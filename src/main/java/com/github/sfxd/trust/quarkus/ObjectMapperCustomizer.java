@@ -1,4 +1,4 @@
-package com.github.sfxd.trust;
+package com.github.sfxd.trust.quarkus;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * Customizer for the object mapper.
  * Mainly configured to produce less errors.
  */
-public class ObjectMapperCustomizer implements io.quarkus.jackson.ObjectMapperCustomizer {
+class ObjectMapperCustomizer implements io.quarkus.jackson.ObjectMapperCustomizer {
 
     @Override
     public void customize(ObjectMapper mapper) {

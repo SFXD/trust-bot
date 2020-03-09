@@ -1,4 +1,4 @@
-package com.github.sfxd.trust;
+package com.github.sfxd.trust.quarkus;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.mock;

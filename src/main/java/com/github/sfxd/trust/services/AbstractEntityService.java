@@ -2,23 +2,59 @@ package com.github.sfxd.trust.services;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import javax.persistence.EntityManager;
 
 import com.github.sfxd.trust.model.AbstractEntity;
-import com.github.sfxd.trust.repositories.AbstractEntityRepository;
 
-/** Base class for all fo the entity services */
+/** Base class for all of the entity services */
 public abstract class AbstractEntityService<T extends AbstractEntity> {
 
-    protected final AbstractEntityRepository<T> repository;
+    protected final EntityManager em;
+    protected final Class<T> clazz;
 
-    public AbstractEntityService(AbstractEntityRepository<T> repository) {
-        Objects.requireNonNull(repository);
+    public AbstractEntityService(EntityManager em, Class<T> clazz) {
+        Objects.requireNonNull(em);
+        Objects.requireNonNull(clazz);
 
-        this.repository = repository;
+        this.em = em;
+        this.clazz = clazz;
     }
 
-    public abstract List<T> insert(List<T> entities);
-    public abstract T insert(T entity);
-    public abstract List<T> update(List<T> entities);
-    public abstract T update (T entity);
+    public List<T> insert(List<T> entities) {
+        return this.save(entities);
+    };
+
+    public T insert(T entity) {
+        return this.save(entity);
+    };
+
+    public List<T> update(List<T> entities) {
+        return this.save(entities);
+    };
+
+    public T update(T entity) {
+        return this.save(entity);
+    }
+
+    protected T save(T entity) {
+        if (entity.isNew()) {
+            this.em.persist(entity);
+            return entity;
+        } else {
+            return this.em.merge(entity);
+        }
+    }
+
+    protected List<T> save(List<T> entities) {
+        return entities.stream()
+            .map(this::save)
+            .collect(Collectors.toList());
+    }
+
+    public Optional<T> findById(Long id) {
+        return Optional.ofNullable(this.em.find(this.clazz, id));
+    }
 }

@@ -1,5 +1,7 @@
 package com.github.sfxd.trust.model;
 
+import java.util.Objects;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -21,8 +23,9 @@ public class InstanceSubscriber extends AbstractEntity {
 
     private boolean isActive = true;
 
-    public InstanceSubscriber() {
-
+    public InstanceSubscriber(Instance instance, Subscriber subscriber) {
+        this.instance = instance;
+        this.subscriber = subscriber;
     }
 
     public Instance getInstance() {

@@ -19,8 +19,8 @@ public class Subscriber extends AbstractEntity {
     @OneToMany(mappedBy = "subscriber", cascade = CascadeType.ALL)
     private List<InstanceSubscriber> instanceSubcribers;
 
-    public Subscriber() {
-
+    public Subscriber(String username) {
+        this.username = username;
     }
 
     public String getUsername() {
