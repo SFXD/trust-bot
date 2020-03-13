@@ -16,7 +16,6 @@ CREATE TABLE InstanceSubscriber (
     id IDENTITY NOT NULL,
     instanceId BIGINT NOT NULL,
     subscriberId BIGINT NOT NULL,
-    isActive BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (instanceId) REFERENCES Instance(id),
     FOREIGN KEY (subscriberId) REFERENCES Subscriber(id)
 );

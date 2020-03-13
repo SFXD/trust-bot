@@ -30,7 +30,7 @@ public class Instance extends AbstractEntity {
     @Enumerated(EnumType.STRING)
     private Environment environment;
 
-    @OneToMany(mappedBy = "instance", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "instance", cascade = CascadeType.REMOVE)
     private List<InstanceSubscriber> instanceSubscribers;
 
     public Instance() {

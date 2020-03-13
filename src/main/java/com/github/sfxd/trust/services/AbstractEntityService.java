@@ -54,6 +54,16 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
             .collect(Collectors.toList());
     }
 
+    public void delete(List<T> entities) {
+        for (T t : entities) {
+            this.delete(t);
+        }
+    }
+
+    public void delete(T entity) {
+        this.em.remove(entity);
+    }
+
     public Optional<T> findById(Long id) {
         return Optional.ofNullable(this.em.find(this.clazz, id));
     }

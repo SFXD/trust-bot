@@ -21,6 +21,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
  */
 @ApplicationScoped
 public class MessageListener extends ListenerAdapter {
+    private static final String CHECK_MARK = "✅";
 
     private final SubscriberService subscriberService;
     private final InstanceService instanceService;
@@ -41,6 +42,12 @@ public class MessageListener extends ListenerAdapter {
         this.instanceSubscriberService = instanceSubscriberService;
     }
 
+    /**
+     * Handles the message received event. If the message doesn't start with !trust
+     * it will do nothing, if it does if will check if the next word is one of our
+     * supported commands (subscribe or unsubscribe). If the command doesn't have an
+     * instance provided it will respond in the channel with how to use the command.
+     */
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
         String[] split = event.getMessage().getContentRaw().split(" ");
@@ -70,22 +77,55 @@ public class MessageListener extends ListenerAdapter {
         }
     }
 
+    /**
+     * Handles the subscribe command. This will sign a user up for notifications
+     * for the given key.
+     * @param event The event from JDA
+     * @param key the instance key from the command.
+     */
     private void handleSubscribe(MessageReceivedEvent event, String key) {
         Optional<Instance> instance = this.instanceService.findByKey(key);
 
         String username = event.getAuthor().getAsTag();
         Subscriber subscriber = this.subscriberService.findByUsername(username)
-                .orElseGet(() -> new Subscriber(username));
+            .orElseGet(() -> new Subscriber(username));
 
-        if (instance.isPresent()) {
+        if (subscriber.isNew()) {
+            this.subscriberService.insert(subscriber);
+        }
+
+        if (!instance.isPresent()) {
+            return;
+        }
+
+        Optional<InstanceSubscriber> subscription = this.instanceSubscriberService.findByInstanceIdAndSubscriberId(
+            instance.get().getId(),
+            subscriber.getId()
+        );
+
+        if (!subscription.isPresent()) {
             this.instanceSubscriberService.insert(new InstanceSubscriber(instance.get(), subscriber));
-            event.getChannel().addReactionById(event.getMessageId(), "✅").queue();
-        } else {
-            event.getChannel().sendMessage(String.format("Could not find instance with id: %s", key));
+            event.getChannel().addReactionById(event.getMessageId(), CHECK_MARK).queue();
         }
     }
 
+    /**
+     * Handles the unsubscribe command. This will delete the subscription if it
+     * finds it.
+     *
+     * @param event The event from JDA.
+     * @param key   The instance key from the command.
+     */
     private void handleUnsubscribe(MessageReceivedEvent event, String key) {
+        Optional<InstanceSubscriber> subscription = this.instanceSubscriberService.findByKeyAndUsername(
+            key,
+            event.getAuthor().getAsTag()
+        );
 
+        if (subscription.isPresent()) {
+            this.instanceSubscriberService.delete(subscription.get());
+        }
+
+        event.getChannel().addReactionById(event.getMessageId(), CHECK_MARK).queue();
     }
 }

@@ -16,7 +16,7 @@ public class Subscriber extends AbstractEntity {
     @Column(nullable = false, unique = true)
     private String username;
 
-    @OneToMany(mappedBy = "subscriber", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "subscriber", cascade = CascadeType.REMOVE)
     private List<InstanceSubscriber> instanceSubcribers;
 
     public Subscriber(String username) {
