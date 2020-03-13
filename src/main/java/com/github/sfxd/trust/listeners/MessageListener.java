@@ -95,6 +95,7 @@ public class MessageListener extends ListenerAdapter {
         }
 
         if (!instance.isPresent()) {
+            event.getChannel().sendMessage(String.format("%s is not a valid instance key.", key)).queue();
             return;
         }
 
@@ -105,8 +106,9 @@ public class MessageListener extends ListenerAdapter {
 
         if (!subscription.isPresent()) {
             this.instanceSubscriberService.insert(new InstanceSubscriber(instance.get(), subscriber));
-            event.getChannel().addReactionById(event.getMessageId(), CHECK_MARK).queue();
         }
+
+        event.getChannel().addReactionById(event.getMessageId(), CHECK_MARK).queue();
     }
 
     /**
