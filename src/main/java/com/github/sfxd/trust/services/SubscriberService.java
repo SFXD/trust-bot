@@ -2,8 +2,8 @@ package com.github.sfxd.trust.services;
 
 import java.util.Optional;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.transaction.Transactional;
@@ -13,7 +13,7 @@ import com.github.sfxd.trust.model.Subscriber;
 /**
  * Service for interacting with the {@link Subscriber} model.
  */
-@ApplicationScoped
+@Singleton
 @Transactional
 public class SubscriberService extends AbstractEntityService<Subscriber> {
 

@@ -2,8 +2,8 @@ package com.github.sfxd.trust.services;
 
 import java.util.Optional;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
@@ -14,7 +14,7 @@ import com.github.sfxd.trust.model.Instance;
 /**
  * Service for working with the {@link Instance} model.
  */
-@ApplicationScoped
+@Singleton
 @Transactional
 public class InstanceService extends AbstractEntityService<Instance> {
 

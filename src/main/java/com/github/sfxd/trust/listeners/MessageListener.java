@@ -3,8 +3,8 @@ package com.github.sfxd.trust.listeners;
 import java.util.Objects;
 import java.util.Optional;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import com.github.sfxd.trust.model.Instance;
 import com.github.sfxd.trust.model.InstanceSubscriber;
@@ -19,7 +19,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 /**
  * Listener that watches messages that start with !trust
  */
-@ApplicationScoped
+@Singleton
 public class MessageListener extends ListenerAdapter {
     static final String CHECK_MARK = "✅";
     static final String USAGE = "Usage: \n" +
