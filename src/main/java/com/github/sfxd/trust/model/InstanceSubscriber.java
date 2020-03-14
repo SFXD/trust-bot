@@ -1,5 +1,7 @@
 package com.github.sfxd.trust.model;
 
+import java.util.Objects;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -38,5 +40,20 @@ public class InstanceSubscriber extends AbstractEntity {
 
     public void setSubscriber(Subscriber subscriber) {
         this.subscriber = subscriber;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof InstanceSubscriber) {
+            var is = (InstanceSubscriber) other;
+            return Objects.equals(is.instance, this.instance) && Objects.equals(is.subscriber, this.subscriber);
+        }
+
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.instance, this.subscriber);
     }
 }

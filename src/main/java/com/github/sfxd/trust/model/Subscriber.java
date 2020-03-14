@@ -1,6 +1,7 @@
 package com.github.sfxd.trust.model;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -37,5 +38,20 @@ public class Subscriber extends AbstractEntity {
 
     public void setInstanceSubscribers(List<InstanceSubscriber> instanceSubscribers) {
         this.instanceSubcribers = instanceSubscribers;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof Subscriber) {
+            var subscriber = (Subscriber) other;
+            return Objects.equals(this.username, subscriber.username);
+        }
+
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.username);
     }
 }

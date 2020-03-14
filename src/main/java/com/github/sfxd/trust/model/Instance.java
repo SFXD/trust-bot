@@ -1,6 +1,7 @@
 package com.github.sfxd.trust.model;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -87,5 +88,20 @@ public class Instance extends AbstractEntity {
 
     public static enum Environment {
         SANDBOX, PRODUCTION
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof Instance) {
+            var i = (Instance) other;
+            return Objects.equals(this.key, i.key);
+        }
+
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.key);
     }
 }

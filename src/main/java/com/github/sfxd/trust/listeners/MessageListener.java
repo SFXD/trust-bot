@@ -29,15 +29,15 @@ public class MessageListener extends ListenerAdapter {
 
     @Inject
     public MessageListener(
-        SubscriberService subcriberService,
+        SubscriberService subscriberService,
         InstanceService instanceService,
         InstanceSubscriberService instanceSubscriberService
     ) {
-        Objects.requireNonNull(subcriberService);
+        Objects.requireNonNull(subscriberService);
         Objects.requireNonNull(instanceService);
         Objects.requireNonNull(instanceSubscriberService);
 
-        this.subscriberService = subcriberService;
+        this.subscriberService = subscriberService;
         this.instanceService = instanceService;
         this.instanceSubscriberService = instanceSubscriberService;
     }
@@ -50,7 +50,7 @@ public class MessageListener extends ListenerAdapter {
      */
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        String[] split = event.getMessage().getContentRaw().split(" ");
+        String[] split = event.getMessage().getContentRaw().split(" ", -1);
         if (!split[0].equals("!trust")) {
             return;
         }
@@ -86,17 +86,17 @@ public class MessageListener extends ListenerAdapter {
     private void handleSubscribe(MessageReceivedEvent event, String key) {
         Optional<Instance> instance = this.instanceService.findByKey(key);
 
-        String username = event.getAuthor().getAsTag();
+        if (!instance.isPresent()) {
+            event.getChannel().sendMessage(String.format("%s is not a valid instance key.", key)).queue();
+            return;
+        }
+
+        String username = event.getAuthor().getName();
         Subscriber subscriber = this.subscriberService.findByUsername(username)
             .orElseGet(() -> new Subscriber(username));
 
         if (subscriber.isNew()) {
             this.subscriberService.insert(subscriber);
-        }
-
-        if (!instance.isPresent()) {
-            event.getChannel().sendMessage(String.format("%s is not a valid instance key.", key)).queue();
-            return;
         }
 
         Optional<InstanceSubscriber> subscription = this.instanceSubscriberService.findByInstanceIdAndSubscriberId(
@@ -121,7 +121,7 @@ public class MessageListener extends ListenerAdapter {
     private void handleUnsubscribe(MessageReceivedEvent event, String key) {
         Optional<InstanceSubscriber> subscription = this.instanceSubscriberService.findByKeyAndUsername(
             key,
-            event.getAuthor().getAsTag()
+            event.getAuthor().getName()
         );
 
         if (subscription.isPresent()) {
