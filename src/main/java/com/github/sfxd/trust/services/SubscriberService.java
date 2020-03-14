@@ -3,6 +3,7 @@ package com.github.sfxd.trust.services;
 import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.transaction.Transactional;
@@ -16,6 +17,7 @@ import com.github.sfxd.trust.model.Subscriber;
 @Transactional
 public class SubscriberService extends AbstractEntityService<Subscriber> {
 
+    @Inject
     public SubscriberService(EntityManager em) {
         super(em, Subscriber.class);
     }
