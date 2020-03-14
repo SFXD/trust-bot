@@ -21,7 +21,11 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
  */
 @ApplicationScoped
 public class MessageListener extends ListenerAdapter {
-    private static final String CHECK_MARK = "✅";
+    static final String CHECK_MARK = "✅";
+    static final String USAGE = "Usage: \n" +
+                                "  !trust <subscribe, unsubscribe> <instance_id>\n" +
+                                "  !trust source\n";
+    static final String GITHUB = "https://github.com/SFXD/trust-bot";
 
     private final SubscriberService subscriberService;
     private final InstanceService instanceService;
@@ -51,28 +55,31 @@ public class MessageListener extends ListenerAdapter {
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
         String[] split = event.getMessage().getContentRaw().split(" ", -1);
-        if (!split[0].equals("!trust")) {
+        if (!split[0].equalsIgnoreCase("!trust")) {
             return;
         }
 
-        if (split.length < 3) {
-            event.getChannel()
-                .sendMessage("Usage: !trust <subscribe, unsubscribe> <instance_id>")
-                .queue();
-
+        if (split.length < 2) {
+            this.printUsage(event);
             return;
         }
 
         String command = split[1].toLowerCase();
-        String key = split[2].toUpperCase();
+        String key = null;
         switch (command) {
         case "subscribe":
+            key = split[2].toUpperCase();
             this.handleSubscribe(event, key);
             return;
         case "unsubscribe":
+            key = split[2].toUpperCase();
             this.handleUnsubscribe(event, key);
             return;
+        case "source":
+            this.handleSource(event);
+            return;
         default:
+            this.printUsage(event);
             return;
         }
     }
@@ -129,5 +136,25 @@ public class MessageListener extends ListenerAdapter {
         }
 
         event.getChannel().addReactionById(event.getMessageId(), CHECK_MARK).queue();
+    }
+
+    /**
+     * Handles the source command. This should respond with a link to the source
+     * code of this project.
+     *
+     * @param event the event from jda
+     */
+    private void handleSource(MessageReceivedEvent event) {
+        event.getChannel().sendMessage(GITHUB).queue();
+    }
+
+    private void printUsage(MessageReceivedEvent event) {
+        event.getChannel()
+            .sendMessage(
+                "Usage: \n" +
+                "  !trust <subscribe, unsubscribe> <instance_id>\n" +
+                "  !trust source\n"
+            )
+            .queue();
     }
 }

@@ -63,7 +63,7 @@ class MessageListenerTests {
 
         listener.onMessageReceived(event);
         verifyNoInteractions(instanceService, subscriberService, instanceSubscriberService);
-        verify(channel, times(1)).sendMessage(anyString());
+        verify(channel, times(1)).sendMessage(MessageListener.USAGE);
     }
 
     @Test
@@ -184,5 +184,65 @@ class MessageListenerTests {
 
         listener.onMessageReceived(event);
         verify(instanceSubscriberService, times(0)).delete(any(InstanceSubscriber.class));
+    }
+
+    @Test
+    void it_should_send_link_to_source_when_source_command_is_used() {
+        var instanceService = mock(InstanceService.class);
+        var subscriberService = mock(SubscriberService.class);
+        var instanceSubscriberService = mock(InstanceSubscriberService.class);
+        var event = mock(MessageReceivedEvent.class);
+        var message = mock(Message.class);
+        var channel = mock(MessageChannel.class);
+        var action = mock(MessageAction.class);
+
+        when(event.getMessage()).thenReturn(message);
+        when(event.getChannel()).thenReturn(channel);
+        when(message.getContentRaw()).thenReturn("!trust source");
+        when(channel.sendMessage(anyString())).thenReturn(action);
+
+        var listener = new MessageListener(subscriberService, instanceService, instanceSubscriberService);
+        listener.onMessageReceived(event);
+        verify(channel).sendMessage(MessageListener.GITHUB);
+    }
+
+    @Test
+    void it_should_print_usage_when_not_enough_args_are_supplied() {
+        var instanceService = mock(InstanceService.class);
+        var subscriberService = mock(SubscriberService.class);
+        var instanceSubscriberService = mock(InstanceSubscriberService.class);
+        var event = mock(MessageReceivedEvent.class);
+        var message = mock(Message.class);
+        var channel = mock(MessageChannel.class);
+        var action = mock(MessageAction.class);
+
+        when(event.getMessage()).thenReturn(message);
+        when(event.getChannel()).thenReturn(channel);
+        when(message.getContentRaw()).thenReturn("!trust");
+        when(channel.sendMessage(anyString())).thenReturn(action);
+
+        var listener = new MessageListener(subscriberService, instanceService, instanceSubscriberService);
+        listener.onMessageReceived(event);
+        verify(channel).sendMessage(MessageListener.USAGE);
+    }
+
+    @Test
+    void it_should_print_usage_when_an_invalid_command_is_sent() {
+        var instanceService = mock(InstanceService.class);
+        var subscriberService = mock(SubscriberService.class);
+        var instanceSubscriberService = mock(InstanceSubscriberService.class);
+        var event = mock(MessageReceivedEvent.class);
+        var message = mock(Message.class);
+        var channel = mock(MessageChannel.class);
+        var action = mock(MessageAction.class);
+
+        when(event.getMessage()).thenReturn(message);
+        when(event.getChannel()).thenReturn(channel);
+        when(message.getContentRaw()).thenReturn("!trust this_isnt_real");
+        when(channel.sendMessage(anyString())).thenReturn(action);
+
+        var listener = new MessageListener(subscriberService, instanceService, instanceSubscriberService);
+        listener.onMessageReceived(event);
+        verify(channel).sendMessage(MessageListener.USAGE);
     }
 }
