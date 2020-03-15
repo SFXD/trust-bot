@@ -5,7 +5,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
+import javax.persistence.TransactionRequiredException;
 
 import com.github.sfxd.trust.model.AbstractEntity;
 
@@ -23,20 +25,36 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
         this.clazz = clazz;
     }
 
-    public List<T> insert(List<T> entities) {
-        return this.save(entities);
+    public List<T> insert(List<T> entities) throws DmlException {
+        try {
+            return this.save(entities);
+        } catch (EntityExistsException | IllegalArgumentException | TransactionRequiredException ex) {
+            throw new DmlException(ex);
+        }
     };
 
-    public T insert(T entity) {
-        return this.save(entity);
+    public T insert(T entity) throws DmlException {
+        try {
+            return this.save(entity);
+        } catch (EntityExistsException | IllegalArgumentException | TransactionRequiredException ex) {
+            throw new DmlException(ex);
+        }
     };
 
-    public List<T> update(List<T> entities) {
-        return this.save(entities);
+    public List<T> update(List<T> entities) throws DmlException {
+        try {
+            return this.save(entities);
+        } catch (EntityExistsException | IllegalArgumentException | TransactionRequiredException ex) {
+            throw new DmlException(ex);
+        }
     };
 
-    public T update(T entity) {
-        return this.save(entity);
+    public T update(T entity) throws DmlException {
+        try {
+            return this.save(entity);
+        } catch (EntityExistsException | IllegalArgumentException | TransactionRequiredException ex) {
+            throw new DmlException(ex);
+        }
     }
 
     protected T save(T entity) {
@@ -54,17 +72,30 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
             .collect(Collectors.toList());
     }
 
-    public void delete(List<T> entities) {
+    public void delete(List<T> entities) throws DmlException {
         for (T t : entities) {
             this.delete(t);
         }
     }
 
-    public void delete(T entity) {
-        this.em.remove(entity);
+    public void delete(T entity) throws DmlException {
+        try {
+            this.em.remove(entity);
+        } catch (TransactionRequiredException | IllegalArgumentException ex) {
+            throw new DmlException(ex);
+        }
     }
 
     public Optional<T> findById(Long id) {
         return Optional.ofNullable(this.em.find(this.clazz, id));
+    }
+
+    /** A wrapper for exceptions from Hibernate */
+    public static class DmlException extends Exception {
+        private static final long serialVersionUID = -7822530728020542026L;
+
+        public DmlException(Exception ex) {
+            super(ex);
+        }
     }
 }

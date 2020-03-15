@@ -1,6 +1,8 @@
 package com.github.sfxd.trust.services;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -31,12 +33,26 @@ public class InstanceService extends AbstractEntityService<Instance> {
      *         throws NoResultException
      */
     public Optional<Instance> findByKey(String key) {
-        TypedQuery<Instance> query = this.em.createQuery("SELECT i FROM Instance WHERE key = :key", this.clazz);
+        TypedQuery<Instance> query = this.em.createQuery("SELECT i FROM Instance i WHERE key = :key", this.clazz)
+            .setParameter("key", key);
 
         try {
             return Optional.of(query.getSingleResult());
         } catch (NoResultException ex) {
             return Optional.empty();
         }
+    }
+
+    /**
+     * Finds all Instances whose key field is in the given set of keys.
+     *
+     * @param keys the keys you want to filter by
+     * @return the matching instances
+     */
+    public List<Instance> findByKeyIn(Set<String> keys) {
+        TypedQuery<Instance> query = this.em.createQuery("SELECT i FROM Instance i WHERE key IN :keys", this.clazz)
+            .setParameter("keys", keys);
+
+        return query.getResultList();
     }
 }

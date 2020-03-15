@@ -12,6 +12,10 @@ import com.github.sfxd.trust.model.Subscriber;
 import com.github.sfxd.trust.services.InstanceService;
 import com.github.sfxd.trust.services.InstanceSubscriberService;
 import com.github.sfxd.trust.services.SubscriberService;
+import com.github.sfxd.trust.services.AbstractEntityService.DmlException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -21,11 +25,15 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
  */
 @Singleton
 public class MessageListener extends ListenerAdapter {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MessageListener.class);
+
     static final String CHECK_MARK = "✅";
+    static final String X = "❌";
     static final String USAGE = "Usage: \n" +
                                 "  !trust <subscribe, unsubscribe> <instance_id>\n" +
                                 "  !trust source\n";
     static final String GITHUB = "https://github.com/SFXD/trust-bot";
+    static final String ERROR_MSG = "Oops! An unexpected error occured.";
 
     private final SubscriberService subscriberService;
     private final InstanceService instanceService;
@@ -69,11 +77,21 @@ public class MessageListener extends ListenerAdapter {
         switch (command) {
         case "subscribe":
             key = split[2].toUpperCase();
-            this.handleSubscribe(event, key);
+            try {
+                this.handleSubscribe(event, key);
+            } catch (DmlException ex) {
+                LOGGER.error("Failed subscribe.", ex);
+                this.printError(event);
+            }
             return;
         case "unsubscribe":
             key = split[2].toUpperCase();
-            this.handleUnsubscribe(event, key);
+            try {
+                this.handleUnsubscribe(event, key);
+            } catch (DmlException ex) {
+                LOGGER.error("Failed unsubscribe.", ex);
+                this.printError(event);
+            }
             return;
         case "source":
             this.handleSource(event);
@@ -90,7 +108,7 @@ public class MessageListener extends ListenerAdapter {
      * @param event The event from JDA
      * @param key the instance key from the command.
      */
-    private void handleSubscribe(MessageReceivedEvent event, String key) {
+    private void handleSubscribe(MessageReceivedEvent event, String key) throws DmlException {
         Optional<Instance> instance = this.instanceService.findByKey(key);
 
         if (!instance.isPresent()) {
@@ -115,7 +133,7 @@ public class MessageListener extends ListenerAdapter {
             this.instanceSubscriberService.insert(new InstanceSubscriber(instance.get(), subscriber));
         }
 
-        event.getChannel().addReactionById(event.getMessageId(), CHECK_MARK).queue();
+        event.getMessage().addReaction(CHECK_MARK).queue();
     }
 
     /**
@@ -125,7 +143,7 @@ public class MessageListener extends ListenerAdapter {
      * @param event The event from JDA.
      * @param key   The instance key from the command.
      */
-    private void handleUnsubscribe(MessageReceivedEvent event, String key) {
+    private void handleUnsubscribe(MessageReceivedEvent event, String key) throws DmlException {
         Optional<InstanceSubscriber> subscription = this.instanceSubscriberService.findByKeyAndUsername(
             key,
             event.getAuthor().getName()
@@ -135,7 +153,7 @@ public class MessageListener extends ListenerAdapter {
             this.instanceSubscriberService.delete(subscription.get());
         }
 
-        event.getChannel().addReactionById(event.getMessageId(), CHECK_MARK).queue();
+        event.getMessage().addReaction(CHECK_MARK).queue();
     }
 
     /**
@@ -149,12 +167,11 @@ public class MessageListener extends ListenerAdapter {
     }
 
     private void printUsage(MessageReceivedEvent event) {
-        event.getChannel()
-            .sendMessage(
-                "Usage: \n" +
-                "  !trust <subscribe, unsubscribe> <instance_id>\n" +
-                "  !trust source\n"
-            )
-            .queue();
+        event.getChannel().sendMessage(USAGE).queue();
+    }
+
+    private void printError(MessageReceivedEvent event) {
+        event.getChannel().sendMessage(ERROR_MSG).queue();
+        event.getMessage().addReaction(X).queue();
     }
 }

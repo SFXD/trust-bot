@@ -12,6 +12,7 @@ import javax.persistence.OneToMany;
 
 /**
  * Represents an SFDC instance. Sandbox or Production.
+ * This model maps directly to the model from the api.
  */
 @Entity
 public class Instance extends AbstractEntity {
