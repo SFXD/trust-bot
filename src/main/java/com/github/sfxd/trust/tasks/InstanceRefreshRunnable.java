@@ -29,16 +29,23 @@ import io.quarkus.scheduler.Scheduled;
 public class InstanceRefreshRunnable implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(InstanceRefreshRunnable.class);
 
+    @Inject
     @RestClient
-    private final SalesforceTrustApiService trustApi;
+    private SalesforceTrustApiService trustApi;
     private final InstanceService instanceService;
 
-    @Inject
     public InstanceRefreshRunnable(SalesforceTrustApiService trustApi, InstanceService instanceService) {
         Objects.requireNonNull(trustApi);
         Objects.requireNonNull(instanceService);
 
         this.trustApi = trustApi;
+        this.instanceService = instanceService;
+    }
+
+    @Inject
+    InstanceRefreshRunnable(InstanceService instanceService) {
+        Objects.requireNonNull(instanceService);
+
         this.instanceService = instanceService;
     }
 

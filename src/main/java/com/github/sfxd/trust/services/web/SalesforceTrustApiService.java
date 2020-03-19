@@ -18,7 +18,7 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
  * @see https://api.status.salesforce.com/v1/docs/
  */
 @Path("/v1")
-@RegisterRestClient(configKey = "salesforce-trust-api")
+@RegisterRestClient
 @ApplicationScoped
 public interface SalesforceTrustApiService {
 
