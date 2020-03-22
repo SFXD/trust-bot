@@ -1,10 +1,11 @@
 CREATE TABLE Instance (
     id IDENTITY NOT NULL,
-    key VARCHAR(255) NOT NULL,
+    key VARCHAR(255) NOT NULL UNIQUE,
     location VARCHAR(255),
     releaseVersion VARCHAR(255),
     releaseNumber VARCHAR(255),
-    environment VARCHAR(20)
+    environment VARCHAR(20),
+    status VARCHAR(255)
 );
 
 CREATE TABLE Subscriber (

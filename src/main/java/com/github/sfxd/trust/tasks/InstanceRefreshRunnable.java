@@ -1,7 +1,6 @@
 package com.github.sfxd.trust.tasks;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
@@ -60,8 +59,8 @@ public class InstanceRefreshRunnable implements Runnable {
             .stream()
             .collect(Collectors.toMap(Instance::getKey, Function.identity()));
 
-        List<Instance> forUpdate = new ArrayList<>();
-        List<Instance> forInsert = new ArrayList<>();
+        var forUpdate = new ArrayList<Instance>();
+        var forInsert = new ArrayList<Instance>();
         for (Instance preview : instancePreviews.values()) {
             Instance current = instances.get(preview.getKey());
             if (current != null) {

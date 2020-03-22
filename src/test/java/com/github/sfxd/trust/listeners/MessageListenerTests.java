@@ -91,7 +91,7 @@ class MessageListenerTests {
         when(channel.sendMessage(anyString())).thenReturn(action);
         when(channel.addReactionById(anyString(), anyString())).thenReturn(restAction);
         when(event.getAuthor()).thenReturn(user);
-        when(user.getName()).thenReturn("");
+        when(user.getId()).thenReturn("");
 
         var instance = new Instance();
         instance.setId(1L);
@@ -149,7 +149,7 @@ class MessageListenerTests {
         when(channel.sendMessage(anyString())).thenReturn(action);
         when(channel.addReactionById(anyString(), anyString())).thenReturn(restAction);
         when(event.getAuthor()).thenReturn(user);
-        when(user.getName()).thenReturn("");
+        when(user.getId()).thenReturn("");
 
         var instance = new Instance();
         instance.setId(1L);

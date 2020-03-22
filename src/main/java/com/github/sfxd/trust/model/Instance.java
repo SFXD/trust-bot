@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
  */
 @Entity
 public class Instance extends AbstractEntity {
+    public static final String STATUS_OK = "OK";
 
     @Column(nullable = false, length = 255, unique = true)
     private String key;
@@ -28,6 +29,9 @@ public class Instance extends AbstractEntity {
 
     @Column(length = 255)
     private String releaseNumber;
+
+    @Column(length = 255)
+    private String status;
 
     @Enumerated(EnumType.STRING)
     private Environment environment;
@@ -69,6 +73,15 @@ public class Instance extends AbstractEntity {
 
     public void setReleaseNumber(String releaseNumber) {
         this.releaseNumber = releaseNumber;
+    }
+
+
+    public String getStatus() {
+        return this.status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public Environment getEnvironment() {

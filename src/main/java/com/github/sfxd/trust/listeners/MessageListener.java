@@ -116,7 +116,7 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
-        String username = event.getAuthor().getName();
+        String username = event.getAuthor().getId();
         Subscriber subscriber = this.subscriberService.findByUsername(username)
             .orElseGet(() -> new Subscriber(username));
 

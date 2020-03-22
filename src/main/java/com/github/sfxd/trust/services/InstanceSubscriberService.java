@@ -1,6 +1,8 @@
 package com.github.sfxd.trust.services;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -75,5 +77,24 @@ public class InstanceSubscriberService extends AbstractEntityService<InstanceSub
         } catch (NoResultException ex) {
             return Optional.empty();
         }
+    }
+
+    /**
+     * Finds all subscribers who's instance is in the provided instance ids
+     *
+     * @param instanceIds the instances you want to filter by
+     * @return the matching subscribers
+     */
+    public List<InstanceSubscriber> findByInstanceIdIn(Set<Long> instanceIds) {
+        TypedQuery<InstanceSubscriber> query = this.em.createQuery(
+            "SELECT subscription " +
+            "FROM InstanceSubscriber subscription " +
+            "JOIN subscription.instance instance " +
+            "WHERE instance.id IN :instanceIds",
+            this.clazz
+        )
+        .setParameter("instanceIds", instanceIds);
+
+        return query.getResultList();
     }
 }
