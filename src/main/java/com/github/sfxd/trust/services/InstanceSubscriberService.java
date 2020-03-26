@@ -22,12 +22,12 @@ import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
 
 import com.github.sfxd.trust.model.InstanceSubscriber;
+
+import io.ebean.Database;
+import io.ebean.annotation.Transactional;
 
 /**
  * Service for working with the {@link InstanceSubcriber} model
@@ -37,8 +37,8 @@ import com.github.sfxd.trust.model.InstanceSubscriber;
 public class InstanceSubscriberService extends AbstractEntityService<InstanceSubscriber> {
 
     @Inject
-    public InstanceSubscriberService(EntityManager em) {
-        super(em, InstanceSubscriber.class);
+    public InstanceSubscriberService(Database db) {
+        super(db, InstanceSubscriber.class);
     }
 
     /**
@@ -50,22 +50,24 @@ public class InstanceSubscriberService extends AbstractEntityService<InstanceSub
      *         {@link NoResultException}
      */
     public Optional<InstanceSubscriber> findByKeyAndUsername(String key, String username) {
-        TypedQuery<InstanceSubscriber> query = this.em.createQuery(
-            "SELECT subscription " +
-            "FROM InstanceSubscriber subscription " +
-            "JOIN subscription.subscriber subscriber " +
-            "JOIN subscription.instance instance " +
-            "WHERE subscriber.username = :username AND instance.key = :key",
-            this.clazz
-        )
-        .setParameter("username", username)
-        .setParameter("key", key);
+        // TypedQuery<InstanceSubscriber> query = this.em.createQuery(
+        //     "SELECT subscription " +
+        //     "FROM InstanceSubscriber subscription " +
+        //     "JOIN subscription.subscriber subscriber " +
+        //     "JOIN subscription.instance instance " +
+        //     "WHERE subscriber.username = :username AND instance.key = :key",
+        //     this.clazz
+        // )
+        // .setParameter("username", username)
+        // .setParameter("key", key);
 
-        try {
-            return Optional.of(query.getSingleResult());
-        } catch (NoResultException ex) {
-            return Optional.empty();
-        }
+        // try {
+        //     return Optional.of(query.getSingleResult());
+        // } catch (NoResultException ex) {
+        //     return Optional.empty();
+        // }
+
+        return null;
     }
 
     /**
@@ -77,22 +79,23 @@ public class InstanceSubscriberService extends AbstractEntityService<InstanceSub
      *         {@link NoResultException}
      */
     public Optional<InstanceSubscriber> findByInstanceIdAndSubscriberId(Long instanceId, Long subscriberId) {
-        TypedQuery<InstanceSubscriber> query = this.em.createQuery(
-            "SELECT subscription " +
-            "FROM InstanceSubscriber subscription " +
-            "JOIN subscription.subscriber subscriber " +
-            "JOIN subscription.instance instance " +
-            "WHERE subsriber.id = :subscriberId AND instance.id = :instanceId",
-            this.clazz
-        )
-        .setParameter("subscriberId", subscriberId)
-        .setParameter("instanceId", instanceId);
+        // TypedQuery<InstanceSubscriber> query = this.em.createQuery(
+        //     "SELECT subscription " +
+        //     "FROM InstanceSubscriber subscription " +
+        //     "JOIN subscription.subscriber subscriber " +
+        //     "JOIN subscription.instance instance " +
+        //     "WHERE subsriber.id = :subscriberId AND instance.id = :instanceId",
+        //     this.clazz
+        // )
+        // .setParameter("subscriberId", subscriberId)
+        // .setParameter("instanceId", instanceId);
 
-        try {
-            return Optional.of(query.getSingleResult());
-        } catch (NoResultException ex) {
-            return Optional.empty();
-        }
+        // try {
+        //     return Optional.of(query.getSingleResult());
+        // } catch (NoResultException ex) {
+        //     return Optional.empty();
+        // }
+        return null;
     }
 
     /**
@@ -102,15 +105,16 @@ public class InstanceSubscriberService extends AbstractEntityService<InstanceSub
      * @return the matching subscribers
      */
     public List<InstanceSubscriber> findByInstanceIdIn(Set<Long> instanceIds) {
-        TypedQuery<InstanceSubscriber> query = this.em.createQuery(
-            "SELECT subscription " +
-            "FROM InstanceSubscriber subscription " +
-            "JOIN subscription.instance instance " +
-            "WHERE instance.id IN :instanceIds",
-            this.clazz
-        )
-        .setParameter("instanceIds", instanceIds);
+        // TypedQuery<InstanceSubscriber> query = this.em.createQuery(
+        //     "SELECT subscription " +
+        //     "FROM InstanceSubscriber subscription " +
+        //     "JOIN subscription.instance instance " +
+        //     "WHERE instance.id IN :instanceIds",
+        //     this.clazz
+        // )
+        // .setParameter("instanceIds", instanceIds);
 
-        return query.getResultList();
+        // return query.getResultList();
+        return null;
     }
 }

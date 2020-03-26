@@ -27,14 +27,13 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
 
 import com.github.sfxd.trust.model.Instance;
 import com.github.sfxd.trust.model.InstanceSubscriber;
 
+import io.ebean.Database;
+import io.ebean.annotation.Transactional;
 import net.dv8tion.jda.api.JDA;
 
 /**
@@ -48,8 +47,8 @@ public class InstanceService extends AbstractEntityService<Instance> {
     private final InstanceSubscriberService instanceSubcriberService;
 
     @Inject
-    public InstanceService(EntityManager em, JDA jda, InstanceSubscriberService instanceSubscriberService) {
-        super(em, Instance.class);
+    public InstanceService(Database db, JDA jda, InstanceSubscriberService instanceSubscriberService) {
+        super(db, Instance.class);
 
         Objects.requireNonNull(jda);
         Objects.requireNonNull(instanceSubscriberService);
@@ -111,14 +110,15 @@ public class InstanceService extends AbstractEntityService<Instance> {
      *         throws NoResultException
      */
     public Optional<Instance> findByKey(String key) {
-        TypedQuery<Instance> query = this.em.createQuery("SELECT i FROM Instance i WHERE key = :key", this.clazz)
-            .setParameter("key", key);
+        // TypedQuery<Instance> query = this.em.createQuery("SELECT i FROM Instance i WHERE key = :key", this.clazz)
+        //     .setParameter("key", key);
 
-        try {
-            return Optional.of(query.getSingleResult());
-        } catch (NoResultException ex) {
-            return Optional.empty();
-        }
+        // try {
+        //     return Optional.of(query.getSingleResult());
+        // } catch (NoResultException ex) {
+        //     return Optional.empty();
+        // }
+        return null;
     }
 
     /**
@@ -128,9 +128,10 @@ public class InstanceService extends AbstractEntityService<Instance> {
      * @return the matching instances
      */
     public List<Instance> findByKeyIn(Set<String> keys) {
-        return this.em.createQuery("SELECT i FROM Instance i WHERE key IN :keys", this.clazz)
-            .setParameter("keys", keys)
-            .getResultList();
+        // return this.em.createQuery("SELECT i FROM Instance i WHERE key IN :keys", this.clazz)
+        //     .setParameter("keys", keys)
+        //     .getResultList();
+        return null;
     }
 
     /**
@@ -140,8 +141,9 @@ public class InstanceService extends AbstractEntityService<Instance> {
      * @return the matching instances
      */
     public List<Instance> findByIdIn(Set<Long> ids) {
-        return this.em.createQuery("SELECT i from Instance i WHERE id IN :ids", this.clazz)
-            .setParameter("ids", ids)
-            .getResultList();
+        // return this.em.createQuery("SELECT i from Instance i WHERE id IN :ids", this.clazz)
+        //     .setParameter("ids", ids)
+        //     .getResultList();
+        return null;
     }
 }

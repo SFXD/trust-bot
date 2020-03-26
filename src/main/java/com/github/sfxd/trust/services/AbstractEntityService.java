@@ -18,33 +18,32 @@ package com.github.sfxd.trust.services;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityManager;
-import javax.persistence.TransactionRequiredException;
+import javax.persistence.OptimisticLockException;
 
 import com.github.sfxd.trust.model.AbstractEntity;
+
+import io.ebean.Database;
+import io.ebean.Query;
 
 /** Base class for all of the entity services */
 public abstract class AbstractEntityService<T extends AbstractEntity> {
 
-    protected final EntityManager em;
+    protected final Database db;
     protected final Class<T> clazz;
 
-    public AbstractEntityService(EntityManager em, Class<T> clazz) {
-        Objects.requireNonNull(em);
+    public AbstractEntityService(Database db, Class<T> clazz) {
+        Objects.requireNonNull(db);
         Objects.requireNonNull(clazz);
 
-        this.em = em;
+        this.db = db;
         this.clazz = clazz;
     }
 
     public List<T> insert(List<T> entities) throws DmlException {
         try {
             return this.save(entities);
-        } catch (EntityExistsException | IllegalArgumentException | TransactionRequiredException ex) {
+        } catch (OptimisticLockException ex) {
             throw new DmlException(ex);
         }
     };
@@ -52,7 +51,7 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
     public T insert(T entity) throws DmlException {
         try {
             return this.save(entity);
-        } catch (EntityExistsException | IllegalArgumentException | TransactionRequiredException ex) {
+        } catch (OptimisticLockException ex) {
             throw new DmlException(ex);
         }
     };
@@ -60,7 +59,7 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
     public List<T> update(List<T> entities) throws DmlException {
         try {
             return this.save(entities);
-        } catch (EntityExistsException | IllegalArgumentException | TransactionRequiredException ex) {
+        } catch (OptimisticLockException ex) {
             throw new DmlException(ex);
         }
     };
@@ -68,42 +67,42 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
     public T update(T entity) throws DmlException {
         try {
             return this.save(entity);
-        } catch (EntityExistsException | IllegalArgumentException | TransactionRequiredException ex) {
+        } catch (OptimisticLockException ex) {
             throw new DmlException(ex);
         }
     }
 
     protected T save(T entity) {
-        if (entity.isNew()) {
-            this.em.persist(entity);
-            return entity;
-        } else {
-            return this.em.merge(entity);
-        }
+        this.db.save(entity);
+        return entity;
     }
 
     protected List<T> save(List<T> entities) {
-        return entities.stream()
-            .map(this::save)
-            .collect(Collectors.toList());
+        this.db.saveAll(entities);
+        return entities;
     }
 
     public void delete(List<T> entities) throws DmlException {
-        for (T t : entities) {
-            this.delete(t);
+        try {
+            this.db.deleteAll(entities);
+        } catch (OptimisticLockException ex) {
+            throw new DmlException(ex);
         }
     }
 
     public void delete(T entity) throws DmlException {
         try {
-            this.em.remove(entity);
-        } catch (TransactionRequiredException | IllegalArgumentException ex) {
+            this.db.delete(entity);
+        } catch (OptimisticLockException ex) {
             throw new DmlException(ex);
         }
     }
 
-    public Optional<T> findById(Long id) {
-        return Optional.ofNullable(this.em.find(this.clazz, id));
+    public Query<T> findById(Long id) {
+        return this.db.createQuery(this.clazz)
+            .where()
+            .idEq(id)
+            .query();
     }
 
     /** A wrapper for exceptions from Hibernate */
