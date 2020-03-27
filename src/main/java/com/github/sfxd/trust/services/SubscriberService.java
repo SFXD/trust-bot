@@ -16,15 +16,14 @@
 
 package com.github.sfxd.trust.services;
 
-import java.util.Optional;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.transaction.Transactional;
 
 import com.github.sfxd.trust.model.Subscriber;
+import com.github.sfxd.trust.model.query.QSubscriber;
+
+import io.ebean.Database;
+import io.ebean.annotation.Transactional;
 
 /**
  * Service for interacting with the {@link Subscriber} model.
@@ -34,8 +33,8 @@ import com.github.sfxd.trust.model.Subscriber;
 public class SubscriberService extends AbstractEntityService<Subscriber> {
 
     @Inject
-    public SubscriberService(EntityManager em) {
-        super(em, Subscriber.class);
+    public SubscriberService(Database db) {
+        super(db, Subscriber.class);
     }
 
     /**
@@ -45,14 +44,9 @@ public class SubscriberService extends AbstractEntityService<Subscriber> {
      * @return An Optional containing the subscriber or empty if hibernate throws
      *         NoResultException
      */
-    public Optional<Subscriber> findByUsername(String username) {
-        var query = this.em.createQuery("SELECT s FROM Subscriber s WHERE username = :username", this.clazz)
-            .setParameter("username", username);
-
-        try {
-            return Optional.ofNullable(query.getSingleResult());
-        } catch (NoResultException ex) {
-            return Optional.empty();
-        }
+    public QSubscriber findByUsername(String username) {
+        return new QSubscriber()
+            .where()
+            .username.eq(username);
     }
 }

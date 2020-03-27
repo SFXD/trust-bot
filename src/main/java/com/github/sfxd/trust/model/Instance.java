@@ -26,6 +26,8 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Represents an SFDC instance. Sandbox or Production.
  * This model maps directly to the model from the api.
@@ -63,61 +65,71 @@ public class Instance extends AbstractEntity {
         return this.key;
     }
 
-    public void setKey(String key) {
+    public Instance setKey(String key) {
         this.key = key;
+        return this;
     }
 
     public String getLocation() {
         return this.location;
     }
 
-    public void setLocation(String location) {
+    public Instance setLocation(String location) {
         this.location = location;
+        return this;
     }
 
     public String getReleaseVersion() {
         return this.releaseVersion;
     }
 
-    public void setReleaseVersion(String releaseVersion) {
+    public Instance setReleaseVersion(String releaseVersion) {
         this.releaseVersion = releaseVersion;
+        return this;
     }
 
     public String getReleaseNumber() {
         return this.releaseNumber;
     }
 
-    public void setReleaseNumber(String releaseNumber) {
+    public Instance setReleaseNumber(String releaseNumber) {
         this.releaseNumber = releaseNumber;
+        return this;
     }
-
 
     public String getStatus() {
         return this.status;
     }
 
-    public void setStatus(String status) {
+    public Instance setStatus(String status) {
         this.status = status;
+        return this;
     }
 
     public Environment getEnvironment() {
         return this.environment;
     }
 
-    public void setEnvironment(Environment environment) {
+    public Instance setEnvironment(Environment environment) {
         this.environment = environment;
+        return this;
     }
 
     public List<InstanceSubscriber> getInstanceSubscribers() {
         return this.instanceSubscribers;
     }
 
-    public void setInstanceSubscribers(List<InstanceSubscriber> instanceSubscribers) {
+    public Instance setInstanceSubscribers(List<InstanceSubscriber> instanceSubscribers) {
         this.instanceSubscribers = instanceSubscribers;
+        return this;
     }
 
     public static enum Environment {
-        SANDBOX, PRODUCTION
+        @JsonProperty("sandbox")
+        SANDBOX,
+
+        @JsonProperty("production")
+        PRODUCTION
     }
 
     @Override

@@ -125,7 +125,7 @@ public class MessageListener extends ListenerAdapter {
      * @param key the instance key from the command.
      */
     private void handleSubscribe(MessageReceivedEvent event, String key) throws DmlException {
-        Optional<Instance> instance = this.instanceService.findByKey(key);
+        Optional<Instance> instance = this.instanceService.findByKey(key).findOneOrEmpty();
 
         if (!instance.isPresent()) {
             event.getChannel().sendMessage(String.format("%s is not a valid instance key.", key)).queue();
@@ -134,16 +134,19 @@ public class MessageListener extends ListenerAdapter {
 
         String username = event.getAuthor().getId();
         Subscriber subscriber = this.subscriberService.findByUsername(username)
+            .findOneOrEmpty()
             .orElseGet(() -> new Subscriber(username));
 
         if (subscriber.isNew()) {
             this.subscriberService.insert(subscriber);
         }
 
-        Optional<InstanceSubscriber> subscription = this.instanceSubscriberService.findByInstanceIdAndSubscriberId(
-            instance.get().getId(),
-            subscriber.getId()
-        );
+        Optional<InstanceSubscriber> subscription
+            = this.instanceSubscriberService.findByInstanceIdAndSubscriberId(
+                instance.get().getId(),
+                subscriber.getId()
+            )
+            .findOneOrEmpty();
 
         if (!subscription.isPresent()) {
             this.instanceSubscriberService.insert(new InstanceSubscriber(instance.get(), subscriber));
@@ -160,10 +163,12 @@ public class MessageListener extends ListenerAdapter {
      * @param key   The instance key from the command.
      */
     private void handleUnsubscribe(MessageReceivedEvent event, String key) throws DmlException {
-        Optional<InstanceSubscriber> subscription = this.instanceSubscriberService.findByKeyAndUsername(
-            key,
-            event.getAuthor().getName()
-        );
+        Optional<InstanceSubscriber> subscription
+            = this.instanceSubscriberService.findByKeyAndUsername(
+                key,
+                event.getAuthor().getName()
+            )
+            .findOneOrEmpty();
 
         if (subscription.isPresent()) {
             this.instanceSubscriberService.delete(subscription.get());

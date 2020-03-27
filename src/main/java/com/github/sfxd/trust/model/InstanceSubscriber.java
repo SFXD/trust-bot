@@ -46,16 +46,18 @@ public class InstanceSubscriber extends AbstractEntity {
         return this.instance;
     }
 
-    public void setInstance(Instance instance) {
+    public InstanceSubscriber setInstance(Instance instance) {
         this.instance = instance;
+        return this;
     }
 
     public Subscriber getSubscriber() {
         return this.subscriber;
     }
 
-    public void setSubscriber(Subscriber subscriber) {
+    public InstanceSubscriber setSubscriber(Subscriber subscriber) {
         this.subscriber = subscriber;
+        return this;
     }
 
     @Override

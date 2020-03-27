@@ -16,18 +16,16 @@
 
 package com.github.sfxd.trust.services;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
 
 import com.github.sfxd.trust.model.InstanceSubscriber;
+import com.github.sfxd.trust.model.query.QInstanceSubscriber;
+
+import io.ebean.Database;
+import io.ebean.annotation.Transactional;
 
 /**
  * Service for working with the {@link InstanceSubcriber} model
@@ -37,35 +35,23 @@ import com.github.sfxd.trust.model.InstanceSubscriber;
 public class InstanceSubscriberService extends AbstractEntityService<InstanceSubscriber> {
 
     @Inject
-    public InstanceSubscriberService(EntityManager em) {
-        super(em, InstanceSubscriber.class);
+    public InstanceSubscriberService(Database db) {
+        super(db, InstanceSubscriber.class);
     }
 
     /**
      * Finds a subscription by it's instances key and the the subscriber's username
      *
      * @param key      the instance's key (e.g. NA99)
-     * @param username discord user name as a tag (e.g. vipasana#0267)
-     * @return An optional containing the instance or empty if hibernate throws
-     *         {@link NoResultException}
+     * @param username discord user id
+     * @return the query matching the subscriber
      */
-    public Optional<InstanceSubscriber> findByKeyAndUsername(String key, String username) {
-        TypedQuery<InstanceSubscriber> query = this.em.createQuery(
-            "SELECT subscription " +
-            "FROM InstanceSubscriber subscription " +
-            "JOIN subscription.subscriber subscriber " +
-            "JOIN subscription.instance instance " +
-            "WHERE subscriber.username = :username AND instance.key = :key",
-            this.clazz
-        )
-        .setParameter("username", username)
-        .setParameter("key", key);
-
-        try {
-            return Optional.of(query.getSingleResult());
-        } catch (NoResultException ex) {
-            return Optional.empty();
-        }
+    public QInstanceSubscriber findByKeyAndUsername(String key, String username) {
+        return new QInstanceSubscriber()
+            .where()
+            .subscriber.username.eq(username)
+            .and()
+            .instance.key.eq(key);
     }
 
     /**
@@ -73,26 +59,14 @@ public class InstanceSubscriberService extends AbstractEntityService<InstanceSub
      *
      * @param instanceId   the id of the instance
      * @param subscriberId the is of the subscriber
-     * @return An optional containing the instance or empty if hibernate throws
-     *         {@link NoResultException}
+     * @return the query of matching subscribers
      */
-    public Optional<InstanceSubscriber> findByInstanceIdAndSubscriberId(Long instanceId, Long subscriberId) {
-        TypedQuery<InstanceSubscriber> query = this.em.createQuery(
-            "SELECT subscription " +
-            "FROM InstanceSubscriber subscription " +
-            "JOIN subscription.subscriber subscriber " +
-            "JOIN subscription.instance instance " +
-            "WHERE subsriber.id = :subscriberId AND instance.id = :instanceId",
-            this.clazz
-        )
-        .setParameter("subscriberId", subscriberId)
-        .setParameter("instanceId", instanceId);
-
-        try {
-            return Optional.of(query.getSingleResult());
-        } catch (NoResultException ex) {
-            return Optional.empty();
-        }
+    public QInstanceSubscriber findByInstanceIdAndSubscriberId(Long instanceId, Long subscriberId) {
+        return new QInstanceSubscriber()
+            .where()
+            .subscriber.id.eq(subscriberId)
+            .and()
+            .instance.id.eq(instanceId);
     }
 
     /**
@@ -101,16 +75,9 @@ public class InstanceSubscriberService extends AbstractEntityService<InstanceSub
      * @param instanceIds the instances you want to filter by
      * @return the matching subscribers
      */
-    public List<InstanceSubscriber> findByInstanceIdIn(Set<Long> instanceIds) {
-        TypedQuery<InstanceSubscriber> query = this.em.createQuery(
-            "SELECT subscription " +
-            "FROM InstanceSubscriber subscription " +
-            "JOIN subscription.instance instance " +
-            "WHERE instance.id IN :instanceIds",
-            this.clazz
-        )
-        .setParameter("instanceIds", instanceIds);
-
-        return query.getResultList();
+    public QInstanceSubscriber findByInstanceIdIn(Set<Long> instanceIds) {
+        return new QInstanceSubscriber()
+            .where()
+            .instance.id.in(instanceIds);
     }
 }

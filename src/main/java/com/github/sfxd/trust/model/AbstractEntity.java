@@ -43,8 +43,9 @@ public abstract class AbstractEntity {
         return this.id;
     }
 
-    public void setId(Long id) {
+    public AbstractEntity setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public boolean isNew() {

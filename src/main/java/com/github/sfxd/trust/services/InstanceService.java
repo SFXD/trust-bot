@@ -19,7 +19,6 @@ package com.github.sfxd.trust.services;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.Map.Entry;
 import java.util.function.Function;
@@ -27,14 +26,13 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
 
 import com.github.sfxd.trust.model.Instance;
 import com.github.sfxd.trust.model.InstanceSubscriber;
+import com.github.sfxd.trust.model.query.QInstance;
 
+import io.ebean.Database;
+import io.ebean.annotation.Transactional;
 import net.dv8tion.jda.api.JDA;
 
 /**
@@ -48,8 +46,8 @@ public class InstanceService extends AbstractEntityService<Instance> {
     private final InstanceSubscriberService instanceSubcriberService;
 
     @Inject
-    public InstanceService(EntityManager em, JDA jda, InstanceSubscriberService instanceSubscriberService) {
-        super(em, Instance.class);
+    public InstanceService(Database db, JDA jda, InstanceSubscriberService instanceSubscriberService) {
+        super(db, Instance.class);
 
         Objects.requireNonNull(jda);
         Objects.requireNonNull(instanceSubscriberService);
@@ -65,7 +63,7 @@ public class InstanceService extends AbstractEntityService<Instance> {
             .collect(Collectors.toMap(Instance::getId, Function.identity()));
 
         Set<Long> notOkIds = this.findByIdIn(instancesById.keySet())
-            .stream()
+            .findSteam()
             .filter(old -> {
                 Instance current = instancesById.get(old.getId());
                 return old.getStatus().equals(Instance.STATUS_OK) && !current.getStatus().equals(Instance.STATUS_OK);
@@ -75,7 +73,7 @@ public class InstanceService extends AbstractEntityService<Instance> {
 
         Map<String, List<InstanceSubscriber>> subscriptionsBySubscriber = this.instanceSubcriberService
             .findByInstanceIdIn(notOkIds)
-            .stream()
+            .findSteam()
             .collect(Collectors.groupingBy(is -> is.getSubscriber().getUsername()));
 
         for (Entry<String, List<InstanceSubscriber>> entry : subscriptionsBySubscriber.entrySet()) {
@@ -107,18 +105,13 @@ public class InstanceService extends AbstractEntityService<Instance> {
      * Finds an instance by its unique key (i.e. NA99, CS104)
      *
      * @param key the instance's unique key you want to find
-     * @return An optional containing the instance if found or none if hibernate
-     *         throws NoResultException
+     * @return the matching instances
      */
-    public Optional<Instance> findByKey(String key) {
-        TypedQuery<Instance> query = this.em.createQuery("SELECT i FROM Instance i WHERE key = :key", this.clazz)
-            .setParameter("key", key);
-
-        try {
-            return Optional.of(query.getSingleResult());
-        } catch (NoResultException ex) {
-            return Optional.empty();
-        }
+    public QInstance findByKey(String key) {
+        return new QInstance()
+            .where()
+            .key
+            .eq(key);
     }
 
     /**
@@ -127,10 +120,11 @@ public class InstanceService extends AbstractEntityService<Instance> {
      * @param keys the keys you want to filter by
      * @return the matching instances
      */
-    public List<Instance> findByKeyIn(Set<String> keys) {
-        return this.em.createQuery("SELECT i FROM Instance i WHERE key IN :keys", this.clazz)
-            .setParameter("keys", keys)
-            .getResultList();
+    public QInstance findByKeyIn(Set<String> keys) {
+        return new QInstance()
+            .where()
+            .key
+            .in(keys);
     }
 
     /**
@@ -139,9 +133,10 @@ public class InstanceService extends AbstractEntityService<Instance> {
      * @param ids the ids you want to filter by
      * @return the matching instances
      */
-    public List<Instance> findByIdIn(Set<Long> ids) {
-        return this.em.createQuery("SELECT i from Instance i WHERE id IN :ids", this.clazz)
-            .setParameter("ids", ids)
-            .getResultList();
+    public QInstance findByIdIn(Set<Long> ids) {
+        return new QInstance()
+            .where()
+            .id
+            .in(ids);
     }
 }

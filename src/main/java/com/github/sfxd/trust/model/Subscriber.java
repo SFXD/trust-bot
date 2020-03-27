@@ -44,16 +44,18 @@ public class Subscriber extends AbstractEntity {
         return this.username;
     }
 
-    public void setUsername(String username) {
+    public Subscriber setUsername(String username) {
         this.username = username;
+        return this;
     }
 
     public List<InstanceSubscriber> getInstanceSubscribers() {
         return this.instanceSubcribers;
     }
 
-    public void setInstanceSubscribers(List<InstanceSubscriber> instanceSubscribers) {
+    public Subscriber setInstanceSubscribers(List<InstanceSubscriber> instanceSubscribers) {
         this.instanceSubcribers = instanceSubscribers;
+        return this;
     }
 
     @Override
