@@ -69,7 +69,7 @@ public class InstanceRefreshRunnable implements Runnable {
             .collect(Collectors.toMap(Instance::getKey, Function.identity()));
 
         Map<String, Instance> instances = this.instanceService.findByKeyIn(instancePreviews.keySet())
-            .stream()
+            .findSteam()
             .collect(Collectors.toMap(Instance::getKey, Function.identity()));
 
         var forUpdate = new ArrayList<Instance>();
