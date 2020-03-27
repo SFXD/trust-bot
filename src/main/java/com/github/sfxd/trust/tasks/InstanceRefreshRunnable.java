@@ -26,8 +26,8 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import com.github.sfxd.trust.model.Instance;
-import com.github.sfxd.trust.services.InstanceService;
-import com.github.sfxd.trust.services.AbstractEntityService.DmlException;
+import com.github.sfxd.trust.model.services.InstanceService;
+import com.github.sfxd.trust.model.services.AbstractEntityService.DmlException;
 import com.github.sfxd.trust.services.web.SalesforceTrustApiService;
 
 import org.eclipse.microprofile.rest.client.inject.RestClient;

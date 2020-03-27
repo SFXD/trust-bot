@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-package com.github.sfxd.trust.services;
+package com.github.sfxd.trust.model.services;
 
 import java.util.Set;
 

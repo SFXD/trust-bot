@@ -25,10 +25,10 @@ import javax.inject.Singleton;
 import com.github.sfxd.trust.model.Instance;
 import com.github.sfxd.trust.model.InstanceSubscriber;
 import com.github.sfxd.trust.model.Subscriber;
-import com.github.sfxd.trust.services.InstanceService;
-import com.github.sfxd.trust.services.InstanceSubscriberService;
-import com.github.sfxd.trust.services.SubscriberService;
-import com.github.sfxd.trust.services.AbstractEntityService.DmlException;
+import com.github.sfxd.trust.model.services.InstanceService;
+import com.github.sfxd.trust.model.services.InstanceSubscriberService;
+import com.github.sfxd.trust.model.services.SubscriberService;
+import com.github.sfxd.trust.model.services.AbstractEntityService.DmlException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
