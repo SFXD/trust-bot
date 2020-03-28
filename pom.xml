@@ -55,19 +55,10 @@
       <artifactId>ebean</artifactId>
       <version>12.2.2</version>
     </dependency>
-    <!-- Query bean support -->
     <dependency>
       <groupId>io.ebean</groupId>
       <artifactId>ebean-querybean</artifactId>
       <version>12.2.1</version>
-    </dependency>
-
-    <!-- APT Query bean generation for Java -->
-    <dependency>
-      <groupId>io.ebean</groupId>
-      <artifactId>querybean-generator</artifactId>
-      <version>12.2.2</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>io.ebean</groupId>
@@ -142,16 +133,21 @@
         <configuration>
           <showWarnings>true</showWarnings>
           <compilerArgs>
-            <!-- <arg>-XDcompilePolicy=simple</arg> -->
-            <!-- <arg>-Xplugin:ErrorProne</arg> -->
+            <arg>-XDcompilePolicy=simple</arg>
+            <arg>-Xplugin:ErrorProne</arg>
           </compilerArgs>
-          <!-- <annotationProcessorPaths>
+          <annotationProcessorPaths>
             <path>
               <groupId>com.google.errorprone</groupId>
               <artifactId>error_prone_core</artifactId>
               <version>2.3.4</version>
             </path>
-          </annotationProcessorPaths> -->
+            <path>
+              <groupId>io.ebean</groupId>
+              <artifactId>querybean-generator</artifactId>
+              <version>12.2.2</version>
+            </path>
+          </annotationProcessorPaths>
         </configuration>
       </plugin>
       <plugin>
