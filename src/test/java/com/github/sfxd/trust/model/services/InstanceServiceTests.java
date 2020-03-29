@@ -1,4 +1,4 @@
-package com.github.sfxd.trust.services;
+package com.github.sfxd.trust.model.services;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -19,20 +19,34 @@ import javax.inject.Inject;
 import com.github.sfxd.trust.model.Instance;
 import com.github.sfxd.trust.model.InstanceSubscriber;
 import com.github.sfxd.trust.model.Subscriber;
-import com.github.sfxd.trust.services.AbstractEntityService.DmlException;
+import com.github.sfxd.trust.model.services.AbstractEntityService.DmlException;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 
+import io.ebean.DB;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.PrivateChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
+@TestInstance(Lifecycle.PER_CLASS)
 class InstanceServiceTests {
 
-    @Inject
-    InstanceService instanceService;
+    private InstanceService instanceService;
+
+
+    @BeforeAll
+    void before() {
+        this.instanceService = new InstanceService(
+            DB.getDefault(),
+            mock(JDA.class),
+            new InstanceSubscriberService(DB.getDefault())
+        );
+    }
 
     @Test
     @SuppressWarnings("unchecked")
@@ -96,7 +110,7 @@ class InstanceServiceTests {
         b.setKey("CS01");
 
         this.instanceService.insert(List.of(a, b));
-        List<Instance> found = this.instanceService.findByKeyIn(Set.of(a.getKey()));
+        List<Instance> found = this.instanceService.findByKeyIn(Set.of(a.getKey())).findList();
 
         assertTrue(found.size() == 1);
         assertTrue(found.get(0).getKey().equals(a.getKey()));
@@ -110,7 +124,7 @@ class InstanceServiceTests {
         b.setKey("CS02");
 
         this.instanceService.insert(List.of(a, b));
-        List<Instance> found = this.instanceService.findByIdIn(Set.of(a.getId()));
+        List<Instance> found = this.instanceService.findByIdIn(Set.of(a.getId())).findList();
 
         assertTrue(found.size() == 1);
         assertTrue(found.get(0).getId().equals(a.getId()));
@@ -125,7 +139,7 @@ class InstanceServiceTests {
 
         this.instanceService.insert(List.of(a, b));
 
-        Instance found = this.instanceService.findByKey(a.getKey()).get();
+        Instance found = this.instanceService.findByKey(a.getKey()).findOne();
         assertTrue(found.getKey().equals(a.getKey()));
     }
 
@@ -138,7 +152,7 @@ class InstanceServiceTests {
 
         this.instanceService.insert(List.of(a, b));
 
-        Optional<Instance> found = this.instanceService.findByKey("ZZ00");
+        Optional<Instance> found = this.instanceService.findByKey("ZZ00").findOneOrEmpty();
         assertTrue(found.isEmpty());
     }
 }

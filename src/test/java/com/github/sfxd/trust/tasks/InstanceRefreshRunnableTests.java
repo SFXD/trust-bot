@@ -1,6 +1,7 @@
 package com.github.sfxd.trust.tasks;
 
 import static org.mockito.ArgumentMatchers.anySet;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -9,8 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.sfxd.trust.model.Instance;
-import com.github.sfxd.trust.services.InstanceService;
-import com.github.sfxd.trust.services.AbstractEntityService.DmlException;
+import com.github.sfxd.trust.model.query.QInstance;
+import com.github.sfxd.trust.model.services.InstanceService;
+import com.github.sfxd.trust.model.services.AbstractEntityService.DmlException;
 import com.github.sfxd.trust.services.web.SalesforceTrustApiService;
 
 import org.junit.jupiter.api.Test;
@@ -25,8 +27,10 @@ class InstanceRefreshRunnableTests {
         var instance = new Instance();
         instance.setKey("NA99");
         var previews = List.of(instance);
+        var qinstance = mock(QInstance.class);
 
-        when(instanceService.findByKeyIn(anySet())).thenReturn(instances);
+        when(instanceService.findByKeyIn(anySet())).thenReturn(qinstance);
+        doReturn(instances).when(qinstance).findSteam();
         when(trustApi.getInstancesStatusPreview()).thenReturn(previews);
 
         Runnable r = new InstanceRefreshRunnable(trustApi, instanceService);
