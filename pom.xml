@@ -215,7 +215,6 @@
                 <configuration>
                   <imageName>trust-bot</imageName>
                   <buildArgs>
-                    -H:IncludeResourceBundles=net.sourceforge.argparse4j.internal.ArgumentParserImpl
                     -H:+ReportExceptionStackTraces
                     -H:+ReportUnsupportedElementsAtRuntime
                     --allow-incomplete-classpath
