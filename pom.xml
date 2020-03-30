@@ -192,43 +192,4 @@
       </plugin>
     </plugins>
   </build>
-  <profiles>
-    <profile>
-      <id>native</id>
-      <activation>
-        <property>
-          <name>native</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.graalvm.nativeimage</groupId>
-            <artifactId>native-image-maven-plugin</artifactId>
-            <version>20.0.0</version>
-            <executions>
-              <execution>
-                <goals>
-                  <goal>native-image</goal>
-                </goals>
-                <phase>package</phase>
-                <configuration>
-                  <imageName>trust-bot</imageName>
-                  <buildArgs>
-                    -H:+ReportExceptionStackTraces
-                    -H:+ReportUnsupportedElementsAtRuntime
-                    --allow-incomplete-classpath
-                    --enable-https
-                    --initialize-at-build-time=javax.enterprise.util.AnnotationLiteral,javax.enterprise.util.SecurityActions
-                    --no-fallback
-                    --static
-                  </buildArgs>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
 </project>
