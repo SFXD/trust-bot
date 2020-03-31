@@ -19,6 +19,7 @@ package com.github.sfxd.trust.tasks;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -29,6 +30,7 @@ import com.github.sfxd.trust.model.Instance;
 import com.github.sfxd.trust.model.services.InstanceService;
 import com.github.sfxd.trust.model.services.AbstractEntityService.DmlException;
 import com.github.sfxd.trust.services.web.SalesforceTrustApiService;
+import com.github.sfxd.trust.tasks.TaskManager.Task;
 
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.slf4j.Logger;
@@ -39,7 +41,7 @@ import org.slf4j.LoggerFactory;
  * database.
  */
 @ApplicationScoped
-public class InstanceRefreshRunnable implements Runnable {
+public class InstanceRefreshRunnable implements Task {
     private static final Logger LOGGER = LoggerFactory.getLogger(InstanceRefreshRunnable.class);
 
     @Inject
@@ -64,6 +66,8 @@ public class InstanceRefreshRunnable implements Runnable {
 
     @Override
     public void run() {
+        LOGGER.info("Starting {}", InstanceRefreshRunnable.class.getName());
+
         Map<String, Instance> instancePreviews = this.trustApi.getInstancesStatusPreview()
             .stream()
             .collect(Collectors.toMap(Instance::getKey, Function.identity()));
@@ -90,5 +94,15 @@ public class InstanceRefreshRunnable implements Runnable {
         } catch (DmlException ex) {
             LOGGER.error("Failed to update instances.", ex);
         }
+    }
+
+    @Override
+    public long interval() {
+        return 60L;
+    }
+
+    @Override
+    public TimeUnit timeUnit() {
+        return TimeUnit.SECONDS;
     }
 }

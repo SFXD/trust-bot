@@ -166,7 +166,7 @@ public class MessageListener extends ListenerAdapter {
         Optional<InstanceSubscriber> subscription
             = this.instanceSubscriberService.findByKeyAndUsername(
                 key,
-                event.getAuthor().getName()
+                event.getAuthor().getId()
             )
             .findOneOrEmpty();
 

@@ -34,7 +34,7 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
  * @see https://api.status.salesforce.com/v1/docs/
  */
 @Path("/v1")
-@RegisterRestClient
+@RegisterRestClient(baseUri = "https://api.status.salesforce.com")
 @ApplicationScoped
 public interface SalesforceTrustApiService {
 
