@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<migration xmlns="http://ebean-orm.github.io/xml/ns/dbmigration">
+    <changeSet type="apply">
+        <createTable name="instance" identityType="identity" pkName="pk_instance">
+            <column name="id" type="bigint" primaryKey="true"/>
+            <column name="key" type="varchar" notnull="true" unique="uq_instance_key"/>
+            <column name="location" type="varchar"/>
+            <column name="release_version" type="varchar"/>
+            <column name="release_number" type="varchar"/>
+            <column name="status" type="varchar"/>
+            <column name="environment" type="varchar(10)" checkConstraint="check ( environment in ('SANDBOX','PRODUCTION'))" checkConstraintName="ck_instance_environment"/>
+        </createTable>
+        <createTable name="instance_subscriber" identityType="identity" pkName="pk_instance_subscriber">
+            <column name="id" type="bigint" primaryKey="true"/>
+            <column name="instanceId" type="bigint" notnull="true" references="instance.id" foreignKeyName="fk_instance_subscriber_instanceid" foreignKeyIndex="ix_instance_subscriber_instanceid"/>
+            <column name="subscriberId" type="bigint" notnull="true" references="subscriber.id" foreignKeyName="fk_instance_subscriber_subscriberid" foreignKeyIndex="ix_instance_subscriber_subscriberid"/>
+        </createTable>
+        <createTable name="subscriber" identityType="identity" pkName="pk_subscriber">
+            <column name="id" type="bigint" primaryKey="true"/>
+            <column name="username" type="varchar" notnull="true" unique="uq_subscriber_username"/>
+        </createTable>
+    </changeSet>
+</migration>
