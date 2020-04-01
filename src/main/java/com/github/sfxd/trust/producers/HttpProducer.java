@@ -14,33 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-package com.github.sfxd.trust.services.web;
+package com.github.sfxd.trust.producers;
 
-import java.util.List;
+import java.net.http.HttpClient;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.enterprise.inject.Produces;
 
-import com.github.sfxd.trust.model.Instance;
+class HttpProducer {
 
-import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
-
-/**
- * Service for interating with the Salesforce trust api.
- * This implements only a subset of the functionality of the api.
- *
- * @see https://api.status.salesforce.com/v1/docs/
- */
-@Path("/v1")
-@RegisterRestClient(baseUri = "https://api.status.salesforce.com")
-@ApplicationScoped
-public interface SalesforceTrustApiService {
-
-    @GET
-    @Path("/instances/status/preview")
-    @Produces("application/json")
-    List<Instance> getInstancesStatusPreview();
-
+    @Produces
+    @ApplicationScoped
+    HttpClient produceHttpClient() {
+        return HttpClient.newBuilder()
+            .build();
+    }
 }

@@ -29,10 +29,9 @@ import javax.inject.Inject;
 import com.github.sfxd.trust.model.Instance;
 import com.github.sfxd.trust.model.services.InstanceService;
 import com.github.sfxd.trust.model.services.AbstractEntityService.DmlException;
-import com.github.sfxd.trust.services.web.SalesforceTrustApiService;
+import com.github.sfxd.trust.web.SalesforceTrustApiService;
 import com.github.sfxd.trust.tasks.TaskManager.Task;
 
-import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,15 +40,14 @@ import org.slf4j.LoggerFactory;
  * database.
  */
 @ApplicationScoped
-public class InstanceRefreshRunnable implements Task {
-    private static final Logger LOGGER = LoggerFactory.getLogger(InstanceRefreshRunnable.class);
+public class InstanceRefreshTask implements Task {
+    private static final Logger LOGGER = LoggerFactory.getLogger(InstanceRefreshTask.class);
 
     private SalesforceTrustApiService trustApi;
     private final InstanceService instanceService;
 
     @Inject
-    @RestClient
-    public InstanceRefreshRunnable(SalesforceTrustApiService trustApi, InstanceService instanceService) {
+    public InstanceRefreshTask(SalesforceTrustApiService trustApi, InstanceService instanceService) {
         Objects.requireNonNull(trustApi);
         Objects.requireNonNull(instanceService);
 
@@ -59,9 +57,10 @@ public class InstanceRefreshRunnable implements Task {
 
     @Override
     public void run() {
-        LOGGER.info("Starting {}", InstanceRefreshRunnable.class.getName());
+        LOGGER.info("Starting {}", InstanceRefreshTask.class.getName());
 
         Map<String, Instance> instancePreviews = this.trustApi.getInstancesStatusPreview()
+            .join()
             .stream()
             .collect(Collectors.toMap(Instance::getKey, Function.identity()));
 
@@ -74,8 +73,14 @@ public class InstanceRefreshRunnable implements Task {
         for (Instance preview : instancePreviews.values()) {
             Instance current = instances.get(preview.getKey());
             if (current != null) {
-                preview.setId(current.getId());
-                forUpdate.add(preview);
+                current
+                    .setLocation(preview.getLocation())
+                    .setReleaseVersion(preview.getReleaseVersion())
+                    .setReleaseNumber(preview.getReleaseNumber())
+                    .setStatus(preview.getStatus())
+                    .setEnvironment(preview.getEnvironment());
+
+                forUpdate.add(current);
             } else {
                 forInsert.add(preview);
             }
