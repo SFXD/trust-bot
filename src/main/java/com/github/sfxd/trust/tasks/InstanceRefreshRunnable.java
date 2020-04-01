@@ -44,23 +44,16 @@ import org.slf4j.LoggerFactory;
 public class InstanceRefreshRunnable implements Task {
     private static final Logger LOGGER = LoggerFactory.getLogger(InstanceRefreshRunnable.class);
 
-    @Inject
-    @RestClient
     private SalesforceTrustApiService trustApi;
     private final InstanceService instanceService;
 
+    @Inject
+    @RestClient
     public InstanceRefreshRunnable(SalesforceTrustApiService trustApi, InstanceService instanceService) {
         Objects.requireNonNull(trustApi);
         Objects.requireNonNull(instanceService);
 
         this.trustApi = trustApi;
-        this.instanceService = instanceService;
-    }
-
-    @Inject
-    InstanceRefreshRunnable(InstanceService instanceService) {
-        Objects.requireNonNull(instanceService);
-
         this.instanceService = instanceService;
     }
 
