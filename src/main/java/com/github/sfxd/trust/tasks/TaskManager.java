@@ -24,13 +24,14 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Any;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import com.github.sfxd.trust.runtime.RuntimeManager.StartupHook;
-
+import org.jboss.weld.environment.se.events.ContainerBeforeShutdown;
+import org.jboss.weld.environment.se.events.ContainerInitialized;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +51,7 @@ import org.slf4j.LoggerFactory;
  * silently.
  */
 @ApplicationScoped
-public class TaskManager implements StartupHook {
+public class TaskManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(TaskManager.class);
 
     private final List<Task> tasks = new ArrayList<>();
@@ -72,8 +73,7 @@ public class TaskManager implements StartupHook {
     }
 
     @SuppressWarnings("FutureReturnValueIgnored")
-    @Override
-    public void onStart() {
+    public void onStart(@Observes ContainerInitialized containerInitialized) {
         LOGGER.info("Scheduling {} tasks", this.tasks.size());
 
         for (Task task : this.tasks) {
@@ -90,6 +90,11 @@ public class TaskManager implements StartupHook {
                 task.timeUnit()
             );
         }
+    }
+
+    public void onStop(@Observes ContainerBeforeShutdown shutdown) {
+        LOGGER.info("Shutting down task scheduler");
+        this.scheduler.shutdown();
     }
 
     public interface Task extends Runnable {

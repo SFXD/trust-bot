@@ -4,7 +4,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 
 import com.github.sfxd.trust.listeners.MessageListener;
-import com.github.sfxd.trust.runtime.RuntimeManager.StartupHook;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
@@ -24,17 +23,5 @@ class JDAProducer {
                 .setActivity(Activity.playing("In Vip we trust."))
                 .addEventListeners(listener)
                 .build();
-    }
-
-    @Produces
-    @ApplicationScoped
-    StartupHook produceJDAstartupHook(JDA jda) {
-        return () -> {
-            try {
-                jda.awaitReady();
-            } catch (InterruptedException ex) {
-                throw new RuntimeException(ex);
-            }
-        };
     }
 }

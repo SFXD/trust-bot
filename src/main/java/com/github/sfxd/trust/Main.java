@@ -5,8 +5,6 @@ import java.util.concurrent.CountDownLatch;
 import javax.enterprise.inject.se.SeContainer;
 import javax.enterprise.inject.se.SeContainerInitializer;
 
-import com.github.sfxd.trust.runtime.RuntimeManager;
-
 import io.smallrye.config.inject.ConfigExtension;
 
 public class Main {
@@ -17,9 +15,8 @@ public class Main {
             .addPackages(true, Main.class);
 
         try (SeContainer container = initializer.initialize()) {
-            container.select(RuntimeManager.class).get().onStart();
-
             var latch = new CountDownLatch(1);
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> latch.countDown()));
             latch.await();
         }
     }

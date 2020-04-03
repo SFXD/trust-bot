@@ -9,5 +9,5 @@ indent_style = space
 [*.java]
 indent_size = 4
 
-[*.xml]
+[*.{gradle,xml}]
 indent_size = 2
