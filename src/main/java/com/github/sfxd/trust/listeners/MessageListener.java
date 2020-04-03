@@ -25,7 +25,9 @@ import javax.inject.Singleton;
 import com.github.sfxd.trust.model.Instance;
 import com.github.sfxd.trust.model.InstanceSubscriber;
 import com.github.sfxd.trust.model.Subscriber;
-import com.github.sfxd.trust.model.services.InstanceService;
+import com.github.sfxd.trust.model.finders.InstanceFinder;
+import com.github.sfxd.trust.model.finders.InstanceSubscriberFinder;
+import com.github.sfxd.trust.model.finders.SubscriberFinder;
 import com.github.sfxd.trust.model.services.InstanceSubscriberService;
 import com.github.sfxd.trust.model.services.SubscriberService;
 import com.github.sfxd.trust.model.services.AbstractEntityService.DmlException;
@@ -52,22 +54,30 @@ public class MessageListener extends ListenerAdapter {
     static final String ERROR_MSG = "Oops! An unexpected error occured.";
 
     private final SubscriberService subscriberService;
-    private final InstanceService instanceService;
     private final InstanceSubscriberService instanceSubscriberService;
+    private final InstanceFinder instanceFinder;
+    private final InstanceSubscriberFinder instanceSubscriberFinder;
+    private final SubscriberFinder subscriberFinder;
 
     @Inject
     public MessageListener(
         SubscriberService subscriberService,
-        InstanceService instanceService,
-        InstanceSubscriberService instanceSubscriberService
+        InstanceSubscriberService instanceSubscriberService,
+        InstanceFinder instanceFinder,
+        InstanceSubscriberFinder instanceSubscriberFinder,
+        SubscriberFinder subscriberFinder
     ) {
         Objects.requireNonNull(subscriberService);
-        Objects.requireNonNull(instanceService);
         Objects.requireNonNull(instanceSubscriberService);
+        Objects.requireNonNull(instanceFinder);
+        Objects.requireNonNull(instanceSubscriberFinder);
+        Objects.requireNonNull(subscriberFinder);
 
         this.subscriberService = subscriberService;
-        this.instanceService = instanceService;
         this.instanceSubscriberService = instanceSubscriberService;
+        this.instanceFinder = instanceFinder;
+        this.instanceSubscriberFinder = instanceSubscriberFinder;
+        this.subscriberFinder = subscriberFinder;
     }
 
     /**
@@ -125,7 +135,7 @@ public class MessageListener extends ListenerAdapter {
      * @param key the instance key from the command.
      */
     private void handleSubscribe(MessageReceivedEvent event, String key) throws DmlException {
-        Optional<Instance> instance = this.instanceService.findByKey(key).findOneOrEmpty();
+        Optional<Instance> instance = this.instanceFinder.findByKey(key).findOneOrEmpty();
 
         if (!instance.isPresent()) {
             event.getChannel().sendMessage(String.format("%s is not a valid instance key.", key)).queue();
@@ -133,7 +143,7 @@ public class MessageListener extends ListenerAdapter {
         }
 
         String username = event.getAuthor().getId();
-        Subscriber subscriber = this.subscriberService.findByUsername(username)
+        Subscriber subscriber = this.subscriberFinder.findByUsername(username)
             .findOneOrEmpty()
             .orElseGet(() -> new Subscriber(username));
 
@@ -142,7 +152,7 @@ public class MessageListener extends ListenerAdapter {
         }
 
         Optional<InstanceSubscriber> subscription
-            = this.instanceSubscriberService.findByInstanceIdAndSubscriberId(
+            = this.instanceSubscriberFinder.findByInstanceIdAndSubscriberId(
                 instance.get().getId(),
                 subscriber.getId()
             )
@@ -164,7 +174,7 @@ public class MessageListener extends ListenerAdapter {
      */
     private void handleUnsubscribe(MessageReceivedEvent event, String key) throws DmlException {
         Optional<InstanceSubscriber> subscription
-            = this.instanceSubscriberService.findByKeyAndUsername(
+            = this.instanceSubscriberFinder.findByKeyAndUsername(
                 key,
                 event.getAuthor().getId()
             )

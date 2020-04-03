@@ -29,7 +29,8 @@ import javax.inject.Singleton;
 
 import com.github.sfxd.trust.model.Instance;
 import com.github.sfxd.trust.model.InstanceSubscriber;
-import com.github.sfxd.trust.model.query.QInstance;
+import com.github.sfxd.trust.model.finders.InstanceFinder;
+import com.github.sfxd.trust.model.finders.InstanceSubscriberFinder;
 
 import io.ebean.Database;
 import io.ebean.annotation.Transactional;
@@ -43,17 +44,25 @@ import net.dv8tion.jda.api.JDA;
 public class InstanceService extends AbstractEntityService<Instance> {
 
     private final JDA jda;
-    private final InstanceSubscriberService instanceSubcriberService;
+    private final InstanceSubscriberFinder instanceSubcriberFinder;
+    private final InstanceFinder instanceFinder;
 
     @Inject
-    public InstanceService(Database db, JDA jda, InstanceSubscriberService instanceSubscriberService) {
+    public InstanceService(
+        Database db,
+        JDA jda,
+        InstanceSubscriberFinder instanceSubscriberFinder,
+        InstanceFinder instanceFinder
+    ) {
         super(db, Instance.class);
 
         Objects.requireNonNull(jda);
-        Objects.requireNonNull(instanceSubscriberService);
+        Objects.requireNonNull(instanceSubscriberFinder);
+        Objects.requireNonNull(instanceFinder);
 
         this.jda = jda;
-        this.instanceSubcriberService = instanceSubscriberService;
+        this.instanceSubcriberFinder = instanceSubscriberFinder;
+        this.instanceFinder = instanceFinder;
     }
 
     /** {@inheritDoc} */
@@ -62,7 +71,7 @@ public class InstanceService extends AbstractEntityService<Instance> {
         Map<Long, Instance> instancesById = entities.stream()
             .collect(Collectors.toMap(Instance::getId, Function.identity()));
 
-        Set<Long> notOkIds = this.findByIdIn(instancesById.keySet())
+        Set<Long> notOkIds = this.instanceFinder.findByIdIn(instancesById.keySet())
             .findSteam()
             .filter(old -> {
                 Instance current = instancesById.get(old.getId());
@@ -71,7 +80,7 @@ public class InstanceService extends AbstractEntityService<Instance> {
             .map(Instance::getId)
             .collect(Collectors.toSet());
 
-        Map<String, List<InstanceSubscriber>> subscriptionsBySubscriber = this.instanceSubcriberService
+        Map<String, List<InstanceSubscriber>> subscriptionsBySubscriber = this.instanceSubcriberFinder
             .findByInstanceIdIn(notOkIds)
             .findSteam()
             .collect(Collectors.groupingBy(is -> is.getSubscriber().getUsername()));
@@ -99,44 +108,5 @@ public class InstanceService extends AbstractEntityService<Instance> {
     @Override
     public Instance update(Instance entity) throws DmlException {
         return this.update(List.of(entity)).get(0);
-    }
-
-    /**
-     * Finds an instance by its unique key (i.e. NA99, CS104)
-     *
-     * @param key the instance's unique key you want to find
-     * @return the matching instances
-     */
-    public QInstance findByKey(String key) {
-        return new QInstance()
-            .where()
-            .key
-            .eq(key);
-    }
-
-    /**
-     * Finds all Instances whose key field is in the given set of keys.
-     *
-     * @param keys the keys you want to filter by
-     * @return the matching instances
-     */
-    public QInstance findByKeyIn(Set<String> keys) {
-        return new QInstance()
-            .where()
-            .key
-            .in(keys);
-    }
-
-    /**
-     * Finds all Instances whose id field is in the given set of ids
-     *
-     * @param ids the ids you want to filter by
-     * @return the matching instances
-     */
-    public QInstance findByIdIn(Set<Long> ids) {
-        return new QInstance()
-            .where()
-            .id
-            .in(ids);
     }
 }

@@ -24,7 +24,6 @@ import javax.persistence.OptimisticLockException;
 import com.github.sfxd.trust.model.AbstractEntity;
 
 import io.ebean.Database;
-import io.ebean.Query;
 
 /** Base class for all of the entity services */
 public abstract class AbstractEntityService<T extends AbstractEntity> {
@@ -32,7 +31,7 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
     protected final Database db;
     protected final Class<T> clazz;
 
-    public AbstractEntityService(Database db, Class<T> clazz) {
+    protected AbstractEntityService(Database db, Class<T> clazz) {
         Objects.requireNonNull(db);
         Objects.requireNonNull(clazz);
 
@@ -96,13 +95,6 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
         } catch (OptimisticLockException ex) {
             throw new DmlException(ex);
         }
-    }
-
-    public Query<T> findById(Long id) {
-        return this.db.createQuery(this.clazz)
-            .where()
-            .idEq(id)
-            .query();
     }
 
     /** A wrapper for exceptions from Hibernate */

@@ -16,13 +16,10 @@
 
 package com.github.sfxd.trust.model.services;
 
-import java.util.Set;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import com.github.sfxd.trust.model.InstanceSubscriber;
-import com.github.sfxd.trust.model.query.QInstanceSubscriber;
 
 import io.ebean.Database;
 import io.ebean.annotation.Transactional;
@@ -37,47 +34,5 @@ public class InstanceSubscriberService extends AbstractEntityService<InstanceSub
     @Inject
     public InstanceSubscriberService(Database db) {
         super(db, InstanceSubscriber.class);
-    }
-
-    /**
-     * Finds a subscription by it's instances key and the the subscriber's username
-     *
-     * @param key      the instance's key (e.g. NA99)
-     * @param username discord user id
-     * @return the query matching the subscriber
-     */
-    public QInstanceSubscriber findByKeyAndUsername(String key, String username) {
-        return new QInstanceSubscriber()
-            .where()
-            .subscriber.username.eq(username)
-            .and()
-            .instance.key.eq(key);
-    }
-
-    /**
-     * Finds a subscription by its insance id and subscriber's id
-     *
-     * @param instanceId   the id of the instance
-     * @param subscriberId the is of the subscriber
-     * @return the query of matching subscribers
-     */
-    public QInstanceSubscriber findByInstanceIdAndSubscriberId(Long instanceId, Long subscriberId) {
-        return new QInstanceSubscriber()
-            .where()
-            .subscriber.id.eq(subscriberId)
-            .and()
-            .instance.id.eq(instanceId);
-    }
-
-    /**
-     * Finds all subscribers who's instance is in the provided instance ids
-     *
-     * @param instanceIds the instances you want to filter by
-     * @return the matching subscribers
-     */
-    public QInstanceSubscriber findByInstanceIdIn(Set<Long> instanceIds) {
-        return new QInstanceSubscriber()
-            .where()
-            .instance.id.in(instanceIds);
     }
 }

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import com.github.sfxd.trust.model.Instance;
+import com.github.sfxd.trust.model.finders.InstanceFinder;
 import com.github.sfxd.trust.model.query.QInstance;
 import com.github.sfxd.trust.model.services.InstanceService;
 import com.github.sfxd.trust.model.services.AbstractEntityService.DmlException;
@@ -24,17 +25,18 @@ class InstanceRefreshTaskTests {
     void it_should_update_the_table_with_the_new_data() throws DmlException {
         var trustApi = mock(SalesforceTrustApiService.class);
         var instanceService = mock(InstanceService.class);
+        var instanceFinder = mock(InstanceFinder.class);
         var instances = new ArrayList<Instance>();
         var instance = new Instance();
         instance.setKey("NA99");
         var previews = List.of(instance);
         var qinstance = mock(QInstance.class);
 
-        when(instanceService.findByKeyIn(anySet())).thenReturn(qinstance);
+        when(instanceFinder.findByKeyIn(anySet())).thenReturn(qinstance);
         doReturn(instances.stream()).when(qinstance).findSteam();
         when(trustApi.getInstancesStatusPreview()).thenReturn(CompletableFuture.completedFuture(previews));
 
-        Runnable r = new InstanceRefreshTask(trustApi, instanceService);
+        Runnable r = new InstanceRefreshTask(trustApi, instanceService, instanceFinder);
         r.run();
 
         verify(instanceService).insert(previews);

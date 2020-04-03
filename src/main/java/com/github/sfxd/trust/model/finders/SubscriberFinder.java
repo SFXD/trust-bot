@@ -14,21 +14,27 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-package com.github.sfxd.trust.web;
+package com.github.sfxd.trust.model.finders;
 
-/**
- * Represents any error that can happen when the httpclient doesn't
- * return the response you expect.
- */
-public class InvalidResponseException extends RuntimeException {
-    private static final long serialVersionUID = -2422424845287908196L;
+import com.github.sfxd.trust.model.Subscriber;
+import com.github.sfxd.trust.model.query.QSubscriber;
 
-    private final int statusCode;
-    public InvalidResponseException(int statusCode) {
-        this.statusCode = statusCode;
+public class SubscriberFinder extends AbstractFinder<Subscriber> {
+
+    public SubscriberFinder() {
+        super(Subscriber.class);
     }
 
-    public int statusCode() {
-        return this.statusCode;
+    /**
+     * Finds a subscriber by their unique username.
+     *
+     * @param username the user you want to find
+     * @return An Optional containing the subscriber or empty if hibernate throws
+     *         NoResultException
+     */
+    public QSubscriber findByUsername(String username) {
+        return new QSubscriber()
+            .where()
+            .username.eq(username);
     }
 }

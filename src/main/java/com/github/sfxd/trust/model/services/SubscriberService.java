@@ -20,7 +20,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import com.github.sfxd.trust.model.Subscriber;
-import com.github.sfxd.trust.model.query.QSubscriber;
 
 import io.ebean.Database;
 import io.ebean.annotation.Transactional;
@@ -35,18 +34,5 @@ public class SubscriberService extends AbstractEntityService<Subscriber> {
     @Inject
     public SubscriberService(Database db) {
         super(db, Subscriber.class);
-    }
-
-    /**
-     * Finds a subscriber by their unique username.
-     *
-     * @param username the user you want to find
-     * @return An Optional containing the subscriber or empty if hibernate throws
-     *         NoResultException
-     */
-    public QSubscriber findByUsername(String username) {
-        return new QSubscriber()
-            .where()
-            .username.eq(username);
     }
 }

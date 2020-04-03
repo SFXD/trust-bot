@@ -27,6 +27,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import com.github.sfxd.trust.model.Instance;
+import com.github.sfxd.trust.model.finders.InstanceFinder;
 import com.github.sfxd.trust.model.services.InstanceService;
 import com.github.sfxd.trust.model.services.AbstractEntityService.DmlException;
 import com.github.sfxd.trust.web.SalesforceTrustApiService;
@@ -43,16 +44,23 @@ import org.slf4j.LoggerFactory;
 public class InstanceRefreshTask implements Task {
     private static final Logger LOGGER = LoggerFactory.getLogger(InstanceRefreshTask.class);
 
-    private SalesforceTrustApiService trustApi;
+    private final SalesforceTrustApiService trustApi;
     private final InstanceService instanceService;
+    private final InstanceFinder instanceFinder;
 
     @Inject
-    public InstanceRefreshTask(SalesforceTrustApiService trustApi, InstanceService instanceService) {
+    public InstanceRefreshTask(
+        SalesforceTrustApiService trustApi,
+        InstanceService instanceService,
+        InstanceFinder instanceFinder
+    ) {
         Objects.requireNonNull(trustApi);
         Objects.requireNonNull(instanceService);
+        Objects.requireNonNull(instanceFinder);
 
         this.trustApi = trustApi;
         this.instanceService = instanceService;
+        this.instanceFinder = instanceFinder;
     }
 
     @Override
@@ -64,7 +72,7 @@ public class InstanceRefreshTask implements Task {
             .stream()
             .collect(Collectors.toMap(Instance::getKey, Function.identity()));
 
-        Map<String, Instance> instances = this.instanceService.findByKeyIn(instancePreviews.keySet())
+        Map<String, Instance> instances = this.instanceFinder.findByKeyIn(instancePreviews.keySet())
             .findSteam()
             .collect(Collectors.toMap(Instance::getKey, Function.identity()));
 

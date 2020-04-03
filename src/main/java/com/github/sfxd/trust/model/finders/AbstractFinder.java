@@ -14,21 +14,32 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-package com.github.sfxd.trust.web;
+package com.github.sfxd.trust.model.finders;
 
-/**
- * Represents any error that can happen when the httpclient doesn't
- * return the response you expect.
- */
-public class InvalidResponseException extends RuntimeException {
-    private static final long serialVersionUID = -2422424845287908196L;
 
-    private final int statusCode;
-    public InvalidResponseException(int statusCode) {
-        this.statusCode = statusCode;
+import com.github.sfxd.trust.model.AbstractEntity;
+
+import io.ebean.DB;
+import io.ebean.Query;
+
+/** The base of all finders */
+abstract class AbstractFinder<T extends AbstractEntity> {
+
+    protected final Class<T> clazz;
+
+    protected AbstractFinder(Class<T> clazz) {
+        this.clazz = clazz;
     }
 
-    public int statusCode() {
-        return this.statusCode;
+    /**
+     * Finds an entity by its id
+     * @param id the id of the entity you want to find
+     * @return an optional containing the entity or empty
+     */
+    public Query<T> findById(Long id) {
+        return DB.getDefault().createQuery(this.clazz)
+            .where()
+            .idEq(id)
+            .query();
     }
 }
