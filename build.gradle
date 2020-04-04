@@ -73,10 +73,6 @@ task migrate(type: JavaExec) {
   main = 'com.github.sfxd.trust.model.migration.GenerateDbMigration'
 }
 
-task h2 {
-  'java -jar ./.h2/h2-1.4.200.jar'.execute()
-}
-
 group = 'com.github.sfxd.trust'
 version = '1.0.0-SNAPSHOT'
 sourceCompatibility = '11'
