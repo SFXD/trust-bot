@@ -22,6 +22,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
@@ -54,7 +55,7 @@ import org.slf4j.LoggerFactory;
 public class TaskManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(TaskManager.class);
 
-    private final List<Task> tasks = new ArrayList<>();
+    private final List<Task> tasks;
     private final ScheduledExecutorService scheduler;
     private final ExecutorService worker;
 
@@ -67,9 +68,7 @@ public class TaskManager {
         this.scheduler = scheduler;
         this.worker = worker;
 
-        for (Task t : tasks) {
-            this.tasks.add(t);
-        }
+        this.tasks = tasks.stream().collect(Collectors.toList());
     }
 
     @SuppressWarnings("FutureReturnValueIgnored")
@@ -95,6 +94,7 @@ public class TaskManager {
     public void onStop(@Observes ContainerBeforeShutdown shutdown) {
         LOGGER.info("Shutting down task scheduler");
         this.scheduler.shutdown();
+        this.worker.shutdown();
     }
 
     public interface Task extends Runnable {
