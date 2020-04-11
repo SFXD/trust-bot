@@ -38,3 +38,5 @@ release.properties
 # Gradle
 build/
 .gradle/
+
+*.db
