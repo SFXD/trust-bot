@@ -1,4 +1,4 @@
-FROM openjdk:11
+FROM openjdk:14
 RUN mkdir /opt/trust-bot \
     && chown 1001 /opt/trust-bot \
     && chmod "g+rwX" /opt/trust-bot \
