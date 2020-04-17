@@ -23,6 +23,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 
 /**
  * Represents a user that has subscribe to notifications
@@ -30,7 +31,8 @@ import javax.persistence.OneToMany;
 @Entity
 public class Subscriber extends AbstractEntity {
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
+    @NotNull
     private String username;
 
     @OneToMany(mappedBy = "subscriber", cascade = CascadeType.REMOVE)

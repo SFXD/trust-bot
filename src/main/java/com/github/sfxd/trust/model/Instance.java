@@ -25,6 +25,8 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -36,19 +38,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Instance extends AbstractEntity {
     public static final String STATUS_OK = "OK";
 
-    @Column(nullable = false, length = 255, unique = true)
+    @Column(unique = true)
+    @NotNull
+    @Size(max = 255)
     private String key;
 
-    @Column(length = 255)
+    @Size(max = 255)
     private String location;
 
-    @Column(length = 255)
+    @Size(max = 255)
     private String releaseVersion;
 
-    @Column(length = 255)
+    @Size(max = 255)
     private String releaseNumber;
 
-    @Column(length = 255)
+    @Size(max = 255)
     private String status;
 
     @Enumerated(EnumType.STRING)

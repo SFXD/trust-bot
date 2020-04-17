@@ -20,8 +20,8 @@ import java.util.Objects;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 /**
  * A junction between instances and their subscribers.
@@ -30,11 +30,11 @@ import javax.persistence.ManyToOne;
 public class InstanceSubscriber extends AbstractEntity {
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "instanceId", nullable = false)
+    @NotNull
     private Instance instance;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "subscriberId", nullable = false)
+    @NotNull
     private Subscriber subscriber;
 
     public InstanceSubscriber(Instance instance, Subscriber subscriber) {
