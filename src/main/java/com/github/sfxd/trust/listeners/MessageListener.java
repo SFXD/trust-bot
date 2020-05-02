@@ -54,6 +54,7 @@ public class MessageListener extends ListenerAdapter {
     static final String ERROR_MSG = "Oops! An unexpected error occured.";
     static final String SUBSCRIBE = "subscribe";
     static final String UNSUBSCRIBE = "unsubscribe";
+    static final String SOURCE = "source";
 
     private final SubscriberService subscriberService;
     private final InstanceSubscriberService instanceSubscriberService;
@@ -101,8 +102,6 @@ public class MessageListener extends ListenerAdapter {
         }
 
         String command = split[1].toLowerCase();
-        String key = null;
-
         switch (command) {
             case SUBSCRIBE, UNSUBSCRIBE -> {
                 if (split.length < 3) {
@@ -110,7 +109,7 @@ public class MessageListener extends ListenerAdapter {
                     return;
                 }
 
-                key = split[2].toUpperCase();
+                String key = split[2].toUpperCase();
                 try {
                     if (SUBSCRIBE.equals(command)) {
                         this.handleSubscribe(event, key);
@@ -122,7 +121,7 @@ public class MessageListener extends ListenerAdapter {
                     this.printError(event);
                 }
             }
-            case "source" -> this.handleSource(event);
+            case SOURCE -> this.handleSource(event);
             default -> this.printUsage(event);
         }
     }
