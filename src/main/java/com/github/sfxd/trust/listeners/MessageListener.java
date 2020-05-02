@@ -52,6 +52,8 @@ public class MessageListener extends ListenerAdapter {
                                 "  !trust source\n";
     static final String GITHUB = "https://github.com/SFXD/trust-bot";
     static final String ERROR_MSG = "Oops! An unexpected error occured.";
+    static final String SUBSCRIBE = "subscribe";
+    static final String UNSUBSCRIBE = "unsubscribe";
 
     private final SubscriberService subscriberService;
     private final InstanceSubscriberService instanceSubscriberService;
@@ -100,31 +102,28 @@ public class MessageListener extends ListenerAdapter {
 
         String command = split[1].toLowerCase();
         String key = null;
+
         switch (command) {
-        case "subscribe":
-            key = split[2].toUpperCase();
-            try {
-                this.handleSubscribe(event, key);
-            } catch (DmlException ex) {
-                LOGGER.error("Failed subscribe.", ex);
-                this.printError(event);
+            case SUBSCRIBE, UNSUBSCRIBE -> {
+                if (split.length < 3) {
+                    this.printUsage(event);
+                    return;
+                }
+
+                key = split[2].toUpperCase();
+                try {
+                    if (SUBSCRIBE.equals(command)) {
+                        this.handleSubscribe(event, key);
+                    } else {
+                        this.handleUnsubscribe(event, key);
+                    }
+                } catch (DmlException ex) {
+                    LOGGER.error(String.format("Failed %s", command), ex);
+                    this.printError(event);
+                }
             }
-            return;
-        case "unsubscribe":
-            key = split[2].toUpperCase();
-            try {
-                this.handleUnsubscribe(event, key);
-            } catch (DmlException ex) {
-                LOGGER.error("Failed unsubscribe.", ex);
-                this.printError(event);
-            }
-            return;
-        case "source":
-            this.handleSource(event);
-            return;
-        default:
-            this.printUsage(event);
-            return;
+            case "source" -> this.handleSource(event);
+            default -> this.printUsage(event);
         }
     }
 

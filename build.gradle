@@ -19,7 +19,6 @@ plugins {
   id 'eclipse'
   id 'io.ebean' version '12.2.2'
   id 'java'
-  id 'net.ltgt.errorprone' version '1.1.1'
 }
 
 repositories {
@@ -30,7 +29,6 @@ repositories {
 
 dependencies {
   annotationProcessor 'io.ebean:querybean-generator:12.2.2'
-  errorprone("com.google.errorprone:error_prone_core:2.3.4")
   implementation 'ch.qos.logback:logback-classic:1.2.3'
   implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.3'
   implementation 'com.h2database:h2:1.4.200'
@@ -66,7 +64,6 @@ test {
 
 tasks.withType(JavaCompile) {
   options.encoding = 'UTF-8'
-  options.errorprone.disableWarningsInGeneratedCode = true
 }
 
 task migrate(type: JavaExec) {
