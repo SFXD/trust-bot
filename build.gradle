@@ -67,7 +67,7 @@ tasks.withType(JavaCompile) {
 }
 
 tasks.withType(CreateStartScripts) {
-  defaultJvmOpts = ['-Xmx200m', '-XX:G1PeriodicGCInterval=10']
+  defaultJvmOpts = ['-Xmx200m']
 }
 
 task migrate(type: JavaExec) {
