@@ -32,7 +32,6 @@ import com.github.sfxd.trust.model.InstanceSubscriber;
 import com.github.sfxd.trust.model.finders.InstanceFinder;
 import com.github.sfxd.trust.model.finders.InstanceSubscriberFinder;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.ebean.Database;
 import io.ebean.annotation.Transactional;
 import net.dv8tion.jda.api.JDA;
