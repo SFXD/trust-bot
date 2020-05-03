@@ -32,6 +32,7 @@ import com.github.sfxd.trust.model.InstanceSubscriber;
 import com.github.sfxd.trust.model.finders.InstanceFinder;
 import com.github.sfxd.trust.model.finders.InstanceSubscriberFinder;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.ebean.Database;
 import io.ebean.annotation.Transactional;
 import net.dv8tion.jda.api.JDA;
@@ -75,7 +76,9 @@ public class InstanceService extends AbstractEntityService<Instance> {
             .findSteam()
             .filter(old -> {
                 Instance current = instancesById.get(old.getId());
-                return old.getStatus().equals(Instance.STATUS_OK) && !current.getStatus().equals(Instance.STATUS_OK);
+
+                return old.getStatus().equals(Instance.STATUS_OK)
+                    && !current.getStatus().equals(Instance.STATUS_OK);
             })
             .map(Instance::getId)
             .collect(Collectors.toSet());
@@ -90,7 +93,7 @@ public class InstanceService extends AbstractEntityService<Instance> {
             for (InstanceSubscriber is : entry.getValue()) {
                 Instance instance = is.getInstance();
                 message.append(String.format(
-                    "%s: %s\n",
+                    "%s: %s%n",
                     instance.getKey(),
                     instancesById.get(instance.getId()).getStatus()
                 ));
