@@ -66,6 +66,10 @@ tasks.withType(JavaCompile) {
   options.encoding = 'UTF-8'
 }
 
+tasks.withType(CreateStartScripts) {
+  defaultJvmOpts = ['-Xmx200m', '-XX:G1PeriodicGCInterval=10']
+}
+
 task migrate(type: JavaExec) {
   classpath sourceSets.main.runtimeClasspath
   main = 'com.github.sfxd.trust.model.migration.GenerateDbMigration'
