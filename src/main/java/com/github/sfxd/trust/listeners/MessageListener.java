@@ -16,21 +16,8 @@
 
 package com.github.sfxd.trust.listeners;
 
-import java.util.Objects;
-import java.util.Optional;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
-import com.github.sfxd.trust.model.Instance;
-import com.github.sfxd.trust.model.InstanceSubscriber;
-import com.github.sfxd.trust.model.Subscriber;
-import com.github.sfxd.trust.model.finders.InstanceFinder;
-import com.github.sfxd.trust.model.finders.InstanceSubscriberFinder;
-import com.github.sfxd.trust.model.finders.SubscriberFinder;
-import com.github.sfxd.trust.model.services.InstanceSubscriberService;
-import com.github.sfxd.trust.model.services.SubscriberService;
-import com.github.sfxd.trust.model.services.AbstractEntityService.DmlException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,42 +32,14 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 public class MessageListener extends ListenerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageListener.class);
 
-    static final String CHECK_MARK = "✅";
     static final String X = "❌";
-    static final String USAGE = "Usage: \n" +
-                                "  !trust <subscribe, unsubscribe> <instance_id>\n" +
-                                "  !trust source\n";
-    static final String GITHUB = "https://github.com/SFXD/trust-bot";
-    static final String ERROR_MSG = "Oops! An unexpected error occured.";
-    static final String SUBSCRIBE = "subscribe";
-    static final String UNSUBSCRIBE = "unsubscribe";
-    static final String SOURCE = "source";
+    static final String ERROR_MSG = "Oops! An unexpected error occurred.";
 
-    private final SubscriberService subscriberService;
-    private final InstanceSubscriberService instanceSubscriberService;
-    private final InstanceFinder instanceFinder;
-    private final InstanceSubscriberFinder instanceSubscriberFinder;
-    private final SubscriberFinder subscriberFinder;
+    private final BotCommandFactory botCommandFactory;
 
     @Inject
-    public MessageListener(
-        SubscriberService subscriberService,
-        InstanceSubscriberService instanceSubscriberService,
-        InstanceFinder instanceFinder,
-        InstanceSubscriberFinder instanceSubscriberFinder,
-        SubscriberFinder subscriberFinder
-    ) {
-        Objects.requireNonNull(subscriberService);
-        Objects.requireNonNull(instanceSubscriberService);
-        Objects.requireNonNull(instanceFinder);
-        Objects.requireNonNull(instanceSubscriberFinder);
-        Objects.requireNonNull(subscriberFinder);
-
-        this.subscriberService = subscriberService;
-        this.instanceSubscriberService = instanceSubscriberService;
-        this.instanceFinder = instanceFinder;
-        this.instanceSubscriberFinder = instanceSubscriberFinder;
-        this.subscriberFinder = subscriberFinder;
+    public MessageListener(BotCommandFactory botCommandFactory) {
+        this.botCommandFactory = botCommandFactory;
     }
 
     /**
@@ -91,112 +50,13 @@ public class MessageListener extends ListenerAdapter {
      */
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        String[] split = event.getMessage().getContentRaw().split(" ", -1);
-        if (!split[0].equalsIgnoreCase("!trust")) {
-            return;
+        BotCommand command = this.botCommandFactory.newInstance(event);
+        try {
+            command.run();
+        } catch (BotCommandException ex) {
+            LOGGER.error("Command failed: ", ex);
+            this.printError(event);
         }
-
-        if (split.length < 2) {
-            this.printUsage(event);
-            return;
-        }
-
-        String command = split[1].toLowerCase();
-        switch (command) {
-            case SUBSCRIBE, UNSUBSCRIBE -> {
-                if (split.length < 3) {
-                    this.printUsage(event);
-                    return;
-                }
-
-                String key = split[2].toUpperCase();
-                try {
-                    if (SUBSCRIBE.equals(command)) {
-                        this.handleSubscribe(event, key);
-                    } else {
-                        this.handleUnsubscribe(event, key);
-                    }
-                } catch (DmlException ex) {
-                    LOGGER.error(String.format("Failed %s", command), ex);
-                    this.printError(event);
-                }
-            }
-            case SOURCE -> this.handleSource(event);
-            default -> this.printUsage(event);
-        }
-    }
-
-    /**
-     * Handles the subscribe command. This will sign a user up for notifications
-     * for the given key.
-     * @param event The event from JDA
-     * @param key the instance key from the command.
-     */
-    private void handleSubscribe(MessageReceivedEvent event, String key) throws DmlException {
-        Optional<Instance> instance = this.instanceFinder.findByKey(key).findOneOrEmpty();
-
-        if (!instance.isPresent()) {
-            event.getChannel().sendMessage(String.format("%s is not a valid instance key.", key)).queue();
-            return;
-        }
-
-        String username = event.getAuthor().getId();
-        Subscriber subscriber = this.subscriberFinder.findByUsername(username)
-            .findOneOrEmpty()
-            .orElseGet(() -> new Subscriber(username));
-
-        if (subscriber.isNew()) {
-            this.subscriberService.insert(subscriber);
-        }
-
-        Optional<InstanceSubscriber> subscription
-            = this.instanceSubscriberFinder.findByInstanceIdAndSubscriberId(
-                instance.get().getId(),
-                subscriber.getId()
-            )
-            .findOneOrEmpty();
-
-        if (!subscription.isPresent()) {
-            this.instanceSubscriberService.insert(new InstanceSubscriber(instance.get(), subscriber));
-        }
-
-        event.getMessage().addReaction(CHECK_MARK).queue();
-    }
-
-    /**
-     * Handles the unsubscribe command. This will delete the subscription if it
-     * finds it.
-     *
-     * @param event The event from JDA.
-     * @param key   The instance key from the command.
-     */
-    private void handleUnsubscribe(MessageReceivedEvent event, String key) throws DmlException {
-        Optional<InstanceSubscriber> subscription
-            = this.instanceSubscriberFinder.findByKeyAndUsername(
-                key,
-                event.getAuthor().getId()
-            )
-            .findOneOrEmpty();
-
-        if (subscription.isPresent()) {
-            this.instanceSubscriberService.delete(subscription.get());
-        }
-
-        event.getMessage().addReaction(CHECK_MARK).queue();
-    }
-
-    /**
-     * Handles the source command. This should respond with a link to the source
-     * code of this project.
-     *
-     * @param event the event from jda
-     */
-    private void handleSource(MessageReceivedEvent event) {
-        event.getChannel().sendMessage(GITHUB).queue();
-    }
-
-    private void printUsage(MessageReceivedEvent event) {
-        event.getChannel().sendMessage(USAGE).queue();
     }
 
     private void printError(MessageReceivedEvent event) {
