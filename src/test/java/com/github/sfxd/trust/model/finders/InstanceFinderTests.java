@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mock;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.github.sfxd.trust.model.Instance;
 import com.github.sfxd.trust.model.services.InstanceService;
@@ -43,7 +44,7 @@ class InstanceFinderTests {
         b.setKey("CS01");
 
         this.instanceService.insert(List.of(a, b));
-        List<Instance> found = this.instanceFinder.findByKeyIn(Set.of(a.getKey())).findList();
+        List<Instance> found = this.instanceFinder.findByKeyIn(Set.of(a.getKey())).collect(Collectors.toList());
 
         assertTrue(found.size() == 1);
         assertTrue(found.get(0).getKey().equals(a.getKey()));
@@ -57,7 +58,7 @@ class InstanceFinderTests {
         b.setKey("CS02");
 
         this.instanceService.insert(List.of(a, b));
-        List<Instance> found = this.instanceFinder.findByIdIn(Set.of(a.getId())).findList();
+        List<Instance> found = this.instanceFinder.findByIdIn(Set.of(a.getId())).collect(Collectors.toList());
 
         assertTrue(found.size() == 1);
         assertTrue(found.get(0).getId().equals(a.getId()));
@@ -72,7 +73,7 @@ class InstanceFinderTests {
 
         this.instanceService.insert(List.of(a, b));
 
-        Instance found = this.instanceFinder.findByKey(a.getKey()).findOne();
+        Instance found = this.instanceFinder.findByKey(a.getKey()).get();
         assertTrue(found.getKey().equals(a.getKey()));
     }
 
@@ -85,7 +86,7 @@ class InstanceFinderTests {
 
         this.instanceService.insert(List.of(a, b));
 
-        Optional<Instance> found = this.instanceFinder.findByKey("ZZ00").findOneOrEmpty();
+        Optional<Instance> found = this.instanceFinder.findByKey("ZZ00");
         assertTrue(found.isEmpty());
     }
 }

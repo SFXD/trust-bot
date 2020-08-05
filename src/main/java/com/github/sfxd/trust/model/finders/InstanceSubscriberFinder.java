@@ -16,7 +16,9 @@
 
 package com.github.sfxd.trust.model.finders;
 
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import javax.inject.Singleton;
 
@@ -38,12 +40,13 @@ public class InstanceSubscriberFinder extends AbstractFinder<InstanceSubscriber>
      * @param username discord user id
      * @return the query matching the subscriber
      */
-    public QInstanceSubscriber findByKeyAndUsername(String key, String username) {
+    public Optional<InstanceSubscriber> findByKeyAndUsername(String key, String username) {
         return new QInstanceSubscriber()
             .where()
             .subscriber.username.eq(username)
             .and()
-            .instance.key.eq(key);
+            .instance.key.eq(key)
+            .findOneOrEmpty();
     }
 
     /**
@@ -53,12 +56,13 @@ public class InstanceSubscriberFinder extends AbstractFinder<InstanceSubscriber>
      * @param subscriberId the is of the subscriber
      * @return the query of matching subscribers
      */
-    public QInstanceSubscriber findByInstanceIdAndSubscriberId(Long instanceId, Long subscriberId) {
+    public Optional<InstanceSubscriber> findByInstanceIdAndSubscriberId(Long instanceId, Long subscriberId) {
         return new QInstanceSubscriber()
             .where()
             .subscriber.id.eq(subscriberId)
             .and()
-            .instance.id.eq(instanceId);
+            .instance.id.eq(instanceId)
+            .findOneOrEmpty();
     }
 
     /**
@@ -67,9 +71,10 @@ public class InstanceSubscriberFinder extends AbstractFinder<InstanceSubscriber>
      * @param instanceIds the instances you want to filter by
      * @return the matching subscribers
      */
-    public QInstanceSubscriber findByInstanceIdIn(Set<Long> instanceIds) {
+    public Stream<InstanceSubscriber> findByInstanceIdIn(Set<Long> instanceIds) {
         return new QInstanceSubscriber()
             .where()
-            .instance.id.in(instanceIds);
+            .instance.id.in(instanceIds)
+            .findSteam();
     }
 }

@@ -32,8 +32,7 @@ class InstanceRefreshTaskTests {
         var previews = List.of(instance);
         var qinstance = mock(QInstance.class);
 
-        when(instanceFinder.findByKeyIn(anySet())).thenReturn(qinstance);
-        doReturn(instances.stream()).when(qinstance).findSteam();
+        when(instanceFinder.findByKeyIn(anySet())).thenReturn(instances.stream());
         when(trustApi.getInstancesStatusPreview()).thenReturn(CompletableFuture.completedFuture(previews));
 
         Runnable r = new InstanceRefreshTask(trustApi, instanceService, instanceFinder);

@@ -21,7 +21,7 @@ class SubscriberFinderTests {
         var subscriber = new Subscriber("vips#7L");
         subscriberService.insert(subscriber);
 
-        Optional<Subscriber> found = finder.findByUsername(subscriber.getUsername()).findOneOrEmpty();
+        Optional<Subscriber> found = finder.findByUsername(subscriber.getUsername());
 
         assertTrue(found.isPresent());
         assertTrue(found.get().equals(subscriber));

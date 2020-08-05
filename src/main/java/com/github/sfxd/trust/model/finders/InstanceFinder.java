@@ -16,7 +16,9 @@
 
 package com.github.sfxd.trust.model.finders;
 
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import javax.inject.Singleton;
 
@@ -37,11 +39,12 @@ public class InstanceFinder extends AbstractFinder<Instance> {
      * @param key the instance's unique key you want to find
      * @return the matching instances
      */
-    public QInstance findByKey(String key) {
+    public Optional<Instance> findByKey(String key) {
         return new QInstance()
             .where()
             .key
-            .eq(key);
+            .eq(key)
+            .findOneOrEmpty();
     }
 
     /**
@@ -50,11 +53,12 @@ public class InstanceFinder extends AbstractFinder<Instance> {
      * @param keys the keys you want to filter by
      * @return the matching instances
      */
-    public QInstance findByKeyIn(Set<String> keys) {
+    public Stream<Instance> findByKeyIn(Set<String> keys) {
         return new QInstance()
             .where()
             .key
-            .in(keys);
+            .in(keys)
+            .findSteam();
     }
 
     /**
@@ -63,10 +67,11 @@ public class InstanceFinder extends AbstractFinder<Instance> {
      * @param ids the ids you want to filter by
      * @return the matching instances
      */
-    public QInstance findByIdIn(Set<Long> ids) {
+    public Stream<Instance> findByIdIn(Set<Long> ids) {
         return new QInstance()
             .where()
             .id
-            .in(ids);
+            .in(ids)
+            .findSteam();
     }
 }

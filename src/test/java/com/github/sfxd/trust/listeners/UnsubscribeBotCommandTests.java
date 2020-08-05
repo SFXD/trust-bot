@@ -9,7 +9,6 @@ import java.util.Optional;
 
 import com.github.sfxd.trust.model.InstanceSubscriber;
 import com.github.sfxd.trust.model.finders.InstanceSubscriberFinder;
-import com.github.sfxd.trust.model.query.QInstanceSubscriber;
 import com.github.sfxd.trust.model.services.InstanceSubscriberService;
 
 import org.junit.jupiter.api.Test;
@@ -30,7 +29,6 @@ class UnsubscribeBotCommandTests {
         var username = "george";
         var user = mock(User.class);
         var subscription = new InstanceSubscriber(null, null);
-        var query = mock(QInstanceSubscriber.class);
         var message = mock(Message.class);
 
         @SuppressWarnings("unchecked")
@@ -40,8 +38,7 @@ class UnsubscribeBotCommandTests {
         when(event.getMessage()).thenReturn(message);
         when(message.addReaction(anyString())).thenReturn(action);
         when(user.getId()).thenReturn(username);
-        when(isFinder.findByKeyAndUsername(key, username)).thenReturn(query);
-        when(query.findOneOrEmpty()).thenReturn(Optional.of(subscription));
+        when(isFinder.findByKeyAndUsername(key, username)).thenReturn(Optional.of(subscription));
 
         var command = new UnsubscribeBotCommand(event, key, isFinder, isService);
         command.run();

@@ -73,7 +73,6 @@ public class InstanceRefreshTask implements Task {
             .collect(Collectors.toMap(Instance::getKey, Function.identity()));
 
         Map<String, Instance> instances = this.instanceFinder.findByKeyIn(instancePreviews.keySet())
-            .findSteam()
             .collect(Collectors.toMap(Instance::getKey, Function.identity()));
 
         var forUpdate = new ArrayList<Instance>();

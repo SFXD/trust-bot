@@ -44,7 +44,7 @@ class SubscribeBotCommand extends AbstractBotCommand {
 
     @Override
     public void run() {
-        Optional<Instance> instance = this.instanceFinder.findByKey(key).findOneOrEmpty();
+        Optional<Instance> instance = this.instanceFinder.findByKey(key);
 
         if (instance.isEmpty()) {
             this.event.getChannel()
@@ -55,7 +55,6 @@ class SubscribeBotCommand extends AbstractBotCommand {
 
         String username = event.getAuthor().getId();
         Subscriber subscriber = this.subscriberFinder.findByUsername(username)
-            .findOneOrEmpty()
             .orElseGet(() -> new Subscriber(username));
 
         if (subscriber.isNew()) {
@@ -68,8 +67,7 @@ class SubscribeBotCommand extends AbstractBotCommand {
         }
 
         Optional<InstanceSubscriber> subscription = this.isFinder
-            .findByInstanceIdAndSubscriberId(instance.get().getId(), subscriber.getId())
-            .findOneOrEmpty();
+            .findByInstanceIdAndSubscriberId(instance.get().getId(), subscriber.getId());
 
         if (subscription.isEmpty()) {
             try {

@@ -16,8 +16,6 @@ import com.github.sfxd.trust.model.finders.InstanceFinder;
 import com.github.sfxd.trust.model.finders.InstanceSubscriberFinder;
 import com.github.sfxd.trust.model.finders.SubscriberFinder;
 import com.github.sfxd.trust.model.query.QInstance;
-import com.github.sfxd.trust.model.query.QInstanceSubscriber;
-import com.github.sfxd.trust.model.query.QSubscriber;
 import com.github.sfxd.trust.model.services.InstanceSubscriberService;
 import com.github.sfxd.trust.model.services.SubscriberService;
 import com.github.sfxd.trust.model.services.AbstractEntityService.DmlException;
@@ -45,9 +43,6 @@ class SubscribeBotCommandTests {
         var channel = mock(MessageChannel.class);
         var action = mock(MessageAction.class);
         var user = mock(User.class);
-        var qinstance = mock(QInstance.class);
-        var qsubscriber = mock(QSubscriber.class);
-        var qintsub = mock(QInstanceSubscriber.class);
 
         @SuppressWarnings("unchecked")
         var restAction = (RestAction<Void>) mock(RestAction.class);
@@ -64,14 +59,10 @@ class SubscribeBotCommandTests {
 
         var instance = new Instance();
         instance.setId(1L);
-        when(instanceFinder.findByKey(anyString())).thenReturn(qinstance);
-        when(qinstance.findOneOrEmpty()).thenReturn(Optional.of(instance));
-        when(subscriberFinder.findByUsername(anyString())).thenReturn(qsubscriber);
-        when(qsubscriber.findOneOrEmpty()).thenReturn(Optional.empty());
+        when(instanceFinder.findByKey(anyString())).thenReturn(Optional.of(instance));
+        when(subscriberFinder.findByUsername(anyString())).thenReturn(Optional.empty());
         when(isFinder.findByInstanceIdAndSubscriberId(anyLong(), any()))
-            .thenReturn(qintsub);
-        when(qintsub.findOneOrEmpty()).thenReturn(Optional.empty());
-
+            .thenReturn(Optional.empty());
 
         var command = new SubscribeBotCommand(
             event,
@@ -99,15 +90,12 @@ class SubscribeBotCommandTests {
         var message = mock(Message.class);
         var channel = mock(MessageChannel.class);
         var action = mock(MessageAction.class);
-        var qinstance = mock(QInstance.class);
 
         when(event.getMessage()).thenReturn(message);
         when(message.getContentRaw()).thenReturn("!trust subscribe na99");
         when(event.getChannel()).thenReturn(channel);
         when(channel.sendMessage(anyString())).thenReturn(action);
-        when(instanceFinder.findByKey(anyString())).thenReturn(qinstance);
-        when(qinstance.findOneOrEmpty()).thenReturn(Optional.empty());
-
+        when(instanceFinder.findByKey(anyString())).thenReturn(Optional.empty());
 
         var command = new SubscribeBotCommand(
             event,
@@ -138,8 +126,6 @@ class SubscribeBotCommandTests {
         var action = mock(MessageAction.class);
         var user = mock(User.class);
         var qinstance =  mock(QInstance.class);
-        var qsubscriber = mock(QSubscriber.class);
-        var qintsub = mock(QInstanceSubscriber.class);
         var subscriber = new Subscriber("");
         subscriber.setId(1L);
 
@@ -158,13 +144,11 @@ class SubscribeBotCommandTests {
 
         var instance = new Instance();
         instance.setId(1L);
-        when(instanceFinder.findByKey(anyString())).thenReturn(qinstance);
+        when(instanceFinder.findByKey(anyString())).thenReturn(Optional.of(instance));
         when(qinstance.findOneOrEmpty()).thenReturn(Optional.of(instance));
-        when(subscriberFinder.findByUsername(anyString())).thenReturn(qsubscriber);
-        when(qsubscriber.findOneOrEmpty()).thenReturn(Optional.of(subscriber));
+        when(subscriberFinder.findByUsername(anyString())).thenReturn(Optional.of(subscriber));
         when(isFinder.findByInstanceIdAndSubscriberId(anyLong(), anyLong()))
-            .thenReturn(qintsub);
-        when(qintsub.findOneOrEmpty()).thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
 
         var command = new SubscribeBotCommand(
             event,

@@ -72,7 +72,6 @@ public class InstanceService extends AbstractEntityService<Instance> {
             .collect(Collectors.toMap(Instance::getId, Function.identity()));
 
         Set<Long> notOkIds = this.instanceFinder.findByIdIn(instancesById.keySet())
-            .findSteam()
             .filter(old -> {
                 Instance current = instancesById.get(old.getId());
 
@@ -84,7 +83,6 @@ public class InstanceService extends AbstractEntityService<Instance> {
 
         Map<String, List<InstanceSubscriber>> subscriptionsBySubscriber = this.instanceSubcriberFinder
             .findByInstanceIdIn(notOkIds)
-            .findSteam()
             .collect(Collectors.groupingBy(is -> is.getSubscriber().getUsername()));
 
         for (Entry<String, List<InstanceSubscriber>> entry : subscriptionsBySubscriber.entrySet()) {

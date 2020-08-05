@@ -43,8 +43,6 @@ class InstanceServiceTests {
         var user = mock(User.class);
         var channel = mock(PrivateChannel.class);
         var messageAction = mock(MessageAction.class);
-        var query = mock(QInstanceSubscriber.class);
-        var qinstance = mock(QInstance.class);
 
         var instance = new Instance();
         instance.setKey("NA99");
@@ -60,11 +58,9 @@ class InstanceServiceTests {
         var subscriber = new Subscriber("vips#7L");
         var instanceSubscribers = List.of(new InstanceSubscriber(oldInstance, subscriber));
 
-        when(instanceFinder.findByIdIn(anySet())).thenReturn(qinstance);
-        when(qinstance.findSteam()).thenReturn(instances.stream());
+        when(instanceFinder.findByIdIn(anySet())).thenReturn(instances.stream());
         when(instanceSubscriberFinder.findByInstanceIdIn(anySet()))
-            .thenReturn(query);
-        when(query.findSteam()).thenReturn(instanceSubscribers.stream());
+            .thenReturn(instanceSubscribers.stream());
         when(jda.retrieveUserById(anyString())).thenReturn(action);
         doReturn(channelAction).when(user).openPrivateChannel();
         doAnswer(invocation -> {

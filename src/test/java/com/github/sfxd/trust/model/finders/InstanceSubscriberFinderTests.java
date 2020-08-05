@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.github.sfxd.trust.model.Instance;
 import com.github.sfxd.trust.model.InstanceSubscriber;
@@ -44,7 +45,7 @@ class InstanceSubscriberFinderTests {
 
         this.isService.insert(new InstanceSubscriber(instance, subscriber));
 
-        var found = this.finder.findByKeyAndUsername(instance.getKey(), subscriber.getUsername()).findOne();
+        var found = this.finder.findByKeyAndUsername(instance.getKey(), subscriber.getUsername()).get();
         assertTrue(found != null);
         assertTrue(found.getInstance().getKey().equals(instance.getKey()));
         assertTrue(found.getSubscriber().getUsername().equals(subscriber.getUsername()));
@@ -63,7 +64,7 @@ class InstanceSubscriberFinderTests {
 
         this.isService.insert(new InstanceSubscriber(instance, subscriber));
 
-        var found = this.finder.findByInstanceIdAndSubscriberId(instance.getId(), subscriber.getId()).findOne();
+        var found = this.finder.findByInstanceIdAndSubscriberId(instance.getId(), subscriber.getId()).get();
         assertTrue(found != null);
         assertEquals(instance.getId(), found.getInstance().getId());
         assertEquals(subscriber.getId(), found.getSubscriber().getId());
@@ -82,7 +83,7 @@ class InstanceSubscriberFinderTests {
 
         this.isService.insert(new InstanceSubscriber(instance, subscriber));
 
-        var found = this.finder.findByInstanceIdIn(Set.of(instance.getId())).findList();
+        var found = this.finder.findByInstanceIdIn(Set.of(instance.getId())).collect(Collectors.toList());
         assertTrue(found.size() == 1);
         assertEquals(instance.getId(), found.get(0).getInstance().getId());
 

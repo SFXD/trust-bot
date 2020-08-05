@@ -16,6 +16,8 @@
 
 package com.github.sfxd.trust.model.finders;
 
+import java.util.Optional;
+
 import com.github.sfxd.trust.model.Subscriber;
 import com.github.sfxd.trust.model.query.QSubscriber;
 
@@ -32,9 +34,10 @@ public class SubscriberFinder extends AbstractFinder<Subscriber> {
      * @return An Optional containing the subscriber or empty if hibernate throws
      *         NoResultException
      */
-    public QSubscriber findByUsername(String username) {
+    public Optional<Subscriber> findByUsername(String username) {
         return new QSubscriber()
             .where()
-            .username.eq(username);
+            .username.eq(username)
+            .findOneOrEmpty();
     }
 }

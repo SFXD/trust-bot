@@ -31,7 +31,7 @@ class UnsubscribeBotCommand extends AbstractBotCommand {
     @Override
     public void run() {
         Optional<InstanceSubscriber> subscription = this.isFinder
-            .findByKeyAndUsername(this.key, this.event.getAuthor().getId()).findOneOrEmpty();
+            .findByKeyAndUsername(this.key, this.event.getAuthor().getId());
 
         if (subscription.isPresent()) {
             try {
