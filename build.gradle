@@ -77,4 +77,4 @@ task migrate(type: JavaExec) {
 
 group = 'com.github.sfxd.trust'
 version = '1.0.0-SNAPSHOT'
-sourceCompatibility = '14'
+sourceCompatibility = '15'
