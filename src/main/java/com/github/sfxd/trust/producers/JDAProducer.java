@@ -20,8 +20,8 @@ class JDAProducer {
         MessageListener listener
     ) throws Exception {
         return new JDABuilder(token)
-                .setActivity(Activity.playing("In Vip we trust."))
-                .addEventListeners(listener)
-                .build();
+            .setActivity(Activity.playing("In Vip we trust."))
+            .addEventListeners(listener)
+            .build();
     }
 }

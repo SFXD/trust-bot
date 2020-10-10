@@ -10,7 +10,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class Json {
 
     private static final ObjectMapper MAPPER = new ObjectMapper()
-        .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+        .disable(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES);
 
     private Json() {
 
