@@ -17,8 +17,6 @@ import com.github.sfxd.trust.model.InstanceSubscriber;
 import com.github.sfxd.trust.model.Subscriber;
 import com.github.sfxd.trust.model.finders.InstanceFinder;
 import com.github.sfxd.trust.model.finders.InstanceSubscriberFinder;
-import com.github.sfxd.trust.model.query.QInstance;
-import com.github.sfxd.trust.model.query.QInstanceSubscriber;
 
 import org.junit.jupiter.api.Test;
 
