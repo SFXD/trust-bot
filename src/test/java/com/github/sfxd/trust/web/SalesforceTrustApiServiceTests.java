@@ -25,13 +25,12 @@ class SalesforceTrustApiServiceTests {
     @SuppressWarnings("unchecked")
     void it_should_throw_when_get_previews_does_not_return_200() {
         var httpClient = mock(HttpClient.class);
-        var objectMapper = mock(ObjectMapper.class);
         var response = mock(HttpResponse.class);
 
         when(httpClient.sendAsync(any(), any())).thenReturn(CompletableFuture.completedFuture(response));
         when(response.statusCode()).thenReturn(500);
 
-        var service = new SalesforceTrustApiService(httpClient, objectMapper);
+        var service = new SalesforceTrustApiService(httpClient);
 
         var f = service.getInstancesStatusPreview();
 
@@ -49,13 +48,11 @@ class SalesforceTrustApiServiceTests {
 
         when(httpClient.sendAsync(any(), any())).thenReturn(CompletableFuture.completedFuture(response));
         when(response.statusCode()).thenReturn(200);
-        var s = objectMapper.writeValueAsString(instances);
-        System.err.println(s);
         when(response.body()).thenReturn(
             IOUtils.toInputStream(objectMapper.writeValueAsString(instances), Charset.defaultCharset())
         );
 
-        var service = new SalesforceTrustApiService(httpClient, objectMapper);
+        var service = new SalesforceTrustApiService(httpClient);
 
         var f = service.getInstancesStatusPreview();
         assertEquals(instances, f.join());

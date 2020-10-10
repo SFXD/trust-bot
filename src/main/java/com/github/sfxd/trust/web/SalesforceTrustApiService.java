@@ -16,8 +16,6 @@
 
 package com.github.sfxd.trust.web;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -30,8 +28,8 @@ import java.util.concurrent.CompletableFuture;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.sfxd.trust.model.Instance;
+import com.github.sfxd.trust.util.Json;
 
 /**
  * Service for interating with the Salesforce trust api. This implements only a
@@ -44,15 +42,12 @@ public class SalesforceTrustApiService {
     private static final String BASE_URI = "https://api.status.salesforce.com/v1";
 
     private final HttpClient httpClient;
-    private final ObjectMapper objectMapper;
 
     @Inject
-    public SalesforceTrustApiService(HttpClient httpClient, ObjectMapper objectMapper) {
+    public SalesforceTrustApiService(HttpClient httpClient) {
         Objects.requireNonNull(httpClient);
-        Objects.requireNonNull(objectMapper);
 
         this.httpClient = httpClient;
-        this.objectMapper = objectMapper;
     }
 
     /**
@@ -73,13 +68,7 @@ public class SalesforceTrustApiService {
                 throw new InvalidResponseException(response.statusCode());
             }
 
-            try {
-                Instance[] instances = this.objectMapper.readValue(response.body(), Instance[].class);
-
-                return Arrays.asList(instances);
-            } catch (IOException ex) {
-                throw new UncheckedIOException(ex);
-            }
+            return Arrays.asList(Json.deserialize(response.body(), Instance[].class));
         });
     }
 }
