@@ -2,7 +2,7 @@ package com.github.sfxd.trust.listeners;
 
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-class SourceBotCommand extends AbstractBotCommand {
+class SourceBotCommand extends BotCommand {
     static final String GITHUB = "https://github.com/SFXD/trust-bot";
 
     SourceBotCommand(MessageReceivedEvent event) {

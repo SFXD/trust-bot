@@ -10,7 +10,7 @@ import com.github.sfxd.trust.model.services.AbstractEntityService.DmlException;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 /** Command for !trust unsubscribe <serverkey> */
-class UnsubscribeBotCommand extends AbstractBotCommand {
+class UnsubscribeBotCommand extends BotCommand {
     private final String key;
     private final InstanceSubscriberFinder isFinder;
     private final InstanceSubscriberService isService;

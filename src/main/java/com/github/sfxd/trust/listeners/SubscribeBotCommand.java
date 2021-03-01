@@ -14,7 +14,7 @@ import com.github.sfxd.trust.model.services.AbstractEntityService.DmlException;
 
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-class SubscribeBotCommand extends AbstractBotCommand {
+class SubscribeBotCommand extends BotCommand {
 
     private final InstanceFinder instanceFinder;
     private final InstanceSubscriberFinder isFinder;

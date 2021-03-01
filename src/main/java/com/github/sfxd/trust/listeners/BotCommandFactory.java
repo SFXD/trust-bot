@@ -13,6 +13,8 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 @ApplicationScoped
 class BotCommandFactory {
+    private static final BotCommand NULL_COMMAND = new NullBotCommand();
+
     static final String SUBSCRIBE = "subscribe";
     static final String UNSUBSCRIBE = "unsubscribe";
     static final String SOURCE = "source";
@@ -41,7 +43,7 @@ class BotCommandFactory {
     BotCommand newInstance(MessageReceivedEvent event) {
         String[] split = event.getMessage().getContentRaw().split(" ", -1);
         if (!split[0].equalsIgnoreCase("!trust")) {
-            return () -> {};
+            return NULL_COMMAND;
         }
 
         if (split.length < 2) {
@@ -73,5 +75,15 @@ class BotCommandFactory {
             case SOURCE -> new SourceBotCommand(event);
             default -> new UsageBotCommand(event);
         };
+    }
+
+    private static class NullBotCommand extends BotCommand {
+        private NullBotCommand() {
+            super(null);
+        }
+
+        public void run() {
+            // do nothing
+        }
     }
 }

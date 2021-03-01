@@ -76,17 +76,17 @@ public class TaskManager {
 
         for (Task task : this.tasks) {
             this.scheduler.scheduleAtFixedRate(
-                () -> {
-                    CompletableFuture.runAsync(task, this.worker).whenComplete((ignored, ex) -> {
-                        if (ex != null) {
-                            LOGGER.error("Uncaught exception from scheduled task", ex);
-                        }
-                    });
-                },
+                () -> CompletableFuture.runAsync(task, this.worker).whenComplete(TaskManager::logIfError),
                 0L,
                 task.interval(),
                 task.timeUnit()
             );
+        }
+    }
+
+    private static <T> void logIfError(T ignored, Throwable ex) {
+        if (ex != null) {
+            LOGGER.error("Uncaught exception from scheduled task", ex);
         }
     }
 
