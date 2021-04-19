@@ -15,7 +15,6 @@ import com.github.sfxd.trust.model.Subscriber;
 import com.github.sfxd.trust.model.finders.InstanceFinder;
 import com.github.sfxd.trust.model.finders.InstanceSubscriberFinder;
 import com.github.sfxd.trust.model.finders.SubscriberFinder;
-import com.github.sfxd.trust.model.query.QInstance;
 import com.github.sfxd.trust.model.services.InstanceSubscriberService;
 import com.github.sfxd.trust.model.services.SubscriberService;
 import com.github.sfxd.trust.model.services.AbstractEntityService.DmlException;
@@ -125,7 +124,6 @@ class SubscribeBotCommandTests {
         var channel = mock(MessageChannel.class);
         var action = mock(MessageAction.class);
         var user = mock(User.class);
-        var qinstance =  mock(QInstance.class);
         var subscriber = new Subscriber("");
         subscriber.setId(1L);
 
@@ -145,7 +143,6 @@ class SubscribeBotCommandTests {
         var instance = new Instance();
         instance.setId(1L);
         when(instanceFinder.findByKey(anyString())).thenReturn(Optional.of(instance));
-        when(qinstance.findOneOrEmpty()).thenReturn(Optional.of(instance));
         when(subscriberFinder.findByUsername(anyString())).thenReturn(Optional.of(subscriber));
         when(isFinder.findByInstanceIdAndSubscriberId(anyLong(), anyLong()))
             .thenReturn(Optional.empty());

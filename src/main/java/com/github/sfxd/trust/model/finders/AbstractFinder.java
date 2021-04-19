@@ -17,6 +17,8 @@
 package com.github.sfxd.trust.model.finders;
 
 
+import java.util.Optional;
+
 import com.github.sfxd.trust.model.AbstractEntity;
 
 import io.ebean.DB;
@@ -36,10 +38,14 @@ abstract class AbstractFinder<T extends AbstractEntity> {
      * @param id the id of the entity you want to find
      * @return an optional containing the entity or empty
      */
-    public Query<T> findById(Long id) {
-        return DB.getDefault().createQuery(this.clazz)
+    public Optional<T> findById(Long id) {
+        return this.query()
             .where()
             .idEq(id)
-            .query();
+            .findOneOrEmpty();
+    }
+
+    protected Query<T> query() {
+        return DB.getDefault().createQuery(this.clazz);
     }
 }

@@ -23,7 +23,6 @@ import java.util.stream.Stream;
 import javax.inject.Singleton;
 
 import com.github.sfxd.trust.model.InstanceSubscriber;
-import com.github.sfxd.trust.model.query.QInstanceSubscriber;
 
 /** Finder for the InstanceSubscriber model */
 @Singleton
@@ -41,11 +40,11 @@ public class InstanceSubscriberFinder extends AbstractFinder<InstanceSubscriber>
      * @return the query matching the subscriber
      */
     public Optional<InstanceSubscriber> findByKeyAndUsername(String key, String username) {
-        return new QInstanceSubscriber()
+        return this.query()
             .where()
-            .subscriber.username.eq(username)
+            .eq("subscriber.username", username)
             .and()
-            .instance.key.eq(key)
+            .eq("instance.key", key)
             .findOneOrEmpty();
     }
 
@@ -57,11 +56,11 @@ public class InstanceSubscriberFinder extends AbstractFinder<InstanceSubscriber>
      * @return the query of matching subscribers
      */
     public Optional<InstanceSubscriber> findByInstanceIdAndSubscriberId(Long instanceId, Long subscriberId) {
-        return new QInstanceSubscriber()
+        return this.query()
             .where()
-            .subscriber.id.eq(subscriberId)
+            .eq("subscriber.id", subscriberId)
             .and()
-            .instance.id.eq(instanceId)
+            .eq("instance.id", instanceId)
             .findOneOrEmpty();
     }
 
@@ -72,9 +71,10 @@ public class InstanceSubscriberFinder extends AbstractFinder<InstanceSubscriber>
      * @return the matching subscribers
      */
     public Stream<InstanceSubscriber> findByInstanceIdIn(Set<Long> instanceIds) {
-        return new QInstanceSubscriber()
+        return this.query()
             .where()
-            .instance.id.in(instanceIds)
-            .findSteam();
+            .in("instance.id", instanceIds)
+            .query()
+            .findStream();
     }
 }

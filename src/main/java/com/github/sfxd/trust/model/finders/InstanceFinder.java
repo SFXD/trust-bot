@@ -23,11 +23,11 @@ import java.util.stream.Stream;
 import javax.inject.Singleton;
 
 import com.github.sfxd.trust.model.Instance;
-import com.github.sfxd.trust.model.query.QInstance;
 
 /** Finder for the Instance model */
 @Singleton
 public class InstanceFinder extends AbstractFinder<Instance> {
+    private static final String KEY = "key";
 
     public InstanceFinder() {
         super(Instance.class);
@@ -40,10 +40,9 @@ public class InstanceFinder extends AbstractFinder<Instance> {
      * @return the matching instances
      */
     public Optional<Instance> findByKey(String key) {
-        return new QInstance()
+        return this.query()
             .where()
-            .key
-            .eq(key)
+            .eq(KEY, key)
             .findOneOrEmpty();
     }
 
@@ -54,11 +53,11 @@ public class InstanceFinder extends AbstractFinder<Instance> {
      * @return the matching instances
      */
     public Stream<Instance> findByKeyIn(Set<String> keys) {
-        return new QInstance()
+        return this.query()
             .where()
-            .key
-            .in(keys)
-            .findSteam();
+            .in(KEY, keys)
+            .query()
+            .findStream();
     }
 
     /**
@@ -68,10 +67,10 @@ public class InstanceFinder extends AbstractFinder<Instance> {
      * @return the matching instances
      */
     public Stream<Instance> findByIdIn(Set<Long> ids) {
-        return new QInstance()
+        return this.query()
             .where()
-            .id
-            .in(ids)
-            .findSteam();
+            .idIn(ids)
+            .query()
+            .findStream();
     }
 }

@@ -19,7 +19,6 @@ package com.github.sfxd.trust.model.finders;
 import java.util.Optional;
 
 import com.github.sfxd.trust.model.Subscriber;
-import com.github.sfxd.trust.model.query.QSubscriber;
 
 public class SubscriberFinder extends AbstractFinder<Subscriber> {
 
@@ -35,9 +34,9 @@ public class SubscriberFinder extends AbstractFinder<Subscriber> {
      *         NoResultException
      */
     public Optional<Subscriber> findByUsername(String username) {
-        return new QSubscriber()
+        return this.query()
             .where()
-            .username.eq(username)
+            .eq("username", username)
             .findOneOrEmpty();
     }
 }

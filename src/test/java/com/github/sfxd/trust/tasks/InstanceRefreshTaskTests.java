@@ -1,7 +1,6 @@
 package com.github.sfxd.trust.tasks;
 
 import static org.mockito.ArgumentMatchers.anySet;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -12,7 +11,6 @@ import java.util.concurrent.CompletableFuture;
 
 import com.github.sfxd.trust.model.Instance;
 import com.github.sfxd.trust.model.finders.InstanceFinder;
-import com.github.sfxd.trust.model.query.QInstance;
 import com.github.sfxd.trust.model.services.InstanceService;
 import com.github.sfxd.trust.model.services.AbstractEntityService.DmlException;
 import com.github.sfxd.trust.web.SalesforceTrustApiService;
@@ -30,7 +28,6 @@ class InstanceRefreshTaskTests {
         var instance = new Instance();
         instance.setKey("NA99");
         var previews = List.of(instance);
-        var qinstance = mock(QInstance.class);
 
         when(instanceFinder.findByKeyIn(anySet())).thenReturn(instances.stream());
         when(trustApi.getInstancesStatusPreview()).thenReturn(CompletableFuture.completedFuture(previews));
