@@ -49,7 +49,7 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
 
     public T insert(T entity) throws DmlException {
         try {
-            return this.save(entity);
+            return this.insert(List.of(entity)).get(0);
         } catch (OptimisticLockException ex) {
             throw new DmlException(ex);
         }
@@ -65,7 +65,7 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
 
     public T update(T entity) throws DmlException {
         try {
-            return this.save(entity);
+            return this.update(List.of(entity)).get(0);
         } catch (OptimisticLockException ex) {
             throw new DmlException(ex);
         }
@@ -91,7 +91,7 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
 
     public void delete(T entity) throws DmlException {
         try {
-            this.db.delete(entity);
+            this.delete(List.of(entity));
         } catch (OptimisticLockException ex) {
             throw new DmlException(ex);
         }
