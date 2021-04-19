@@ -45,7 +45,7 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
         } catch (OptimisticLockException ex) {
             throw new DmlException(ex);
         }
-    };
+    }
 
     public T insert(T entity) throws DmlException {
         try {
@@ -53,7 +53,7 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
         } catch (OptimisticLockException ex) {
             throw new DmlException(ex);
         }
-    };
+    }
 
     public List<T> update(List<T> entities) throws DmlException {
         try {
@@ -61,7 +61,7 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
         } catch (OptimisticLockException ex) {
             throw new DmlException(ex);
         }
-    };
+    }
 
     public T update(T entity) throws DmlException {
         try {
