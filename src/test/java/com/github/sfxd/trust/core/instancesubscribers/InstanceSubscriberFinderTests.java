@@ -7,6 +7,7 @@ import static org.mockito.Mockito.mock;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.github.sfxd.trust.core.MessageService;
 import com.github.sfxd.trust.core.instances.Instance;
 import com.github.sfxd.trust.core.instances.InstanceFinder;
 import com.github.sfxd.trust.core.instances.InstanceService;
@@ -18,7 +19,6 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 
 import io.ebean.DB;
-import net.dv8tion.jda.api.JDA;
 
 @TestInstance(Lifecycle.PER_CLASS)
 class InstanceSubscriberFinderTests {
@@ -28,7 +28,7 @@ class InstanceSubscriberFinderTests {
     private InstanceFinder instanceFinder = new InstanceFinder();
     private InstanceService instanceService = new InstanceService(
         DB.getDefault(),
-        mock(JDA.class),
+        mock(MessageService.class),
         this.finder,
         this.instanceFinder
     );

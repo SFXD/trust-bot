@@ -28,12 +28,13 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import com.github.sfxd.trust.core.AbstractEntityService;
+import com.github.sfxd.trust.core.MessageService;
 import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriber;
 import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriberFinder;
+import com.github.sfxd.trust.core.subscribers.Subscriber;
 
 import io.ebean.Database;
 import io.ebean.annotation.Transactional;
-import net.dv8tion.jda.api.JDA;
 
 /**
  * Service for working with the {@link Instance} model.
@@ -42,24 +43,20 @@ import net.dv8tion.jda.api.JDA;
 @Transactional
 public class InstanceService extends AbstractEntityService<Instance> {
 
-    private final JDA jda;
     private final InstanceSubscriberFinder instanceSubcriberFinder;
     private final InstanceFinder instanceFinder;
+    private final MessageService messageService;
 
     @Inject
     public InstanceService(
         Database db,
-        JDA jda,
+        MessageService messageService,
         InstanceSubscriberFinder instanceSubscriberFinder,
         InstanceFinder instanceFinder
     ) {
         super(db, Instance.class);
 
-        Objects.requireNonNull(jda);
-        Objects.requireNonNull(instanceSubscriberFinder);
-        Objects.requireNonNull(instanceFinder);
-
-        this.jda = jda;
+        this.messageService = messageService;
         this.instanceSubcriberFinder = instanceSubscriberFinder;
         this.instanceFinder = instanceFinder;
     }
@@ -80,11 +77,11 @@ public class InstanceService extends AbstractEntityService<Instance> {
             .map(Instance::getId)
             .collect(Collectors.toSet());
 
-        Map<String, List<InstanceSubscriber>> subscriptionsBySubscriber = this.instanceSubcriberFinder
+        Map<Subscriber, List<InstanceSubscriber>> subscriptionsBySubscriber = this.instanceSubcriberFinder
             .findByInstanceIdIn(notOkIds)
-            .collect(Collectors.groupingBy(is -> is.getSubscriber().getUsername()));
+            .collect(Collectors.groupingBy(InstanceSubscriber::getSubscriber));
 
-        for (Entry<String, List<InstanceSubscriber>> entry : subscriptionsBySubscriber.entrySet()) {
+        for (Entry<Subscriber, List<InstanceSubscriber>> entry : subscriptionsBySubscriber.entrySet()) {
             var message = new StringBuilder();
             for (InstanceSubscriber is : entry.getValue()) {
                 Instance instance = is.getInstance();
@@ -95,9 +92,7 @@ public class InstanceService extends AbstractEntityService<Instance> {
                 ));
             }
 
-            this.jda.retrieveUserById(entry.getKey()).queue(user -> {
-                user.openPrivateChannel().queue(channel -> channel.sendMessage(message.toString()).queue());
-            });
+            this.messageService.sendMessage(entry.getKey(), message.toString());
         }
 
         return super.update(entities);

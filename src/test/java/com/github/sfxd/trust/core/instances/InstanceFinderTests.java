@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.github.sfxd.trust.core.MessageService;
 import com.github.sfxd.trust.core.AbstractEntityService.DmlException;
 import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriberFinder;
 
@@ -17,7 +18,6 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 
 import io.ebean.DB;
-import net.dv8tion.jda.api.JDA;
 
 @TestInstance(Lifecycle.PER_CLASS)
 class InstanceFinderTests {
@@ -29,7 +29,7 @@ class InstanceFinderTests {
     void beforeAll() {
         this.instanceService = new InstanceService(
             DB.getDefault(),
-            mock(JDA.class),
+            mock(MessageService.class),
             new InstanceSubscriberFinder(),
             this.instanceFinder
         );
