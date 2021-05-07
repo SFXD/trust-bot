@@ -13,19 +13,42 @@
 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
-package com.github.sfxd.trust.producers;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
+package com.github.sfxd.trust.core;
 
-import io.ebean.DB;
-import io.ebean.Database;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 
-class DatabaseProducer {
+/**
+ * The base representation of all entities.
+ */
+@MappedSuperclass
+public abstract class AbstractEntity {
 
-    @Produces
-    @ApplicationScoped
-    Database produceDatabase() throws Exception {
-        return DB.getDefault();
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected Long id;
+
+    public AbstractEntity() {
+
+    }
+
+    public AbstractEntity(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return this.id;
+    }
+
+    public AbstractEntity setId(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    public boolean isNew() {
+        return this.id == null;
     }
 }

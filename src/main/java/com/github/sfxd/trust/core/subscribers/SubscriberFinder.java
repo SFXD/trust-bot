@@ -13,19 +13,30 @@
 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
-package com.github.sfxd.trust.producers;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
+package com.github.sfxd.trust.core.subscribers;
 
-import io.ebean.DB;
-import io.ebean.Database;
+import java.util.Optional;
 
-class DatabaseProducer {
+import com.github.sfxd.trust.core.AbstractFinder;
 
-    @Produces
-    @ApplicationScoped
-    Database produceDatabase() throws Exception {
-        return DB.getDefault();
+public class SubscriberFinder extends AbstractFinder<Subscriber> {
+
+    public SubscriberFinder() {
+        super(Subscriber.class);
+    }
+
+    /**
+     * Finds a subscriber by their unique username.
+     *
+     * @param username the user you want to find
+     * @return An Optional containing the subscriber or empty if hibernate throws
+     *         NoResultException
+     */
+    public Optional<Subscriber> findByUsername(String username) {
+        return this.query()
+            .where()
+            .eq("username", username)
+            .findOneOrEmpty();
     }
 }

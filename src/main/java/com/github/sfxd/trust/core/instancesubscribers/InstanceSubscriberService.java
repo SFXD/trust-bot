@@ -13,19 +13,26 @@
 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
-package com.github.sfxd.trust.producers;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
+package com.github.sfxd.trust.core.instancesubscribers;
 
-import io.ebean.DB;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import com.github.sfxd.trust.core.AbstractEntityService;
+
 import io.ebean.Database;
+import io.ebean.annotation.Transactional;
 
-class DatabaseProducer {
+/**
+ * Service for working with the {@link InstanceSubcriber} model
+ */
+@Singleton
+@Transactional
+public class InstanceSubscriberService extends AbstractEntityService<InstanceSubscriber> {
 
-    @Produces
-    @ApplicationScoped
-    Database produceDatabase() throws Exception {
-        return DB.getDefault();
+    @Inject
+    public InstanceSubscriberService(Database db) {
+        super(db, InstanceSubscriber.class);
     }
 }

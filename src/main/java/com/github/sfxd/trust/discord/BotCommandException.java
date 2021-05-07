@@ -1,5 +1,5 @@
 // trust-bot a discord bot to watch the salesforce trust api.
-// Copyright (C) 2020 George Doenlen
+// Copyright (C) 2021 George Doenlen
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -13,19 +13,12 @@
 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
-package com.github.sfxd.trust.producers;
+package com.github.sfxd.trust.discord;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
+public class BotCommandException extends RuntimeException {
+    private static final long serialVersionUID = 1L;
 
-import io.ebean.DB;
-import io.ebean.Database;
-
-class DatabaseProducer {
-
-    @Produces
-    @ApplicationScoped
-    Database produceDatabase() throws Exception {
-        return DB.getDefault();
+    BotCommandException(Throwable ex) {
+        super(ex);
     }
 }

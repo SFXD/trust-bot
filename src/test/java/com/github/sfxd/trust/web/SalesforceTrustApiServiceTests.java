@@ -14,7 +14,8 @@ import java.util.concurrent.CompletableFuture;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.sfxd.trust.model.Instance;
+import com.github.sfxd.trust.core.instances.Instance;
+import com.github.sfxd.trust.integrations.SalesforceTrustApiService;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;

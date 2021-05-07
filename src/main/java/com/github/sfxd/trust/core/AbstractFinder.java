@@ -13,19 +13,37 @@
 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
-package com.github.sfxd.trust.producers;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
+package com.github.sfxd.trust.core;
+
+
+import java.util.Optional;
 
 import io.ebean.DB;
-import io.ebean.Database;
+import io.ebean.Query;
 
-class DatabaseProducer {
+/** The base of all finders */
+public abstract class AbstractFinder<T extends AbstractEntity> {
 
-    @Produces
-    @ApplicationScoped
-    Database produceDatabase() throws Exception {
-        return DB.getDefault();
+    protected final Class<T> clazz;
+
+    protected AbstractFinder(Class<T> clazz) {
+        this.clazz = clazz;
+    }
+
+    /**
+     * Finds an entity by its id
+     * @param id the id of the entity you want to find
+     * @return an optional containing the entity or empty
+     */
+    public Optional<T> findById(Long id) {
+        return this.query()
+            .where()
+            .idEq(id)
+            .findOneOrEmpty();
+    }
+
+    protected Query<T> query() {
+        return DB.getDefault().createQuery(this.clazz);
     }
 }

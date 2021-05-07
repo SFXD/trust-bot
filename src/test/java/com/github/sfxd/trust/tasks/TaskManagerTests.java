@@ -14,7 +14,8 @@ import java.util.concurrent.TimeUnit;
 
 import javax.enterprise.inject.Instance;
 
-import com.github.sfxd.trust.tasks.TaskManager.Task;
+import com.github.sfxd.trust.integrations.TaskManager;
+import com.github.sfxd.trust.integrations.TaskManager.Task;
 
 import org.junit.jupiter.api.Test;
 

@@ -13,19 +13,6 @@
 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
-package com.github.sfxd.trust.producers;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
-
-import io.ebean.DB;
-import io.ebean.Database;
-
-class DatabaseProducer {
-
-    @Produces
-    @ApplicationScoped
-    Database produceDatabase() throws Exception {
-        return DB.getDefault();
-    }
-}
+/** Classes that help with Ebean database migration */
+package com.github.sfxd.trust.core.migration;

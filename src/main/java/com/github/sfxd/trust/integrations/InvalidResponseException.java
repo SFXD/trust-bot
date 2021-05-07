@@ -13,19 +13,22 @@
 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
-package com.github.sfxd.trust.producers;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
+package com.github.sfxd.trust.integrations;
 
-import io.ebean.DB;
-import io.ebean.Database;
+/**
+ * Represents any error that can happen when the httpclient doesn't
+ * return the response you expect.
+ */
+public class InvalidResponseException extends RuntimeException {
+    private static final long serialVersionUID = -2422424845287908196L;
 
-class DatabaseProducer {
+    private final int statusCode;
+    public InvalidResponseException(int statusCode) {
+        this.statusCode = statusCode;
+    }
 
-    @Produces
-    @ApplicationScoped
-    Database produceDatabase() throws Exception {
-        return DB.getDefault();
+    public int statusCode() {
+        return this.statusCode;
     }
 }
