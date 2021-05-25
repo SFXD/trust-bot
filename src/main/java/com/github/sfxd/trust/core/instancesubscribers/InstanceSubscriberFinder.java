@@ -16,8 +16,8 @@
 
 package com.github.sfxd.trust.core.instancesubscribers;
 
+import java.util.Collection;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Stream;
 
 import javax.inject.Singleton;
@@ -70,7 +70,7 @@ public class InstanceSubscriberFinder extends AbstractFinder<InstanceSubscriber>
      * @param instanceIds the instances you want to filter by
      * @return the matching subscribers
      */
-    public Stream<InstanceSubscriber> findByInstanceIdIn(Set<Long> instanceIds) {
+    public Stream<InstanceSubscriber> findByInstanceIdIn(Collection<Long> instanceIds) {
         return this.query()
             .where()
             .in("instance.id", instanceIds)

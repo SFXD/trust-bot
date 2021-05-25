@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import com.github.sfxd.trust.core.MessageService;
 import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriber;
@@ -41,7 +42,7 @@ class InstanceServiceTests {
         var subscriber = new Subscriber("vips#7L");
         var instanceSubscribers = List.of(new InstanceSubscriber(oldInstance, subscriber));
 
-        when(instanceFinder.findByIdIn(anySet())).thenReturn(instances.stream());
+        when(instanceFinder.findByIdIn(anySet())).thenReturn(Stream.of(oldInstance));
         when(instanceSubscriberFinder.findByInstanceIdIn(anySet()))
             .thenReturn(instanceSubscribers.stream());
 

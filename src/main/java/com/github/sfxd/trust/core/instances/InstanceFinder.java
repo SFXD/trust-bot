@@ -16,8 +16,8 @@
 
 package com.github.sfxd.trust.core.instances;
 
+import java.util.Collection;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Stream;
 
 import javax.inject.Singleton;
@@ -52,7 +52,7 @@ public class InstanceFinder extends AbstractFinder<Instance> {
      * @param keys the keys you want to filter by
      * @return the matching instances
      */
-    public Stream<Instance> findByKeyIn(Set<String> keys) {
+    public Stream<Instance> findByKeyIn(Collection<String> keys) {
         return this.query()
             .where()
             .in(KEY, keys)
@@ -66,7 +66,7 @@ public class InstanceFinder extends AbstractFinder<Instance> {
      * @param ids the ids you want to filter by
      * @return the matching instances
      */
-    public Stream<Instance> findByIdIn(Set<Long> ids) {
+    public Stream<Instance> findByIdIn(Collection<Long> ids) {
         return this.query()
             .where()
             .idIn(ids)

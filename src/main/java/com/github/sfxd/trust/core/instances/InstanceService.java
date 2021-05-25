@@ -18,8 +18,6 @@ package com.github.sfxd.trust.core.instances;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
 import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -32,6 +30,11 @@ import com.github.sfxd.trust.core.MessageService;
 import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriber;
 import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriberFinder;
 import com.github.sfxd.trust.core.subscribers.Subscriber;
+
+import org.apache.commons.lang3.builder.Diff;
+import org.apache.commons.lang3.builder.DiffBuilder;
+import org.apache.commons.lang3.builder.DiffResult;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import io.ebean.Database;
 import io.ebean.annotation.Transactional;
@@ -67,35 +70,41 @@ public class InstanceService extends AbstractEntityService<Instance> {
         Map<Long, Instance> instancesById = entities.stream()
             .collect(Collectors.toMap(Instance::getId, Function.identity()));
 
-        Set<Long> notOkIds = this.instanceFinder.findByIdIn(instancesById.keySet())
-            .filter(old -> {
-                Instance current = instancesById.get(old.getId());
-
-                return old.getStatus().equals(Instance.STATUS_OK)
-                    && !current.getStatus().equals(Instance.STATUS_OK);
-            })
-            .map(Instance::getId)
-            .collect(Collectors.toSet());
+        Map<Long, DiffResult<Instance>> changes = this.instanceFinder.findByIdIn(instancesById.keySet())
+            .map(old -> diff(old, instancesById.get(old.getId())))
+            .filter(diff -> !diff.getDiffs().isEmpty())
+            .collect(Collectors.toMap(diff -> diff.getLeft().getId(), Function.identity()));
 
         Map<Subscriber, List<InstanceSubscriber>> subscriptionsBySubscriber = this.instanceSubcriberFinder
-            .findByInstanceIdIn(notOkIds)
+            .findByInstanceIdIn(changes.keySet())
             .collect(Collectors.groupingBy(InstanceSubscriber::getSubscriber));
 
         for (Entry<Subscriber, List<InstanceSubscriber>> entry : subscriptionsBySubscriber.entrySet()) {
             var message = new StringBuilder();
             for (InstanceSubscriber is : entry.getValue()) {
                 Instance instance = is.getInstance();
-                message.append(String.format(
-                    "%s: %s%n",
-                    instance.getKey(),
-                    instancesById.get(instance.getId()).getStatus()
-                ));
+                message.append(instance.getKey() + System.lineSeparator());
+
+                DiffResult<Instance> diff = changes.get(instance.getId());
+                for (Diff<?> d : diff) {
+                    message.append(String.format("  %s: %s -> %s%n", d.getFieldName(), d.getLeft(), d.getRight()));
+                }
             }
 
             this.messageService.sendMessage(entry.getKey(), message.toString());
         }
 
         return super.update(entities);
+    }
+
+    private static DiffResult<Instance> diff(Instance old, Instance current) {
+        return new DiffBuilder<>(old, current, ToStringStyle.DEFAULT_STYLE, false)
+            .append("status", old.getStatus(), current.getStatus())
+            .append("environment", old.getEnvironment(), current.getEnvironment())
+            .append("location", old.getLocation(), current.getLocation())
+            .append("releaseNumber", old.getReleaseNumber(), current.getReleaseNumber())
+            .append("releaseVersion", old.getReleaseVersion(), current.getReleaseVersion())
+            .build();
     }
 
     /** {@inheritDoc} */
