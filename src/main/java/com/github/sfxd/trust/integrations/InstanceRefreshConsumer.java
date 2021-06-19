@@ -1,5 +1,5 @@
 // trust-bot a discord bot to watch the salesforce trust api.
-// Copyright (C) 2020 George Doenlen
+// Copyright (C) 2021 George Doenlen
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,9 +17,9 @@
 package com.github.sfxd.trust.integrations;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -30,45 +30,26 @@ import com.github.sfxd.trust.core.AbstractEntityService.DmlException;
 import com.github.sfxd.trust.core.instances.Instance;
 import com.github.sfxd.trust.core.instances.InstanceFinder;
 import com.github.sfxd.trust.core.instances.InstanceService;
-import com.github.sfxd.trust.integrations.TaskManager.Task;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Task that will check the Trust api instances and update their data in the
- * database.
- */
 @ApplicationScoped
-public class InstanceRefreshTask implements Task {
-    private static final Logger LOGGER = LoggerFactory.getLogger(InstanceRefreshTask.class);
+class InstanceRefreshConsumer implements Consumer<Collection<Instance>> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(InstanceRefreshConsumer.class);
 
-    private final SalesforceTrustApiService trustApi;
     private final InstanceService instanceService;
     private final InstanceFinder instanceFinder;
 
     @Inject
-    public InstanceRefreshTask(
-        SalesforceTrustApiService trustApi,
-        InstanceService instanceService,
-        InstanceFinder instanceFinder
-    ) {
-        Objects.requireNonNull(trustApi);
-        Objects.requireNonNull(instanceService);
-        Objects.requireNonNull(instanceFinder);
-
-        this.trustApi = trustApi;
+    InstanceRefreshConsumer(InstanceService instanceService, InstanceFinder instanceFinder) {
         this.instanceService = instanceService;
         this.instanceFinder = instanceFinder;
     }
 
     @Override
-    public void run() {
-        LOGGER.info("Starting {}", InstanceRefreshTask.class.getName());
-
-        Map<String, Instance> instancePreviews = this.trustApi.getInstancesStatusPreview()
-            .join()
-            .stream()
+    public void accept(Collection<Instance> incomingInstances) {
+        Map<String, Instance> instancePreviews = incomingInstances.stream()
             .collect(Collectors.toMap(Instance::getKey, Function.identity()));
 
         Map<String, Instance> instances = this.instanceFinder.findByKeyIn(instancePreviews.keySet())
@@ -98,15 +79,5 @@ public class InstanceRefreshTask implements Task {
         } catch (DmlException ex) {
             LOGGER.error("Failed to update instances.", ex);
         }
-    }
-
-    @Override
-    public long interval() {
-        return 60L;
-    }
-
-    @Override
-    public TimeUnit timeUnit() {
-        return TimeUnit.SECONDS;
     }
 }

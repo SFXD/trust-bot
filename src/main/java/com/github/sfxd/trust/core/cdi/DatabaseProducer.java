@@ -13,7 +13,8 @@
 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
-package com.github.sfxd.trust.producers;
+
+package com.github.sfxd.trust.core.cdi;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
@@ -25,7 +26,7 @@ class DatabaseProducer {
 
     @Produces
     @ApplicationScoped
-    Database produceDatabase() throws Exception {
+    Database produceDatabase() {
         return DB.getDefault();
     }
 }

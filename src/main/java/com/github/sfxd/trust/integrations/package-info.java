@@ -14,5 +14,5 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-/** Tasks are schedulable items that occur at fixed intervals */
+/** Integrations into other systems  */
 package com.github.sfxd.trust.integrations;
