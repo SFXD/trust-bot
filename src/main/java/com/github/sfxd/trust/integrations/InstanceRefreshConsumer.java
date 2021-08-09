@@ -26,25 +26,17 @@ import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import com.github.sfxd.trust.core.AbstractEntityService.DmlException;
 import com.github.sfxd.trust.core.instances.Instance;
-import com.github.sfxd.trust.core.instances.InstanceFinder;
 import com.github.sfxd.trust.core.instances.InstanceService;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @ApplicationScoped
 class InstanceRefreshConsumer implements Consumer<Collection<Instance>> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(InstanceRefreshConsumer.class);
 
     private final InstanceService instanceService;
-    private final InstanceFinder instanceFinder;
 
     @Inject
-    InstanceRefreshConsumer(InstanceService instanceService, InstanceFinder instanceFinder) {
+    InstanceRefreshConsumer(InstanceService instanceService) {
         this.instanceService = instanceService;
-        this.instanceFinder = instanceFinder;
     }
 
     @Override
@@ -52,7 +44,7 @@ class InstanceRefreshConsumer implements Consumer<Collection<Instance>> {
         Map<String, Instance> instancePreviews = incomingInstances.stream()
             .collect(Collectors.toMap(Instance::getKey, Function.identity()));
 
-        Map<String, Instance> instances = this.instanceFinder.findByKeyIn(instancePreviews.keySet())
+        Map<String, Instance> instances = this.instanceService.findByKeyIn(instancePreviews.keySet())
             .collect(Collectors.toMap(Instance::getKey, Function.identity()));
 
         var forUpdate = new ArrayList<Instance>();
@@ -73,11 +65,7 @@ class InstanceRefreshConsumer implements Consumer<Collection<Instance>> {
             }
         }
 
-        try {
-            this.instanceService.update(forUpdate);
-            this.instanceService.insert(forInsert);
-        } catch (DmlException ex) {
-            LOGGER.error("Failed to update instances.", ex);
-        }
+        this.instanceService.update(forUpdate);
+        this.instanceService.insert(forInsert);
     }
 }

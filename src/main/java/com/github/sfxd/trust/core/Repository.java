@@ -16,19 +16,22 @@
 
 package com.github.sfxd.trust.core;
 
-
+import java.util.Collection;
 import java.util.Optional;
 
 import io.ebean.DB;
+import io.ebean.Database;
 import io.ebean.Query;
 
 /** The base of all finders */
-public abstract class AbstractFinder<T extends AbstractEntity> {
+public abstract class Repository<T extends Entity> {
 
     protected final Class<T> clazz;
+    protected final Database database;
 
-    protected AbstractFinder(Class<T> clazz) {
+    protected Repository(Class<T> clazz) {
         this.clazz = clazz;
+        this.database = DB.getDefault();
     }
 
     /**
@@ -45,5 +48,17 @@ public abstract class AbstractFinder<T extends AbstractEntity> {
 
     protected Query<T> query() {
         return DB.getDefault().createQuery(this.clazz);
+    }
+
+    public void insert(Collection<T> entities) {
+        this.database.insertAll(entities);
+    }
+
+    public void update(Collection<T> entities) {
+        this.database.updateAll(entities);
+    }
+
+    public void delete(Collection<T> entities) {
+        this.database.deleteAll(entities);
     }
 }

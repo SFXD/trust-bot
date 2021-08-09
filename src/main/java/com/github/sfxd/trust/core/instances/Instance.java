@@ -21,7 +21,6 @@ import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.OneToMany;
@@ -29,15 +28,15 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.github.sfxd.trust.core.AbstractEntity;
+import com.github.sfxd.trust.core.Entity;
 import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriber;
 
 /**
  * Represents an SFDC instance. Sandbox or Production.
  * This model maps directly to the model from the api.
  */
-@Entity
-public class Instance extends AbstractEntity {
+@javax.persistence.Entity
+public class Instance extends Entity {
     public static final String STATUS_OK = "OK";
 
     @Column(unique = true)

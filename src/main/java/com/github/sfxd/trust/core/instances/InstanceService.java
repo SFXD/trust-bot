@@ -16,19 +16,22 @@
 
 package com.github.sfxd.trust.core.instances;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import com.github.sfxd.trust.core.AbstractEntityService;
+import com.github.sfxd.trust.core.EntityService;
 import com.github.sfxd.trust.core.MessageService;
 import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriber;
-import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriberFinder;
+import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriberService;
 import com.github.sfxd.trust.core.subscribers.Subscriber;
 
 import org.apache.commons.lang3.builder.Diff;
@@ -36,7 +39,6 @@ import org.apache.commons.lang3.builder.DiffBuilder;
 import org.apache.commons.lang3.builder.DiffResult;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import io.ebean.Database;
 import io.ebean.annotation.Transactional;
 
 /**
@@ -44,29 +46,28 @@ import io.ebean.annotation.Transactional;
  */
 @Singleton
 @Transactional
-public class InstanceService extends AbstractEntityService<Instance> {
+public class InstanceService extends EntityService<Instance> {
 
-    private final InstanceSubscriberFinder instanceSubcriberFinder;
+    private final InstanceSubscriberService instanceSubscriberService;
     private final InstanceFinder instanceFinder;
     private final MessageService messageService;
 
     @Inject
     public InstanceService(
-        Database db,
         MessageService messageService,
-        InstanceSubscriberFinder instanceSubscriberFinder,
+        InstanceSubscriberService instanceSubscriberService,
         InstanceFinder instanceFinder
     ) {
-        super(db, Instance.class);
+        super(instanceFinder);
 
         this.messageService = messageService;
-        this.instanceSubcriberFinder = instanceSubscriberFinder;
+        this.instanceSubscriberService = instanceSubscriberService;
         this.instanceFinder = instanceFinder;
     }
 
     /** {@inheritDoc} */
     @Override
-    public List<Instance> update(List<Instance> entities) throws DmlException {
+    public List<Instance> update(List<Instance> entities) {
         Map<Long, Instance> instancesById = entities.stream()
             .collect(Collectors.toMap(Instance::getId, Function.identity()));
 
@@ -75,7 +76,7 @@ public class InstanceService extends AbstractEntityService<Instance> {
             .filter(diff -> !diff.getDiffs().isEmpty())
             .collect(Collectors.toMap(diff -> diff.getLeft().getId(), Function.identity()));
 
-        Map<Subscriber, List<InstanceSubscriber>> subscriptionsBySubscriber = this.instanceSubcriberFinder
+        Map<Subscriber, List<InstanceSubscriber>> subscriptionsBySubscriber = this.instanceSubscriberService
             .findByInstanceIdIn(changes.keySet())
             .collect(Collectors.groupingBy(InstanceSubscriber::getSubscriber));
 
@@ -107,9 +108,11 @@ public class InstanceService extends AbstractEntityService<Instance> {
             .build();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public Instance update(Instance entity) throws DmlException {
-        return this.update(List.of(entity)).get(0);
+    public Optional<Instance> findByKey(String key) {
+        return this.instanceFinder.findByKey(key);
+    }
+
+    public Stream<Instance> findByKeyIn(Collection<String> keys) {
+        return this.instanceFinder.findByKeyIn(keys);
     }
 }

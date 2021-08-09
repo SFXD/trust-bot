@@ -18,10 +18,8 @@ package com.github.sfxd.trust.discord;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import com.github.sfxd.trust.core.instances.InstanceFinder;
-import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriberFinder;
+import com.github.sfxd.trust.core.instances.InstanceService;
 import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriberService;
-import com.github.sfxd.trust.core.subscribers.SubscriberFinder;
 import com.github.sfxd.trust.core.subscribers.SubscriberService;
 
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -34,25 +32,19 @@ public class BotCommandFactory {
     static final String UNSUBSCRIBE = "unsubscribe";
     static final String SOURCE = "source";
 
-    private final InstanceSubscriberFinder isFinder;
     private final InstanceSubscriberService isService;
-    private final InstanceFinder instanceFinder;
-    private final SubscriberFinder subscriberFinder;
     private final SubscriberService subscriberService;
+    private final InstanceService instanceService;
 
     @Inject
     BotCommandFactory(
-        InstanceSubscriberFinder isFinder,
         InstanceSubscriberService isService,
-        InstanceFinder instanceFinder,
-        SubscriberFinder subscriberFinder,
-        SubscriberService subscriberService
+        SubscriberService subscriberService,
+        InstanceService instanceService
     ) {
-        this.isFinder = isFinder;
         this.isService = isService;
-        this.instanceFinder = instanceFinder;
-        this.subscriberFinder = subscriberFinder;
         this.subscriberService = subscriberService;
+        this.instanceService = instanceService;
     }
 
     BotCommand newInstance(MessageReceivedEvent event) {
@@ -76,15 +68,13 @@ public class BotCommandFactory {
                 if (SUBSCRIBE.equals(command)) {
                     yield new SubscribeBotCommand(
                         event,
-                        this.instanceFinder,
-                        this.isFinder,
+                        this.instanceService,
                         this.isService,
-                        this.subscriberFinder,
                         this.subscriberService,
                         key
                     );
                 } else {
-                    yield new UnsubscribeBotCommand(event, key, this.isFinder, this.isService);
+                    yield new UnsubscribeBotCommand(event, key, this.isService);
                 }
             }
             case SOURCE -> new SourceBotCommand(event);

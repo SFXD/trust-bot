@@ -12,20 +12,17 @@ import java.util.stream.Stream;
 
 import com.github.sfxd.trust.core.MessageService;
 import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriber;
-import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriberFinder;
+import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriberService;
 import com.github.sfxd.trust.core.subscribers.Subscriber;
 
 import org.junit.jupiter.api.Test;
-
-import io.ebean.Database;
 
 class InstanceServiceTests {
 
     @Test
     void on_update_it_should_send_a_message_to_all_subscribers_if_the_instance_is_not_ok() throws Exception {
-        var db = mock(Database.class);
         var messageService = mock(MessageService.class);
-        var instanceSubscriberFinder = mock(InstanceSubscriberFinder.class);
+        var instanceSubscriberService = mock(InstanceSubscriberService.class);
         var instanceFinder = mock(InstanceFinder.class);
 
         var instance = new Instance();
@@ -43,10 +40,10 @@ class InstanceServiceTests {
         var instanceSubscribers = List.of(new InstanceSubscriber(oldInstance, subscriber));
 
         when(instanceFinder.findByIdIn(anySet())).thenReturn(Stream.of(oldInstance));
-        when(instanceSubscriberFinder.findByInstanceIdIn(anySet()))
+        when(instanceSubscriberService.findByInstanceIdIn(anySet()))
             .thenReturn(instanceSubscribers.stream());
 
-        var service = new InstanceService(db, messageService, instanceSubscriberFinder, instanceFinder);
+        var service = new InstanceService(messageService, instanceSubscriberService, instanceFinder);
         service.update(instances);
 
         verify(messageService).sendMessage(eq(subscriber), anyString());

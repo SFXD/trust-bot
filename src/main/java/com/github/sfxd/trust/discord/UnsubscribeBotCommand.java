@@ -18,9 +18,7 @@ package com.github.sfxd.trust.discord;
 
 import java.util.Optional;
 
-import com.github.sfxd.trust.core.AbstractEntityService.DmlException;
 import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriber;
-import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriberFinder;
 import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriberService;
 
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -28,33 +26,26 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 /** Command for !trust unsubscribe <serverkey> */
 class UnsubscribeBotCommand extends BotCommand {
     private final String key;
-    private final InstanceSubscriberFinder isFinder;
     private final InstanceSubscriberService isService;
 
     UnsubscribeBotCommand(
         MessageReceivedEvent event,
         String key,
-        InstanceSubscriberFinder isFinder,
         InstanceSubscriberService isService
     ) {
         super(event);
 
         this.key = key;
-        this.isFinder = isFinder;
         this.isService = isService;
     }
 
     @Override
     public void run() {
-        Optional<InstanceSubscriber> subscription = this.isFinder
+        Optional<InstanceSubscriber> subscription = this.isService
             .findByKeyAndUsername(this.key, this.event.getAuthor().getId());
 
         if (subscription.isPresent()) {
-            try {
-                this.isService.delete(subscription.get());
-            } catch (DmlException ex) {
-                throw new BotCommandException(ex);
-            }
+            this.isService.delete(subscription.get());
         }
 
         this.reactWithCheckMark();

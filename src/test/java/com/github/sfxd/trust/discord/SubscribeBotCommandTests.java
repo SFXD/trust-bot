@@ -9,14 +9,11 @@ import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 
-import com.github.sfxd.trust.core.AbstractEntityService.DmlException;
 import com.github.sfxd.trust.core.instances.Instance;
-import com.github.sfxd.trust.core.instances.InstanceFinder;
+import com.github.sfxd.trust.core.instances.InstanceService;
 import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriber;
-import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriberFinder;
 import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriberService;
 import com.github.sfxd.trust.core.subscribers.Subscriber;
-import com.github.sfxd.trust.core.subscribers.SubscriberFinder;
 import com.github.sfxd.trust.core.subscribers.SubscriberService;
 
 import org.junit.jupiter.api.Test;
@@ -31,12 +28,10 @@ import net.dv8tion.jda.api.requests.restaction.MessageAction;
 class SubscribeBotCommandTests {
 
     @Test
-    void it_should_subscribe_insert_a_new_subscriber_on_subscribe_if_one_isnt_found() throws DmlException {
+    void it_should_subscribe_insert_a_new_subscriber_on_subscribe_if_one_isnt_found() {
         var subscriberService = mock(SubscriberService.class);
         var isService = mock(InstanceSubscriberService.class);
-        var instanceFinder = mock(InstanceFinder.class);
-        var isFinder = mock(InstanceSubscriberFinder.class);
-        var subscriberFinder = mock(SubscriberFinder.class);
+        var instanceService = mock(InstanceService.class);
         var event = mock(MessageReceivedEvent.class);
         var message = mock(Message.class);
         var channel = mock(MessageChannel.class);
@@ -58,17 +53,15 @@ class SubscribeBotCommandTests {
 
         var instance = new Instance();
         instance.setId(1L);
-        when(instanceFinder.findByKey(anyString())).thenReturn(Optional.of(instance));
-        when(subscriberFinder.findByUsername(anyString())).thenReturn(Optional.empty());
-        when(isFinder.findByInstanceIdAndSubscriberId(anyLong(), any()))
+        when(instanceService.findByKey(anyString())).thenReturn(Optional.of(instance));
+        when(subscriberService.findByUsername(anyString())).thenReturn(Optional.empty());
+        when(isService.findByInstanceIdAndSubscriberId(anyLong(), any()))
             .thenReturn(Optional.empty());
 
         var command = new SubscribeBotCommand(
             event,
-            instanceFinder,
-            isFinder,
+            instanceService,
             isService,
-            subscriberFinder,
             subscriberService,
             "na99"
         );
@@ -82,9 +75,7 @@ class SubscribeBotCommandTests {
     void it_should_respond_with_a_message_if_the_instance_is_not_found() {
         var subscriberService = mock(SubscriberService.class);
         var isService = mock(InstanceSubscriberService.class);
-        var instanceFinder = mock(InstanceFinder.class);
-        var isFinder = mock(InstanceSubscriberFinder.class);
-        var subscriberFinder = mock(SubscriberFinder.class);
+        var instanceService = mock(InstanceService.class);
         var event = mock(MessageReceivedEvent.class);
         var message = mock(Message.class);
         var channel = mock(MessageChannel.class);
@@ -94,14 +85,12 @@ class SubscribeBotCommandTests {
         when(message.getContentRaw()).thenReturn("!trust subscribe na99");
         when(event.getChannel()).thenReturn(channel);
         when(channel.sendMessage(anyString())).thenReturn(action);
-        when(instanceFinder.findByKey(anyString())).thenReturn(Optional.empty());
+        when(instanceService.findByKey(anyString())).thenReturn(Optional.empty());
 
         var command = new SubscribeBotCommand(
             event,
-            instanceFinder,
-            isFinder,
+            instanceService,
             isService,
-            subscriberFinder,
             subscriberService,
             "na99"
         );
@@ -116,9 +105,7 @@ class SubscribeBotCommandTests {
     void it_should_create_a_new_subscription_only_if_there_isnt_one() throws Exception {
         var subscriberService = mock(SubscriberService.class);
         var isService = mock(InstanceSubscriberService.class);
-        var instanceFinder = mock(InstanceFinder.class);
-        var isFinder = mock(InstanceSubscriberFinder.class);
-        var subscriberFinder = mock(SubscriberFinder.class);
+        var instanceService = mock(InstanceService.class);
         var event = mock(MessageReceivedEvent.class);
         var message = mock(Message.class);
         var channel = mock(MessageChannel.class);
@@ -142,17 +129,15 @@ class SubscribeBotCommandTests {
 
         var instance = new Instance();
         instance.setId(1L);
-        when(instanceFinder.findByKey(anyString())).thenReturn(Optional.of(instance));
-        when(subscriberFinder.findByUsername(anyString())).thenReturn(Optional.of(subscriber));
-        when(isFinder.findByInstanceIdAndSubscriberId(anyLong(), anyLong()))
+        when(instanceService.findByKey(anyString())).thenReturn(Optional.of(instance));
+        when(subscriberService.findByUsername(anyString())).thenReturn(Optional.of(subscriber));
+        when(isService.findByInstanceIdAndSubscriberId(anyLong(), anyLong()))
             .thenReturn(Optional.empty());
 
         var command = new SubscribeBotCommand(
             event,
-            instanceFinder,
-            isFinder,
+            instanceService,
             isService,
-            subscriberFinder,
             subscriberService,
             "na99"
         );

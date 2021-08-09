@@ -53,7 +53,7 @@ public class MessageListener extends ListenerAdapter {
         BotCommand command = this.botCommandFactory.newInstance(event);
         try {
             command.run();
-        } catch (BotCommandException ex) {
+        } catch (RuntimeException ex) {
             LOGGER.error("Command failed: ", ex);
             this.printError(event);
         }

@@ -18,11 +18,14 @@ package com.github.sfxd.trust.core.subscribers;
 
 import java.util.Optional;
 
-import com.github.sfxd.trust.core.AbstractFinder;
+import javax.inject.Singleton;
 
-public class SubscriberFinder extends AbstractFinder<Subscriber> {
+import com.github.sfxd.trust.core.Repository;
 
-    public SubscriberFinder() {
+@Singleton
+class SubscriberFinder extends Repository<Subscriber> {
+
+    SubscriberFinder() {
         super(Subscriber.class);
     }
 

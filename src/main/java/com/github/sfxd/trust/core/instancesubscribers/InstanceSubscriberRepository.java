@@ -22,13 +22,13 @@ import java.util.stream.Stream;
 
 import javax.inject.Singleton;
 
-import com.github.sfxd.trust.core.AbstractFinder;
+import com.github.sfxd.trust.core.Repository;
 
 /** Finder for the InstanceSubscriber model */
 @Singleton
-public class InstanceSubscriberFinder extends AbstractFinder<InstanceSubscriber> {
+class InstanceSubscriberRepository extends Repository<InstanceSubscriber> {
 
-    public InstanceSubscriberFinder() {
+    InstanceSubscriberRepository() {
         super(InstanceSubscriber.class);
     }
 

@@ -18,20 +18,19 @@ package com.github.sfxd.trust.core.instancesubscribers;
 
 import java.util.Objects;
 
-import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
-import com.github.sfxd.trust.core.AbstractEntity;
+import com.github.sfxd.trust.core.Entity;
 import com.github.sfxd.trust.core.instances.Instance;
 import com.github.sfxd.trust.core.subscribers.Subscriber;
 
 /**
  * A junction between instances and their subscribers.
  */
-@Entity
-public class InstanceSubscriber extends AbstractEntity {
+@javax.persistence.Entity
+public class InstanceSubscriber extends Entity {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @NotNull

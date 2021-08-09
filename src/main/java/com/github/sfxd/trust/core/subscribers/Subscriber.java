@@ -21,18 +21,17 @@ import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
-import com.github.sfxd.trust.core.AbstractEntity;
+import com.github.sfxd.trust.core.Entity;
 import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriber;
 
 /**
  * Represents a user that has subscribe to notifications
  */
-@Entity
-public class Subscriber extends AbstractEntity {
+@javax.persistence.Entity
+public class Subscriber extends Entity {
 
     @Column(unique = true)
     @NotNull

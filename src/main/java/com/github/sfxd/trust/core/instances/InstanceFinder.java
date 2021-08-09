@@ -22,14 +22,14 @@ import java.util.stream.Stream;
 
 import javax.inject.Singleton;
 
-import com.github.sfxd.trust.core.AbstractFinder;
+import com.github.sfxd.trust.core.Repository;
 
 /** Finder for the Instance model */
 @Singleton
-public class InstanceFinder extends AbstractFinder<Instance> {
+class InstanceFinder extends Repository<Instance> {
     private static final String KEY = "key";
 
-    public InstanceFinder() {
+    InstanceFinder() {
         super(Instance.class);
     }
 

@@ -42,7 +42,7 @@ class MessageListenerTests {
         var restAction = (RestAction<Void>) mock(RestAction.class);
 
         when(factory.newInstance(any())).thenReturn(command);
-        doThrow(BotCommandException.class).when(command).run();
+        doThrow(RuntimeException.class).when(command).run();
         when(event.getChannel()).thenReturn(channel);
         when(channel.sendMessage(anyString())).thenReturn(action);
         when(event.getMessage()).thenReturn(message);

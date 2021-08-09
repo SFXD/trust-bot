@@ -16,23 +16,25 @@
 
 package com.github.sfxd.trust.core.subscribers;
 
+import java.util.Optional;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import com.github.sfxd.trust.core.AbstractEntityService;
-
-import io.ebean.Database;
-import io.ebean.annotation.Transactional;
+import com.github.sfxd.trust.core.EntityService;
 
 /**
  * Service for interacting with the {@link Subscriber} model.
  */
 @Singleton
-@Transactional
-public class SubscriberService extends AbstractEntityService<Subscriber> {
+public class SubscriberService extends EntityService<Subscriber> {
 
     @Inject
-    public SubscriberService(Database db) {
-        super(db, Subscriber.class);
+    public SubscriberService(SubscriberFinder repository) {
+        super(repository);
+    }
+
+    public Optional<Subscriber> findByUsername(String username) {
+        return ((SubscriberFinder) this.repository).findByUsername(username);
     }
 }

@@ -8,9 +8,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.sfxd.trust.core.AbstractEntityService.DmlException;
 import com.github.sfxd.trust.core.instances.Instance;
-import com.github.sfxd.trust.core.instances.InstanceFinder;
 import com.github.sfxd.trust.core.instances.InstanceService;
 
 import org.junit.jupiter.api.Test;
@@ -18,17 +16,16 @@ import org.junit.jupiter.api.Test;
 class InstanceRefreshConsumerTests {
 
     @Test
-    void it_should_update_the_table_with_the_new_data() throws DmlException {
+    void it_should_update_the_table_with_the_new_data() {
         var instanceService = mock(InstanceService.class);
-        var instanceFinder = mock(InstanceFinder.class);
         var instances = new ArrayList<Instance>();
         var instance = new Instance();
         instance.setKey("NA99");
         var previews = List.of(instance);
 
-        when(instanceFinder.findByKeyIn(anySet())).thenReturn(instances.stream());
+        when(instanceService.findByKeyIn(anySet())).thenReturn(instances.stream());
 
-        var consumer = new InstanceRefreshConsumer(instanceService, instanceFinder);
+        var consumer = new InstanceRefreshConsumer(instanceService);
         consumer.accept(previews);
 
         verify(instanceService).insert(previews);

@@ -18,79 +18,62 @@ package com.github.sfxd.trust.discord;
 
 import java.util.Optional;
 
-import com.github.sfxd.trust.core.AbstractEntityService.DmlException;
 import com.github.sfxd.trust.core.instances.Instance;
-import com.github.sfxd.trust.core.instances.InstanceFinder;
+import com.github.sfxd.trust.core.instances.InstanceService;
 import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriber;
-import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriberFinder;
 import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriberService;
 import com.github.sfxd.trust.core.subscribers.Subscriber;
-import com.github.sfxd.trust.core.subscribers.SubscriberFinder;
 import com.github.sfxd.trust.core.subscribers.SubscriberService;
 
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 class SubscribeBotCommand extends BotCommand {
 
-    private final InstanceFinder instanceFinder;
-    private final InstanceSubscriberFinder isFinder;
+    private final InstanceService instanceService;
     private final InstanceSubscriberService isService;
-    private final SubscriberFinder subscriberFinder;
     private final SubscriberService subscriberService;
     private final String key;
 
     SubscribeBotCommand(
         MessageReceivedEvent event,
-        InstanceFinder instanceFinder,
-        InstanceSubscriberFinder isFinder,
+        InstanceService instanceService,
         InstanceSubscriberService isService,
-        SubscriberFinder subscriberFinder,
         SubscriberService subscriberService,
         String key
     ) {
         super(event);
 
-        this.instanceFinder = instanceFinder;
-        this.isFinder = isFinder;
+        this.instanceService = instanceService;
         this.isService = isService;
-        this.subscriberFinder = subscriberFinder;
         this.subscriberService = subscriberService;
         this.key = key;
     }
 
     @Override
     public void run() {
-        Optional<Instance> instance = this.instanceFinder.findByKey(key);
+        Optional<Instance> instance = this.instanceService.findByKey(key);
 
         if (instance.isEmpty()) {
             this.event.getChannel()
-                .sendMessage(String.format("%s is not a valid instance key.", this.key)).queue();
+                .sendMessage(String.format("%s is not a valid instance key.", this.key))
+                .queue();
 
             return;
         }
 
         String username = event.getAuthor().getId();
-        Subscriber subscriber = this.subscriberFinder.findByUsername(username)
+        Subscriber subscriber = this.subscriberService.findByUsername(username)
             .orElseGet(() -> new Subscriber(username));
 
         if (subscriber.isNew()) {
-            try {
-                this.subscriberService.insert(subscriber);
-            } catch (DmlException ex) {
-                throw new BotCommandException(ex);
-            }
-
+            this.subscriberService.insert(subscriber);
         }
 
-        Optional<InstanceSubscriber> subscription = this.isFinder
+        Optional<InstanceSubscriber> subscription = this.isService
             .findByInstanceIdAndSubscriberId(instance.get().getId(), subscriber.getId());
 
         if (subscription.isEmpty()) {
-            try {
-                this.isService.insert(new InstanceSubscriber(instance.get(), subscriber));
-            } catch (DmlException ex) {
-                throw new BotCommandException(ex);
-            }
+            this.isService.insert(new InstanceSubscriber(instance.get(), subscriber));
         }
 
         this.reactWithCheckMark();

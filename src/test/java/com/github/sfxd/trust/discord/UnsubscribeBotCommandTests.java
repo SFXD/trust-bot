@@ -8,7 +8,6 @@ import static org.mockito.Mockito.when;
 import java.util.Optional;
 
 import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriber;
-import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriberFinder;
 import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriberService;
 
 import org.junit.jupiter.api.Test;
@@ -23,7 +22,6 @@ class UnsubscribeBotCommandTests {
     @Test
     void it_should_delete_the_subscription_if_found() throws Exception {
         var event = mock(MessageReceivedEvent.class);
-        var isFinder = mock(InstanceSubscriberFinder.class);
         var isService = mock(InstanceSubscriberService.class);
         var key = "NA99";
         var username = "george";
@@ -38,9 +36,9 @@ class UnsubscribeBotCommandTests {
         when(event.getMessage()).thenReturn(message);
         when(message.addReaction(anyString())).thenReturn(action);
         when(user.getId()).thenReturn(username);
-        when(isFinder.findByKeyAndUsername(key, username)).thenReturn(Optional.of(subscription));
+        when(isService.findByKeyAndUsername(key, username)).thenReturn(Optional.of(subscription));
 
-        var command = new UnsubscribeBotCommand(event, key, isFinder, isService);
+        var command = new UnsubscribeBotCommand(event, key, isService);
         command.run();
 
         verify(isService).delete(subscription);

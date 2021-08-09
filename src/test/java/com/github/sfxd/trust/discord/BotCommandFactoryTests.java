@@ -5,10 +5,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
-import com.github.sfxd.trust.core.instances.InstanceFinder;
-import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriberFinder;
+import com.github.sfxd.trust.core.instances.InstanceService;
 import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriberService;
-import com.github.sfxd.trust.core.subscribers.SubscriberFinder;
 import com.github.sfxd.trust.core.subscribers.SubscriberService;
 
 import org.junit.jupiter.api.Test;
@@ -20,11 +18,9 @@ class BotCommandFactoryTests {
 
     @Test
     void it_should_do_nothing_when_no_command_is_given() {
-        var isFinder = mock(InstanceSubscriberFinder.class);
         var isService = mock(InstanceSubscriberService.class);
-        var instanceFinder = mock(InstanceFinder.class);
-        var subscriberFinder = mock(SubscriberFinder.class);
         var subscriberService = mock(SubscriberService.class);
+        var instanceService = mock(InstanceService.class);
         var event = mock(MessageReceivedEvent.class);
         var message = mock(Message.class);
 
@@ -32,17 +28,15 @@ class BotCommandFactoryTests {
         when(message.getContentRaw()).thenReturn("");
 
         var factory = new BotCommandFactory(
-            isFinder,
             isService,
-            instanceFinder,
-            subscriberFinder,
-            subscriberService
+            subscriberService,
+            instanceService
         );
 
         var command = factory.newInstance(event);
         command.run();
 
-        verifyNoInteractions(isFinder, isService, instanceFinder, subscriberFinder, subscriberService);
+        verifyNoInteractions(isService, subscriberService, instanceService);
     }
 
     @Test
@@ -77,11 +71,9 @@ class BotCommandFactoryTests {
     }
 
     private static void assertCommandClass(String args, Class<? extends BotCommand> clazz) {
-        var isFinder = mock(InstanceSubscriberFinder.class);
         var isService = mock(InstanceSubscriberService.class);
-        var instanceFinder = mock(InstanceFinder.class);
-        var subscriberFinder = mock(SubscriberFinder.class);
         var subscriberService = mock(SubscriberService.class);
+        var instanceService = mock(InstanceService.class);
         var event = mock(MessageReceivedEvent.class);
         var message = mock(Message.class);
 
@@ -89,11 +81,9 @@ class BotCommandFactoryTests {
         when(message.getContentRaw()).thenReturn(args);
 
         var factory = new BotCommandFactory(
-            isFinder,
             isService,
-            instanceFinder,
-            subscriberFinder,
-            subscriberService
+            subscriberService,
+            instanceService
         );
 
         var command = factory.newInstance(event);
