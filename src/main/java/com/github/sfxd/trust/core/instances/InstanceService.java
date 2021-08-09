@@ -45,7 +45,6 @@ import io.ebean.annotation.Transactional;
  * Service for working with the {@link Instance} model.
  */
 @Singleton
-@Transactional
 public class InstanceService extends EntityService<Instance> {
 
     private final InstanceSubscriberService instanceSubscriberService;
@@ -67,6 +66,7 @@ public class InstanceService extends EntityService<Instance> {
 
     /** {@inheritDoc} */
     @Override
+    @Transactional
     public List<Instance> update(List<Instance> entities) {
         Map<Long, Instance> instancesById = entities.stream()
             .collect(Collectors.toMap(Instance::getId, Function.identity()));
