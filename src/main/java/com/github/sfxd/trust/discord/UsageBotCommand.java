@@ -16,20 +16,23 @@
 
 package com.github.sfxd.trust.discord;
 
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 class UsageBotCommand extends BotCommand {
 
-    static final String USAGE = "Usage: \n" +
-                                "  !trust <subscribe, unsubscribe> <instance_id>\n" +
-                                "  !trust source\n";
+    static final String USAGE = """
+                                Usage:
+                                    /<subscribe, unsubscribe> <instance_id>
+                                    /source
+                                    /help
+                                """;
 
-    UsageBotCommand(MessageReceivedEvent event) {
+    UsageBotCommand(SlashCommandEvent event) {
         super(event);
     }
 
     @Override
     public void run() {
-        this.event.getChannel().sendMessage(USAGE).queue();
+        this.event.reply(USAGE).queue();
     }
 }

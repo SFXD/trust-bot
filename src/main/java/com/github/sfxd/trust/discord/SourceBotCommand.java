@@ -16,17 +16,17 @@
 
 package com.github.sfxd.trust.discord;
 
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 class SourceBotCommand extends BotCommand {
     static final String GITHUB = "https://github.com/SFXD/trust-bot";
 
-    SourceBotCommand(MessageReceivedEvent event) {
+    SourceBotCommand(SlashCommandEvent event) {
         super(event);
     }
 
     @Override
     public void run() {
-        this.event.getChannel().sendMessage(GITHUB).queue();
+        this.event.reply(GITHUB).queue();
     }
 }

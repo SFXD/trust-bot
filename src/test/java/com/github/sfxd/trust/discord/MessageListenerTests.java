@@ -11,9 +11,11 @@ import org.junit.jupiter.api.Test;
 
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
+import net.dv8tion.jda.api.requests.restaction.interactions.ReplyAction;
 
 class MessageListenerTests {
 
@@ -24,7 +26,7 @@ class MessageListenerTests {
         when(factory.newInstance(any())).thenReturn(command);
 
         var listener = new MessageListener(factory);
-        listener.onMessageReceived(null);
+        listener.onSlashCommand(null);
 
         verify(command).run();
     }
@@ -33,24 +35,17 @@ class MessageListenerTests {
     void it_should_print_an_error_message_when_a_command_errors() {
         var factory = mock(BotCommandFactory.class);
         var command = mock(BotCommand.class);
-        var event = mock(MessageReceivedEvent.class);
-        var channel = mock(MessageChannel.class);
-        var action = mock(MessageAction.class);
-        var message = mock(Message.class);
+        var event = mock(SlashCommandEvent.class);
+        var action = mock(ReplyAction.class);
 
-        @SuppressWarnings("unchecked")
-        var restAction = (RestAction<Void>) mock(RestAction.class);
 
         when(factory.newInstance(any())).thenReturn(command);
         doThrow(RuntimeException.class).when(command).run();
-        when(event.getChannel()).thenReturn(channel);
-        when(channel.sendMessage(anyString())).thenReturn(action);
-        when(event.getMessage()).thenReturn(message);
-        when(message.addReaction(anyString())).thenReturn(restAction);
+        when(event.reply(anyString())).thenReturn(action);
 
         var listener = new MessageListener(factory);
-        listener.onMessageReceived(event);
+        listener.onSlashCommand(event);
 
-        verify(channel).sendMessage(MessageListener.ERROR_MSG);
+        verify(event).reply(MessageListener.ERROR_MSG);
     }
 }

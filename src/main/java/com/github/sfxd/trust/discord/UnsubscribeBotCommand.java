@@ -21,7 +21,7 @@ import java.util.Optional;
 import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriber;
 import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriberService;
 
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 /** Command for !trust unsubscribe <serverkey> */
 class UnsubscribeBotCommand extends BotCommand {
@@ -29,7 +29,7 @@ class UnsubscribeBotCommand extends BotCommand {
     private final InstanceSubscriberService isService;
 
     UnsubscribeBotCommand(
-        MessageReceivedEvent event,
+        SlashCommandEvent event,
         String key,
         InstanceSubscriberService isService
     ) {
@@ -42,12 +42,12 @@ class UnsubscribeBotCommand extends BotCommand {
     @Override
     public void run() {
         Optional<InstanceSubscriber> subscription = this.isService
-            .findByKeyAndUsername(this.key, this.event.getAuthor().getId());
+            .findByKeyAndUsername(this.key, this.event.getUser().getId());
 
         if (subscription.isPresent()) {
             this.isService.delete(subscription.get());
         }
 
-        this.reactWithCheckMark();
+        this.replyWithCheckMark();
     }
 }

@@ -12,30 +12,25 @@ import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriberService;
 
 import org.junit.jupiter.api.Test;
 
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.requests.RestAction;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.requests.restaction.interactions.ReplyAction;
 
 class UnsubscribeBotCommandTests {
 
     @Test
     void it_should_delete_the_subscription_if_found() throws Exception {
-        var event = mock(MessageReceivedEvent.class);
+        var event = mock(SlashCommandEvent.class);
         var isService = mock(InstanceSubscriberService.class);
         var key = "NA99";
         var username = "george";
         var user = mock(User.class);
         var subscription = new InstanceSubscriber(null, null);
-        var message = mock(Message.class);
+        var action = mock(ReplyAction.class);
 
-        @SuppressWarnings("unchecked")
-        var action = (RestAction<Void>) mock(RestAction.class);
-
-        when(event.getAuthor()).thenReturn(user);
-        when(event.getMessage()).thenReturn(message);
-        when(message.addReaction(anyString())).thenReturn(action);
+        when(event.getUser()).thenReturn(user);
         when(user.getId()).thenReturn(username);
+        when(event.reply(anyString())).thenReturn(action);
         when(isService.findByKeyAndUsername(key, username)).thenReturn(Optional.of(subscription));
 
         var command = new UnsubscribeBotCommand(event, key, isService);

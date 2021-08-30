@@ -22,7 +22,7 @@ import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 /**
@@ -32,8 +32,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 public class MessageListener extends ListenerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageListener.class);
 
-    static final String X = "❌";
-    static final String ERROR_MSG = "Oops! An unexpected error occurred.";
+    static final String ERROR_MSG = "Oops! An unexpected error occurred. ❌";
 
     private final BotCommandFactory botCommandFactory;
 
@@ -49,7 +48,7 @@ public class MessageListener extends ListenerAdapter {
      * instance provided it will respond in the channel with how to use the command.
      */
     @Override
-    public void onMessageReceived(MessageReceivedEvent event) {
+    public void onSlashCommand(SlashCommandEvent event) {
         BotCommand command = this.botCommandFactory.newInstance(event);
         try {
             command.run();
@@ -59,8 +58,7 @@ public class MessageListener extends ListenerAdapter {
         }
     }
 
-    private void printError(MessageReceivedEvent event) {
-        event.getChannel().sendMessage(ERROR_MSG).queue();
-        event.getMessage().addReaction(X).queue();
+    private void printError(SlashCommandEvent event) {
+        event.reply(ERROR_MSG).queue();
     }
 }

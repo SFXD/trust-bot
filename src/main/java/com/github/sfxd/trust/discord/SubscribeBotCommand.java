@@ -25,7 +25,8 @@ import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriberService;
 import com.github.sfxd.trust.core.subscribers.Subscriber;
 import com.github.sfxd.trust.core.subscribers.SubscriberService;
 
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+
 
 class SubscribeBotCommand extends BotCommand {
 
@@ -35,7 +36,7 @@ class SubscribeBotCommand extends BotCommand {
     private final String key;
 
     SubscribeBotCommand(
-        MessageReceivedEvent event,
+        SlashCommandEvent event,
         InstanceService instanceService,
         InstanceSubscriberService isService,
         SubscriberService subscriberService,
@@ -54,14 +55,13 @@ class SubscribeBotCommand extends BotCommand {
         Optional<Instance> instance = this.instanceService.findByKey(key);
 
         if (instance.isEmpty()) {
-            this.event.getChannel()
-                .sendMessage(String.format("%s is not a valid instance key.", this.key))
+            this.event.reply(String.format("%s is not a valid instance key.", this.key))
                 .queue();
 
             return;
         }
 
-        String username = event.getAuthor().getId();
+        String username = this.event.getUser().getId();
         Subscriber subscriber = this.subscriberService.findByUsername(username)
             .orElseGet(() -> new Subscriber(username));
 
@@ -76,7 +76,6 @@ class SubscribeBotCommand extends BotCommand {
             this.isService.insert(new InstanceSubscriber(instance.get(), subscriber));
         }
 
-        this.reactWithCheckMark();
+        this.replyWithCheckMark();
     }
-
 }

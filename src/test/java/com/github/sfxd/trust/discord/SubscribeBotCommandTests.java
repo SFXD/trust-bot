@@ -18,12 +18,9 @@ import com.github.sfxd.trust.core.subscribers.SubscriberService;
 
 import org.junit.jupiter.api.Test;
 
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.requests.RestAction;
-import net.dv8tion.jda.api.requests.restaction.MessageAction;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.requests.restaction.interactions.ReplyAction;
 
 class SubscribeBotCommandTests {
 
@@ -32,24 +29,14 @@ class SubscribeBotCommandTests {
         var subscriberService = mock(SubscriberService.class);
         var isService = mock(InstanceSubscriberService.class);
         var instanceService = mock(InstanceService.class);
-        var event = mock(MessageReceivedEvent.class);
-        var message = mock(Message.class);
-        var channel = mock(MessageChannel.class);
-        var action = mock(MessageAction.class);
+        var event = mock(SlashCommandEvent.class);
         var user = mock(User.class);
+        var replyAction = mock(ReplyAction.class);
 
-        @SuppressWarnings("unchecked")
-        var restAction = (RestAction<Void>) mock(RestAction.class);
 
-        when(event.getMessage()).thenReturn(message);
-        when(message.getContentRaw()).thenReturn("!trust subscribe na99");
-        when(message.addReaction(anyString())).thenReturn(restAction);
-        when(event.getChannel()).thenReturn(channel);
-        when(event.getMessageId()).thenReturn("");
-        when(channel.sendMessage(anyString())).thenReturn(action);
-        when(channel.addReactionById(anyString(), anyString())).thenReturn(restAction);
-        when(event.getAuthor()).thenReturn(user);
+        when(event.getUser()).thenReturn(user);
         when(user.getId()).thenReturn("");
+        when(event.reply(anyString())).thenReturn(replyAction);
 
         var instance = new Instance();
         instance.setId(1L);
@@ -76,15 +63,10 @@ class SubscribeBotCommandTests {
         var subscriberService = mock(SubscriberService.class);
         var isService = mock(InstanceSubscriberService.class);
         var instanceService = mock(InstanceService.class);
-        var event = mock(MessageReceivedEvent.class);
-        var message = mock(Message.class);
-        var channel = mock(MessageChannel.class);
-        var action = mock(MessageAction.class);
+        var event = mock(SlashCommandEvent.class);
+        var replyAction = mock(ReplyAction.class);
 
-        when(event.getMessage()).thenReturn(message);
-        when(message.getContentRaw()).thenReturn("!trust subscribe na99");
-        when(event.getChannel()).thenReturn(channel);
-        when(channel.sendMessage(anyString())).thenReturn(action);
+        when(event.reply(anyString())).thenReturn(replyAction);
         when(instanceService.findByKey(anyString())).thenReturn(Optional.empty());
 
         var command = new SubscribeBotCommand(
@@ -97,8 +79,8 @@ class SubscribeBotCommandTests {
 
         command.run();
 
-        verify(channel).sendMessage(anyString());
-        verify(action).queue();
+        verify(event).reply(anyString());
+        verify(replyAction).queue();
     }
 
     @Test
@@ -106,26 +88,14 @@ class SubscribeBotCommandTests {
         var subscriberService = mock(SubscriberService.class);
         var isService = mock(InstanceSubscriberService.class);
         var instanceService = mock(InstanceService.class);
-        var event = mock(MessageReceivedEvent.class);
-        var message = mock(Message.class);
-        var channel = mock(MessageChannel.class);
-        var action = mock(MessageAction.class);
+        var event = mock(SlashCommandEvent.class);
         var user = mock(User.class);
         var subscriber = new Subscriber("");
         subscriber.setId(1L);
 
-        @SuppressWarnings("unchecked")
-        var restAction = (RestAction<Void>) mock(RestAction.class);
-
-        when(event.getMessage()).thenReturn(message);
-        when(message.getContentRaw()).thenReturn("!trust subscribe na99");
-        when(message.addReaction(anyString())).thenReturn(restAction);
-        when(event.getChannel()).thenReturn(channel);
-        when(event.getMessageId()).thenReturn("");
-        when(channel.sendMessage(anyString())).thenReturn(action);
-        when(channel.addReactionById(anyString(), anyString())).thenReturn(restAction);
-        when(event.getAuthor()).thenReturn(user);
+        when(event.getUser()).thenReturn(user);
         when(user.getId()).thenReturn("");
+        when(event.reply(anyString())).thenReturn(mock(ReplyAction.class));
 
         var instance = new Instance();
         instance.setId(1L);

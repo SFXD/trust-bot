@@ -16,18 +16,18 @@
 
 package com.github.sfxd.trust.discord;
 
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 abstract class BotCommand implements Runnable {
     static final String CHECK_MARK = "✅";
 
-    protected final MessageReceivedEvent event;
+    protected final SlashCommandEvent event;
 
-    protected BotCommand(MessageReceivedEvent event) {
+    protected BotCommand(SlashCommandEvent event) {
         this.event = event;
     }
 
-    protected void reactWithCheckMark() {
-        this.event.getMessage().addReaction(CHECK_MARK).queue();
+    protected void replyWithCheckMark() {
+        this.event.reply(CHECK_MARK).queue();
     }
 }
