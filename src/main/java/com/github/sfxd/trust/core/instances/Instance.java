@@ -24,8 +24,6 @@ import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.sfxd.trust.core.Entity;
@@ -39,21 +37,19 @@ import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriber;
 public class Instance extends Entity {
     public static final String STATUS_OK = "OK";
 
-    @Column(unique = true)
-    @NotNull
-    @Size(max = 255)
+    @Column(unique = true, nullable = false, length = 255)
     private String key;
 
-    @Size(max = 255)
+    @Column(length = 255)
     private String location;
 
-    @Size(max = 255)
+    @Column(length = 255)
     private String releaseVersion;
 
-    @Size(max = 255)
+    @Column(length = 255)
     private String releaseNumber;
 
-    @Size(max = 255)
+    @Column(length = 255)
     private String status;
 
     @Enumerated(EnumType.STRING)
@@ -129,7 +125,7 @@ public class Instance extends Entity {
         return this;
     }
 
-    public static enum Environment {
+    public enum Environment {
         @JsonProperty("sandbox")
         SANDBOX,
 
@@ -139,8 +135,7 @@ public class Instance extends Entity {
 
     @Override
     public boolean equals(Object other) {
-        if (other instanceof Instance) {
-            var i = (Instance) other;
+        if (other instanceof Instance i) {
             return Objects.equals(this.key, i.key);
         }
 

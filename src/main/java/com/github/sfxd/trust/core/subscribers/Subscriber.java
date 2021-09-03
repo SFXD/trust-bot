@@ -22,7 +22,6 @@ import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.NotNull;
 
 import com.github.sfxd.trust.core.Entity;
 import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriber;
@@ -33,8 +32,7 @@ import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriber;
 @javax.persistence.Entity
 public class Subscriber extends Entity {
 
-    @Column(unique = true)
-    @NotNull
+    @Column(unique = true, nullable = false)
     private String username;
 
     @OneToMany(mappedBy = "subscriber", cascade = CascadeType.REMOVE)
@@ -64,8 +62,7 @@ public class Subscriber extends Entity {
 
     @Override
     public boolean equals(Object other) {
-        if (other instanceof Subscriber) {
-            var subscriber = (Subscriber) other;
+        if (other instanceof Subscriber subscriber) {
             return Objects.equals(this.username, subscriber.username);
         }
 

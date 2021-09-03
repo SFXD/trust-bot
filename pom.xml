@@ -70,11 +70,6 @@
       <version>2.2.0</version>
     </dependency>
     <dependency>
-      <groupId>org.hibernate.validator</groupId>
-      <artifactId>hibernate-validator</artifactId>
-      <version>6.1.5.Final</version>
-    </dependency>
-    <dependency>
       <groupId>org.codehaus.janino</groupId>
       <artifactId>janino</artifactId>
       <version>3.1.2</version>
