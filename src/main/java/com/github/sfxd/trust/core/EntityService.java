@@ -6,14 +6,13 @@ import java.util.List;
 /** Base class for all of the entity services */
 public abstract class EntityService<T extends Entity> {
 
-    protected final Repository<T> repository;
-
-    protected EntityService(Repository<T> repository) {
-        this.repository = repository;
+    protected EntityService() {
     }
 
+    protected abstract Repository<T> repository();
+
     public List<T> insert(List<T> entities) {
-        this.repository.insert(entities);
+        this.repository().insert(entities);
 
         return entities;
     }
@@ -23,7 +22,7 @@ public abstract class EntityService<T extends Entity> {
     }
 
     public List<T> update(List<T> entities) {
-        this.repository.update(entities);
+        this.repository().update(entities);
 
         return entities;
     }
@@ -33,7 +32,7 @@ public abstract class EntityService<T extends Entity> {
     }
 
     public void delete(List<T> entities) {
-        this.repository.delete(entities);
+        this.repository().delete(entities);
     }
 
     public void delete(T entity) {

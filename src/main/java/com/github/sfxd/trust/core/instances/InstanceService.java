@@ -15,6 +15,7 @@ import javax.inject.Singleton;
 
 import com.github.sfxd.trust.core.EntityService;
 import com.github.sfxd.trust.core.MessageService;
+import com.github.sfxd.trust.core.Repository;
 import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriber;
 import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriberService;
 import com.github.sfxd.trust.core.subscribers.Subscriber;
@@ -42,8 +43,6 @@ public class InstanceService extends EntityService<Instance> {
         InstanceSubscriberService instanceSubscriberService,
         InstanceFinder instanceFinder
     ) {
-        super(instanceFinder);
-
         this.messageService = messageService;
         this.instanceSubscriberService = instanceSubscriberService;
         this.instanceFinder = instanceFinder;
@@ -99,5 +98,9 @@ public class InstanceService extends EntityService<Instance> {
 
     public Stream<Instance> findByKeyIn(Collection<String> keys) {
         return this.instanceFinder.findByKeyIn(keys);
+    }
+
+    protected Repository<Instance> repository() {
+        return this.instanceFinder;
     }
 }

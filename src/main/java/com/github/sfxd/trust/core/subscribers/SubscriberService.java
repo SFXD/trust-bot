@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import com.github.sfxd.trust.core.EntityService;
+import com.github.sfxd.trust.core.Repository;
 
 /**
  * Service for interacting with the {@link Subscriber} model.
@@ -14,12 +15,18 @@ import com.github.sfxd.trust.core.EntityService;
 @Singleton
 public class SubscriberService extends EntityService<Subscriber> {
 
+    private final SubscriberFinder repository;
+
     @Inject
     public SubscriberService(SubscriberFinder repository) {
-        super(repository);
+        this.repository = repository;
     }
 
     public Optional<Subscriber> findByUsername(String username) {
-        return ((SubscriberFinder) this.repository).findByUsername(username);
+        return this.repository.findByUsername(username);
+    }
+
+    protected Repository<Subscriber> repository() {
+        return this.repository;
     }
 }

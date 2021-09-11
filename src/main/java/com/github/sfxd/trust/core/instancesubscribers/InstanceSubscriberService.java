@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import com.github.sfxd.trust.core.EntityService;
+import com.github.sfxd.trust.core.Repository;
 
 /**
  * Service for working with the {@link InstanceSubcriber} model
@@ -20,8 +21,6 @@ public class InstanceSubscriberService extends EntityService<InstanceSubscriber>
 
     @Inject
     public InstanceSubscriberService(InstanceSubscriberRepository repository) {
-        super(repository);
-
         this.instanceSubscriberRepository = repository;
     }
 
@@ -35,5 +34,9 @@ public class InstanceSubscriberService extends EntityService<InstanceSubscriber>
 
     public Optional<InstanceSubscriber> findByKeyAndUsername(String key, String username) {
         return this.instanceSubscriberRepository.findByKeyAndUsername(key, username);
+    }
+
+    protected Repository<InstanceSubscriber> repository() {
+        return this.instanceSubscriberRepository;
     }
 }
