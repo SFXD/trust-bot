@@ -32,7 +32,7 @@ public abstract class Repository<T extends Entity> {
     }
 
     protected Query<T> query() {
-        return DB.getDefault().createQuery(this.clazz);
+        return this.database.createQuery(this.clazz);
     }
 
     public void insert(Collection<T> entities) {
