@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package com.github.sfxd.trust.discord.cdi;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Produces;
+import javax.inject.Singleton;
 
 import com.github.sfxd.trust.discord.MessageListener;
 
@@ -20,8 +20,11 @@ import net.dv8tion.jda.api.entities.Activity;
 class JDAProducer {
     private static final Logger LOGGER = LoggerFactory.getLogger(JDAProducer.class);
 
+    // This MUST be @Singleton scoped!!
+    // Weld's proxying will cause JDA to not properly register
+    // slash commands since the calls will be made on the proxy object.
     @Produces
-    @ApplicationScoped
+    @Singleton
     JDA produceJDA(
         @ConfigProperty(name = "trust.discord.token") String token,
         MessageListener listener
