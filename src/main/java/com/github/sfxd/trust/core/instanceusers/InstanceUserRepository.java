@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-package com.github.sfxd.trust.core.instancesubscribers;
+package com.github.sfxd.trust.core.instanceusers;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -9,41 +9,41 @@ import javax.inject.Singleton;
 
 import com.github.sfxd.trust.core.Repository;
 
-/** Finder for the InstanceSubscriber model */
+/** Finder for the InstanceUser model */
 @Singleton
-class InstanceSubscriberRepository extends Repository<InstanceSubscriber> {
+class InstanceUserRepository extends Repository<InstanceUser> {
 
-    InstanceSubscriberRepository() {
-        super(InstanceSubscriber.class);
+    InstanceUserRepository() {
+        super(InstanceUser.class);
     }
 
     /**
-     * Finds a subscription by it's instances key and the the subscriber's username
+     * Finds a subscription by it's instances key and the the user's username
      *
      * @param key      the instance's key (e.g. NA99)
      * @param username discord user id
      * @return the query matching the subscriber
      */
-    public Optional<InstanceSubscriber> findByKeyAndUsername(String key, String username) {
+    public Optional<InstanceUser> findByKeyAndUsername(String key, String username) {
         return this.query()
             .where()
-            .eq("subscriber.username", username)
+            .eq("user.username", username)
             .and()
             .eq("instance.key", key)
             .findOneOrEmpty();
     }
 
     /**
-     * Finds a subscription by its insance id and subscriber's id
+     * Finds a subscription by its insance id and user's id
      *
      * @param instanceId   the id of the instance
-     * @param subscriberId the is of the subscriber
+     * @param userId the is of the subscriber
      * @return the query of matching subscribers
      */
-    public Optional<InstanceSubscriber> findByInstanceIdAndSubscriberId(Long instanceId, Long subscriberId) {
+    public Optional<InstanceUser> findByInstanceIdAndUserId(Long instanceId, Long userId) {
         return this.query()
             .where()
-            .eq("subscriber.id", subscriberId)
+            .eq("user.id", userId)
             .and()
             .eq("instance.id", instanceId)
             .findOneOrEmpty();
@@ -55,7 +55,7 @@ class InstanceSubscriberRepository extends Repository<InstanceSubscriber> {
      * @param instanceIds the instances you want to filter by
      * @return the matching subscribers
      */
-    public Stream<InstanceSubscriber> findByInstanceIdIn(Collection<Long> instanceIds) {
+    public Stream<InstanceUser> findByInstanceIdIn(Collection<Long> instanceIds) {
         return this.query()
             .where()
             .in("instance.id", instanceIds)

@@ -12,7 +12,7 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.sfxd.trust.core.Entity;
-import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriber;
+import com.github.sfxd.trust.core.instanceusers.InstanceUser;
 
 /**
  * Represents an SFDC instance. Sandbox or Production.
@@ -41,7 +41,7 @@ public class Instance extends Entity {
     private Environment environment;
 
     @OneToMany(mappedBy = "instance", cascade = CascadeType.REMOVE)
-    private List<InstanceSubscriber> instanceSubscribers;
+    private List<InstanceUser> instanceUsers;
 
     public Instance() {
 
@@ -101,12 +101,12 @@ public class Instance extends Entity {
         return this;
     }
 
-    public List<InstanceSubscriber> getInstanceSubscribers() {
-        return this.instanceSubscribers;
+    public List<InstanceUser> getInstanceUsers() {
+        return this.instanceUsers;
     }
 
-    public Instance setInstanceSubscribers(List<InstanceSubscriber> instanceSubscribers) {
-        this.instanceSubscribers = instanceSubscribers;
+    public Instance setInstanceUsers(List<InstanceUser> instanceUsers) {
+        this.instanceUsers = instanceUsers;
         return this;
     }
 

@@ -16,9 +16,9 @@ import javax.inject.Singleton;
 import com.github.sfxd.trust.core.EntityService;
 import com.github.sfxd.trust.core.MessageService;
 import com.github.sfxd.trust.core.Repository;
-import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriber;
-import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriberService;
-import com.github.sfxd.trust.core.subscribers.Subscriber;
+import com.github.sfxd.trust.core.instanceusers.InstanceUser;
+import com.github.sfxd.trust.core.instanceusers.InstanceUserService;
+import com.github.sfxd.trust.core.users.User;
 
 import org.apache.commons.lang3.builder.Diff;
 import org.apache.commons.lang3.builder.DiffBuilder;
@@ -33,18 +33,18 @@ import io.ebean.annotation.Transactional;
 @Singleton
 public class InstanceService extends EntityService<Instance> {
 
-    private final InstanceSubscriberService instanceSubscriberService;
+    private final InstanceUserService instanceUserService;
     private final InstanceFinder instanceFinder;
     private final MessageService messageService;
 
     @Inject
     public InstanceService(
         MessageService messageService,
-        InstanceSubscriberService instanceSubscriberService,
+        InstanceUserService instanceUserService,
         InstanceFinder instanceFinder
     ) {
         this.messageService = messageService;
-        this.instanceSubscriberService = instanceSubscriberService;
+        this.instanceUserService = instanceUserService;
         this.instanceFinder = instanceFinder;
     }
 
@@ -60,13 +60,13 @@ public class InstanceService extends EntityService<Instance> {
             .filter(diff -> !diff.getDiffs().isEmpty())
             .collect(Collectors.toMap(diff -> diff.getLeft().getId(), Function.identity()));
 
-        Map<Subscriber, List<InstanceSubscriber>> subscriptionsBySubscriber = this.instanceSubscriberService
+        Map<User, List<InstanceUser>> subscriptions = this.instanceUserService
             .findByInstanceIdIn(changes.keySet())
-            .collect(Collectors.groupingBy(InstanceSubscriber::getSubscriber));
+            .collect(Collectors.groupingBy(InstanceUser::getUser));
 
-        for (Entry<Subscriber, List<InstanceSubscriber>> entry : subscriptionsBySubscriber.entrySet()) {
+        for (Entry<User, List<InstanceUser>> entry : subscriptions.entrySet()) {
             var message = new StringBuilder();
-            for (InstanceSubscriber is : entry.getValue()) {
+            for (InstanceUser is : entry.getValue()) {
                 Instance instance = is.getInstance();
                 message.append(instance.getKey() + System.lineSeparator());
 

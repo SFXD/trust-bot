@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-package com.github.sfxd.trust.core.subscribers;
+package com.github.sfxd.trust.core.users;
 
 import java.util.Optional;
 
@@ -8,10 +8,10 @@ import javax.inject.Singleton;
 import com.github.sfxd.trust.core.Repository;
 
 @Singleton
-class SubscriberFinder extends Repository<Subscriber> {
+class UserFinder extends Repository<User> {
 
-    SubscriberFinder() {
-        super(Subscriber.class);
+    UserFinder() {
+        super(User.class);
     }
 
     /**
@@ -21,7 +21,7 @@ class SubscriberFinder extends Repository<Subscriber> {
      * @return An Optional containing the subscriber or empty if hibernate throws
      *         NoResultException
      */
-    public Optional<Subscriber> findByUsername(String username) {
+    public Optional<User> findByUsername(String username) {
         return this.query()
             .where()
             .eq("username", username)

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-package com.github.sfxd.trust.core.instancesubscribers;
+package com.github.sfxd.trust.core.instanceusers;
 
 import java.util.Objects;
 
@@ -9,13 +9,13 @@ import javax.persistence.ManyToOne;
 
 import com.github.sfxd.trust.core.Entity;
 import com.github.sfxd.trust.core.instances.Instance;
-import com.github.sfxd.trust.core.subscribers.Subscriber;
+import com.github.sfxd.trust.core.users.User;
 
 /**
  * A junction between instances and their subscribers.
  */
 @javax.persistence.Entity
-public class InstanceSubscriber extends Entity {
+public class InstanceUser extends Entity {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @Column(nullable = false)
@@ -23,36 +23,36 @@ public class InstanceSubscriber extends Entity {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @Column(nullable = false)
-    private Subscriber subscriber;
+    private User user;
 
-    public InstanceSubscriber(Instance instance, Subscriber subscriber) {
+    public InstanceUser(Instance instance, User user) {
         this.instance = instance;
-        this.subscriber = subscriber;
+        this.user = user;
     }
 
     public Instance getInstance() {
         return this.instance;
     }
 
-    public InstanceSubscriber setInstance(Instance instance) {
+    public InstanceUser setInstance(Instance instance) {
         this.instance = instance;
         return this;
     }
 
-    public Subscriber getSubscriber() {
-        return this.subscriber;
+    public User getUser() {
+        return this.user;
     }
 
-    public InstanceSubscriber setSubscriber(Subscriber subscriber) {
-        this.subscriber = subscriber;
+    public InstanceUser setUser(User user) {
+        this.user = user;
         return this;
     }
 
     @Override
     public boolean equals(Object other) {
-        if (other instanceof InstanceSubscriber) {
-            var is = (InstanceSubscriber) other;
-            return Objects.equals(is.instance, this.instance) && Objects.equals(is.subscriber, this.subscriber);
+        if (other instanceof InstanceUser) {
+            var is = (InstanceUser) other;
+            return Objects.equals(is.instance, this.instance) && Objects.equals(is.user, this.user);
         }
 
         return false;
@@ -60,6 +60,6 @@ public class InstanceSubscriber extends Entity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.instance, this.subscriber);
+        return Objects.hash(this.instance, this.user);
     }
 }

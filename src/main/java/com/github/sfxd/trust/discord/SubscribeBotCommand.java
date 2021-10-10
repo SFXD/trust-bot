@@ -5,10 +5,10 @@ import java.util.Optional;
 
 import com.github.sfxd.trust.core.instances.Instance;
 import com.github.sfxd.trust.core.instances.InstanceService;
-import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriber;
-import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriberService;
-import com.github.sfxd.trust.core.subscribers.Subscriber;
-import com.github.sfxd.trust.core.subscribers.SubscriberService;
+import com.github.sfxd.trust.core.instanceusers.InstanceUser;
+import com.github.sfxd.trust.core.instanceusers.InstanceUserService;
+import com.github.sfxd.trust.core.users.UserService;
+import com.github.sfxd.trust.core.users.User;
 
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
@@ -16,22 +16,22 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 class SubscribeBotCommand extends BotCommand {
 
     private final InstanceService instanceService;
-    private final InstanceSubscriberService isService;
-    private final SubscriberService subscriberService;
+    private final InstanceUserService instanceUserService;
+    private final UserService userService;
     private final String key;
 
     SubscribeBotCommand(
         SlashCommandEvent event,
         InstanceService instanceService,
-        InstanceSubscriberService isService,
-        SubscriberService subscriberService,
+        InstanceUserService isService,
+        UserService subscriberService,
         String key
     ) {
         super(event);
 
         this.instanceService = instanceService;
-        this.isService = isService;
-        this.subscriberService = subscriberService;
+        this.instanceUserService = isService;
+        this.userService = subscriberService;
         this.key = key;
     }
 
@@ -47,18 +47,18 @@ class SubscribeBotCommand extends BotCommand {
         }
 
         String username = this.event.getUser().getId();
-        Subscriber subscriber = this.subscriberService.findByUsername(username)
-            .orElseGet(() -> new Subscriber(username));
+        User user = this.userService.findByUsername(username)
+            .orElseGet(() -> new User(username));
 
-        if (subscriber.isNew()) {
-            this.subscriberService.insert(subscriber);
+        if (user.isNew()) {
+            this.userService.insert(user);
         }
 
-        Optional<InstanceSubscriber> subscription = this.isService
-            .findByInstanceIdAndSubscriberId(instance.get().getId(), subscriber.getId());
+        Optional<InstanceUser> subscription = this.instanceUserService
+            .findByInstanceIdAndUserId(instance.get().getId(), user.getId());
 
         if (subscription.isEmpty()) {
-            this.isService.insert(new InstanceSubscriber(instance.get(), subscriber));
+            this.instanceUserService.insert(new InstanceUser(instance.get(), user));
         }
 
         this.replyWithCheckMark();

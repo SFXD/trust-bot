@@ -1,4 +1,4 @@
-package com.github.sfxd.trust.core.subscribers;
+package com.github.sfxd.trust.core.users;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -8,16 +8,16 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
-class SubscriberFinderTests {
+class UserFinderTests {
 
     @Test
     void it_should_find_users_with_the_specified_username() throws Exception {
-        var finder = new SubscriberFinder();
+        var finder = new UserFinder();
 
-        var subscriber = new Subscriber("vips#7L");
+        var subscriber = new User("vips#7L");
         finder.insert(List.of(subscriber));
 
-        Optional<Subscriber> found = finder.findByUsername(subscriber.getUsername());
+        Optional<User> found = finder.findByUsername(subscriber.getUsername());
 
         assertTrue(found.isPresent());
         assertEquals(found.get(), subscriber);

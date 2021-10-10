@@ -5,8 +5,8 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import com.github.sfxd.trust.core.instances.InstanceService;
-import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriberService;
-import com.github.sfxd.trust.core.subscribers.SubscriberService;
+import com.github.sfxd.trust.core.instanceusers.InstanceUserService;
+import com.github.sfxd.trust.core.users.UserService;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -22,15 +22,15 @@ public class BotCommandFactory {
     static final String SOURCE = "source";
     static final String INSTANCE = "instance";
 
-    private final InstanceSubscriberService isService;
-    private final SubscriberService subscriberService;
+    private final InstanceUserService isService;
+    private final UserService subscriberService;
     private final InstanceService instanceService;
     private final JDA jda;
 
     @Inject
     BotCommandFactory(
-        InstanceSubscriberService isService,
-        SubscriberService subscriberService,
+        InstanceUserService isService,
+        UserService subscriberService,
         InstanceService instanceService,
         JDA jda
     ) {

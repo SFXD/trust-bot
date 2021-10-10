@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-package com.github.sfxd.trust.core.subscribers;
+package com.github.sfxd.trust.core.users;
 
 import java.util.List;
 import java.util.Objects;
@@ -9,21 +9,21 @@ import javax.persistence.Column;
 import javax.persistence.OneToMany;
 
 import com.github.sfxd.trust.core.Entity;
-import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriber;
+import com.github.sfxd.trust.core.instanceusers.InstanceUser;
 
 /**
  * Represents a user that has subscribe to notifications
  */
 @javax.persistence.Entity
-public class Subscriber extends Entity {
+public class User extends Entity {
 
     @Column(unique = true, nullable = false)
     private String username;
 
-    @OneToMany(mappedBy = "subscriber", cascade = CascadeType.REMOVE)
-    private List<InstanceSubscriber> instanceSubcribers;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<InstanceUser> instanceUsers;
 
-    public Subscriber(String username) {
+    public User(String username) {
         this.username = username;
     }
 
@@ -31,23 +31,23 @@ public class Subscriber extends Entity {
         return this.username;
     }
 
-    public Subscriber setUsername(String username) {
+    public User setUsername(String username) {
         this.username = username;
         return this;
     }
 
-    public List<InstanceSubscriber> getInstanceSubscribers() {
-        return this.instanceSubcribers;
+    public List<InstanceUser> getInstanceUsers() {
+        return this.instanceUsers;
     }
 
-    public Subscriber setInstanceSubscribers(List<InstanceSubscriber> instanceSubscribers) {
-        this.instanceSubcribers = instanceSubscribers;
+    public User setInstanceUsers(List<InstanceUser> instanceUsers) {
+        this.instanceUsers = instanceUsers;
         return this;
     }
 
     @Override
     public boolean equals(Object other) {
-        if (other instanceof Subscriber subscriber) {
+        if (other instanceof User subscriber) {
             return Objects.equals(this.username, subscriber.username);
         }
 

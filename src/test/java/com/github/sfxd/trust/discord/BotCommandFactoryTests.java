@@ -9,8 +9,8 @@ import static org.mockito.Mockito.when;
 import java.util.Map;
 
 import com.github.sfxd.trust.core.instances.InstanceService;
-import com.github.sfxd.trust.core.instancesubscribers.InstanceSubscriberService;
-import com.github.sfxd.trust.core.subscribers.SubscriberService;
+import com.github.sfxd.trust.core.instanceusers.InstanceUserService;
+import com.github.sfxd.trust.core.users.UserService;
 
 import org.junit.jupiter.api.Test;
 
@@ -55,8 +55,8 @@ class BotCommandFactoryTests {
     }
 
     private static void assertCommandClass(String name, Map<String, String> options, Class<? extends BotCommand> clazz) {
-        var isService = mock(InstanceSubscriberService.class);
-        var subscriberService = mock(SubscriberService.class);
+        var isService = mock(InstanceUserService.class);
+        var subscriberService = mock(UserService.class);
         var instanceService = mock(InstanceService.class);
         var event = mock(SlashCommandEvent.class);
         var message = mock(Message.class);

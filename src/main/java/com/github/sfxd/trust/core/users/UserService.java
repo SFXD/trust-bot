@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-package com.github.sfxd.trust.core.subscribers;
+package com.github.sfxd.trust.core.users;
 
 import java.util.Optional;
 
@@ -10,23 +10,23 @@ import com.github.sfxd.trust.core.EntityService;
 import com.github.sfxd.trust.core.Repository;
 
 /**
- * Service for interacting with the {@link Subscriber} model.
+ * Service for interacting with the {@link User} model.
  */
 @Singleton
-public class SubscriberService extends EntityService<Subscriber> {
+public class UserService extends EntityService<User> {
 
-    private final SubscriberFinder repository;
+    private final UserFinder repository;
 
     @Inject
-    public SubscriberService(SubscriberFinder repository) {
+    public UserService(UserFinder repository) {
         this.repository = repository;
     }
 
-    public Optional<Subscriber> findByUsername(String username) {
+    public Optional<User> findByUsername(String username) {
         return this.repository.findByUsername(username);
     }
 
-    protected Repository<Subscriber> repository() {
+    protected Repository<User> repository() {
         return this.repository;
     }
 }

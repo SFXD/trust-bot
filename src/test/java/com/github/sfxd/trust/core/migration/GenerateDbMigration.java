@@ -5,7 +5,7 @@ import java.io.IOException;
 import io.ebean.annotation.Platform;
 import io.ebean.dbmigration.DbMigration;
 
-class GenerateDbMigration {
+public class GenerateDbMigration {
 
     public static void main(String[] args) throws IOException {
         System.setProperty("ddl.migration.version", "1.0");

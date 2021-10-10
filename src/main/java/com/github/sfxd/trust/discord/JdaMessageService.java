@@ -5,7 +5,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import com.github.sfxd.trust.core.MessageService;
-import com.github.sfxd.trust.core.subscribers.Subscriber;
+import com.github.sfxd.trust.core.users.User;
 
 import net.dv8tion.jda.api.JDA;
 
@@ -20,7 +20,7 @@ class JdaMessageService implements MessageService {
     }
 
     @Override
-    public void sendMessage(Subscriber user, String message) {
+    public void sendMessage(User user, String message) {
         this.jda.retrieveUserById(user.getUsername()).queue(u -> {
             u.openPrivateChannel().queue(channel -> channel.sendMessage(message).queue());
         });
