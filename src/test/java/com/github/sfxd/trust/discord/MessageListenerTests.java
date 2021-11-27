@@ -18,7 +18,7 @@ class MessageListenerTests {
     void it_should_run_whatever_the_factory_gives_it() {
         var factory = mock(BotCommandFactory.class);
         var command = mock(BotCommand.class);
-        when(factory.newInstance(any())).thenReturn(command);
+        when(factory.of(any())).thenReturn(command);
 
         var listener = new MessageListener(factory);
         listener.onSlashCommand(null);
@@ -34,7 +34,7 @@ class MessageListenerTests {
         var action = mock(ReplyAction.class);
 
 
-        when(factory.newInstance(any())).thenReturn(command);
+        when(factory.of(any())).thenReturn(command);
         doThrow(RuntimeException.class).when(command).run();
         when(event.reply(anyString())).thenReturn(action);
 

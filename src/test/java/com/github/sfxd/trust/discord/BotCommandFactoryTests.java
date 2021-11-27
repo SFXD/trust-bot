@@ -82,7 +82,7 @@ class BotCommandFactoryTests {
             jda
         );
 
-        var command = factory.newInstance(event);
+        var command = factory.of(event);
         assertEquals(command.getClass(), clazz);
     }
 }

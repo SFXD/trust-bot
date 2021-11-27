@@ -34,7 +34,7 @@ public class MessageListener extends ListenerAdapter {
      */
     @Override
     public void onSlashCommand(SlashCommandEvent event) {
-        BotCommand command = this.botCommandFactory.newInstance(event);
+        BotCommand command = this.botCommandFactory.of(event);
         try {
             command.run();
         } catch (RuntimeException ex) {

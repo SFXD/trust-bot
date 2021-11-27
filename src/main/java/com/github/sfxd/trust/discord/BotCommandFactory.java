@@ -58,7 +58,7 @@ public class BotCommandFactory {
         this.jda.upsertCommand("help", "prints usage instructions.").queue();
     }
 
-    BotCommand newInstance(SlashCommandEvent event) {
+    BotCommand of(SlashCommandEvent event) {
         String command = event.getName();
         return switch (command) {
             case SUBSCRIBE, UNSUBSCRIBE -> {
