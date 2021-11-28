@@ -26,12 +26,6 @@ public class MessageListener extends ListenerAdapter {
         this.botCommandFactory = botCommandFactory;
     }
 
-    /**
-     * Handles the message received event. If the message doesn't start with !trust
-     * it will do nothing, if it does if will check if the next word is one of our
-     * supported commands (subscribe or unsubscribe). If the command doesn't have an
-     * instance provided it will respond in the channel with how to use the command.
-     */
     @Override
     public void onSlashCommand(SlashCommandEvent event) {
         BotCommand command = this.botCommandFactory.of(event);
