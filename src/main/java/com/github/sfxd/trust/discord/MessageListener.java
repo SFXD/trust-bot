@@ -10,9 +10,6 @@ import org.slf4j.LoggerFactory;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-/**
- * Listener that watches messages that start with !trust
- */
 @Singleton
 public class MessageListener extends ListenerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageListener.class);
