@@ -2,14 +2,20 @@
 package com.github.sfxd.trust.core.instanceusers;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import com.github.sfxd.trust.core.Entity;
 import com.github.sfxd.trust.core.EntityService;
 import com.github.sfxd.trust.core.Repository;
+import com.github.sfxd.trust.core.users.User;
+import com.github.sfxd.trust.core.users.UserService;
+
+import io.ebean.annotation.Transactional;
 
 /**
  * Service for working with the {@link InstanceSubcriber} model
@@ -18,10 +24,29 @@ import com.github.sfxd.trust.core.Repository;
 public class InstanceUserService extends EntityService<InstanceUser> {
 
     private final InstanceUserRepository instanceUserRepository;
+    private final UserService userService;
 
     @Inject
-    public InstanceUserService(InstanceUserRepository repository) {
+    public InstanceUserService(InstanceUserRepository repository, UserService userService) {
         this.instanceUserRepository = repository;
+        this.userService = userService;
+    }
+
+    /**
+     * Insert new InstanceUsers. The user objects can be new users and those will
+     * be persisted as well.
+     */
+    @Override
+    @Transactional
+    public List<InstanceUser> insert(List<InstanceUser> instanceUsers) {
+        List<User> newUsers = instanceUsers.stream()
+            .map(InstanceUser::getUser)
+            .filter(Entity::isNew)
+            .toList();
+
+        this.userService.insert(newUsers);
+
+        return super.insert(instanceUsers);
     }
 
     public Optional<InstanceUser> findByInstanceIdAndUserId(Long instanceId, Long userId) {

@@ -50,14 +50,14 @@ class SubscribeBotCommand extends BotCommand {
         User user = this.userService.findByUsername(username)
             .orElseGet(() -> new User(username));
 
-        if (user.isNew()) {
-            this.userService.insert(user);
+        InstanceUser subscription = null;
+        if (!user.isNew()) {
+            subscription = this.instanceUserService
+                .findByInstanceIdAndUserId(instance.get().getId(), user.getId())
+                .orElse(null);
         }
 
-        Optional<InstanceUser> subscription = this.instanceUserService
-            .findByInstanceIdAndUserId(instance.get().getId(), user.getId());
-
-        if (subscription.isEmpty()) {
+        if (subscription == null) {
             this.instanceUserService.insert(new InstanceUser(instance.get(), user));
         }
 

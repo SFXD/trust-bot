@@ -1,6 +1,5 @@
 package com.github.sfxd.trust.discord;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -22,40 +21,6 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyAction;
 
 class SubscribeBotCommandTests {
-
-    @Test
-    void it_should_subscribe_insert_a_new_subscriber_on_subscribe_if_one_isnt_found() {
-        var subscriberService = mock(UserService.class);
-        var isService = mock(InstanceUserService.class);
-        var instanceService = mock(InstanceService.class);
-        var event = mock(SlashCommandEvent.class);
-        var user = mock(net.dv8tion.jda.api.entities.User.class);
-        var replyAction = mock(ReplyAction.class);
-
-
-        when(event.getUser()).thenReturn(user);
-        when(user.getId()).thenReturn("");
-        when(event.reply(anyString())).thenReturn(replyAction);
-
-        var instance = new Instance();
-        instance.setId(1L);
-        when(instanceService.findByKey(anyString())).thenReturn(Optional.of(instance));
-        when(subscriberService.findByUsername(anyString())).thenReturn(Optional.empty());
-        when(isService.findByInstanceIdAndUserId(anyLong(), any()))
-            .thenReturn(Optional.empty());
-
-        var command = new SubscribeBotCommand(
-            event,
-            instanceService,
-            isService,
-            subscriberService,
-            "na99"
-        );
-
-        command.run();
-
-        verify(subscriberService).insert(new User(""));
-    }
 
     @Test
     void it_should_respond_with_a_message_if_the_instance_is_not_found() {
