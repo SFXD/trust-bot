@@ -16,7 +16,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 @ApplicationScoped
-public class BotCommandFactory {
+class BotCommandFactory {
     static final String SUBSCRIBE = "subscribe";
     static final String UNSUBSCRIBE = "unsubscribe";
     static final String SOURCE = "source";
