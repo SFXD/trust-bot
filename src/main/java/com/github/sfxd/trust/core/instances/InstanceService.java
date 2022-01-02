@@ -68,7 +68,8 @@ public class InstanceService extends EntityService<Instance> {
             var message = new StringBuilder();
             for (InstanceUser is : entry.getValue()) {
                 Instance instance = is.getInstance();
-                message.append(instance.getKey() + System.lineSeparator());
+                message.append(instance.getKey());
+                message.append(System.lineSeparator());
 
                 DiffResult<Instance> diff = changes.get(instance.getId());
                 for (Diff<?> d : diff) {
