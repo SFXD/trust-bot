@@ -51,7 +51,7 @@ public class InstanceService extends EntityService<Instance> {
     /** {@inheritDoc} */
     @Override
     @Transactional
-    public List<Instance> update(List<Instance> entities) {
+    public void update(Collection<Instance> entities) {
         Map<Long, Instance> instancesById = entities.stream()
             .collect(Collectors.toMap(Instance::getId, Function.identity()));
 
@@ -78,8 +78,6 @@ public class InstanceService extends EntityService<Instance> {
 
             this.messageService.sendMessage(entry.getKey(), message.toString());
         }
-
-        return super.update(entities);
     }
 
     private static DiffResult<Instance> diff(Instance old, Instance current) {

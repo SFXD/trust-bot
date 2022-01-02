@@ -18,7 +18,7 @@ import com.github.sfxd.trust.core.users.UserService;
 import io.ebean.annotation.Transactional;
 
 /**
- * Service for working with the {@link InstanceSubcriber} model
+ * Service for working with the {@link InstanceSubscriber} model
  */
 @Singleton
 public class InstanceUserService extends EntityService<InstanceUser> {
@@ -38,15 +38,13 @@ public class InstanceUserService extends EntityService<InstanceUser> {
      */
     @Override
     @Transactional
-    public List<InstanceUser> insert(List<InstanceUser> instanceUsers) {
+    public void insert(Collection<InstanceUser> instanceUsers) {
         List<User> newUsers = instanceUsers.stream()
             .map(InstanceUser::getUser)
             .filter(Entity::isNew)
             .toList();
 
         this.userService.insert(newUsers);
-
-        return super.insert(instanceUsers);
     }
 
     public Optional<InstanceUser> findByInstanceIdAndUserId(Long instanceId, Long userId) {

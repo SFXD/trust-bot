@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package com.github.sfxd.trust.core;
 
+import java.util.Collection;
 import java.util.List;
 
 /** Base class for all of the entity services */
@@ -11,27 +12,23 @@ public abstract class EntityService<T extends Entity> {
 
     protected abstract Repository<T> repository();
 
-    public List<T> insert(List<T> entities) {
+    public void insert(Collection<T> entities) {
         this.repository().insert(entities);
-
-        return entities;
     }
 
-    public T insert(T entity) {
-        return this.insert(List.of(entity)).get(0);
+    public void insert(T entity) {
+        this.insert(List.of(entity));
     }
 
-    public List<T> update(List<T> entities) {
+    public void update(Collection<T> entities) {
         this.repository().update(entities);
-
-        return entities;
     }
 
-    public T update(T entity) {
-        return this.update(List.of(entity)).get(0);
+    public void update(T entity) {
+        this.update(List.of(entity));
     }
 
-    public void delete(List<T> entities) {
+    public void delete(Collection<T> entities) {
         this.repository().delete(entities);
     }
 
