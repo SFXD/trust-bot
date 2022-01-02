@@ -18,7 +18,7 @@ import com.github.sfxd.trust.core.users.UserService;
 import io.ebean.annotation.Transactional;
 
 /**
- * Service for working with the {@link InstanceSubscriber} model
+ * Service for working with the {@link InstanceUser} model
  */
 @Singleton
 public class InstanceUserService extends EntityService<InstanceUser> {
