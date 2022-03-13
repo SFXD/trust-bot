@@ -22,7 +22,7 @@ import com.github.sfxd.trust.core.instanceusers.InstanceUser;
 public class Instance extends Entity {
     public static final String STATUS_OK = "OK";
 
-    @Column(unique = true, nullable = false, length = 255)
+    @Column(unique = true, nullable = false, length = 255, name = "\"key\"")
     private String key;
 
     @Column(length = 255)

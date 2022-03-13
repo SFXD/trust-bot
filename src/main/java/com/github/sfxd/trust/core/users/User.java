@@ -15,6 +15,7 @@ import com.github.sfxd.trust.core.instanceusers.InstanceUser;
  * Represents a user that has subscribe to notifications
  */
 @javax.persistence.Entity
+@javax.persistence.Table(name = "users")
 public class User extends Entity {
 
     @Column(unique = true, nullable = false)
