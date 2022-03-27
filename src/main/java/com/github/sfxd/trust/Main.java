@@ -10,12 +10,13 @@ import io.smallrye.config.inject.ConfigExtension;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        var initializer = SeContainerInitializer.newInstance()
+        SeContainer container = SeContainerInitializer.newInstance()
             .disableDiscovery()
             .addExtensions(new ConfigExtension())
-            .addPackages(true, Main.class);
+            .addPackages(true, Main.class)
+            .initialize();
 
-        try (SeContainer container = initializer.initialize()) {
+        try (container) {
             var latch = new CountDownLatch(1);
             Runtime.getRuntime().addShutdownHook(new Thread(latch::countDown));
             latch.await();

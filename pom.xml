@@ -240,6 +240,7 @@
       </properties>
     </profile>
     <profile>
+      <!-- To Migrate you need to comment out -Werror from the compiler flags. -->
       <id>migrate</id>
       <properties>
         <exec.mainClass>com.github.sfxd.trust.core.migration.GenerateDbMigration</exec.mainClass>
