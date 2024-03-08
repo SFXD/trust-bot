@@ -15,7 +15,7 @@
       The version numbers don't match exactly.
     -->
     <ebean.version>13.6.3</ebean.version>
-    <camel.version>3.10.0</camel.version>
+    <camel.version>3.21.4</camel.version>
   </properties>
 
   <repositories>
