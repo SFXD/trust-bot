@@ -9,7 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.OneToMany;
 
 import com.github.sfxd.trust.core.Entity;
-import com.github.sfxd.trust.core.instanceusers.InstanceUser;
+import com.github.sfxd.trust.core.subscription.Subscription;
 
 /**
  * Represents a user that has subscribe to notifications
@@ -22,7 +22,7 @@ public class User extends Entity {
     private String username;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private List<InstanceUser> instanceUsers;
+    private List<Subscription> subscriptions;
 
     public User(String username) {
         this.username = username;
@@ -37,12 +37,12 @@ public class User extends Entity {
         return this;
     }
 
-    public List<InstanceUser> getInstanceUsers() {
-        return this.instanceUsers;
+    public List<Subscription> getInstanceUsers() {
+        return this.subscriptions;
     }
 
-    public User setInstanceUsers(List<InstanceUser> instanceUsers) {
-        this.instanceUsers = instanceUsers;
+    public User setInstanceUsers(List<Subscription> subscriptions) {
+        this.subscriptions = subscriptions;
         return this;
     }
 

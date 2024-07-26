@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-package com.github.sfxd.trust.core.instanceusers;
+package com.github.sfxd.trust.core.subscription;
 
 import java.util.Objects;
 
@@ -15,7 +15,7 @@ import com.github.sfxd.trust.core.users.User;
  * A junction between instances and their subscribers.
  */
 @javax.persistence.Entity
-public class InstanceUser extends Entity {
+public class Subscription extends Entity {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @Column(nullable = false)
@@ -25,7 +25,7 @@ public class InstanceUser extends Entity {
     @Column(nullable = false)
     private User user;
 
-    public InstanceUser(Instance instance, User user) {
+    public Subscription(Instance instance, User user) {
         this.instance = instance;
         this.user = user;
     }
@@ -34,7 +34,7 @@ public class InstanceUser extends Entity {
         return this.instance;
     }
 
-    public InstanceUser setInstance(Instance instance) {
+    public Subscription setInstance(Instance instance) {
         this.instance = instance;
         return this;
     }
@@ -43,16 +43,16 @@ public class InstanceUser extends Entity {
         return this.user;
     }
 
-    public InstanceUser setUser(User user) {
+    public Subscription setUser(User user) {
         this.user = user;
         return this;
     }
 
     @Override
     public boolean equals(Object other) {
-        if (other instanceof InstanceUser) {
-            var is = (InstanceUser) other;
-            return Objects.equals(is.instance, this.instance) && Objects.equals(is.user, this.user);
+        if (other instanceof Subscription subscription) {
+            return Objects.equals(subscription.instance, this.instance)
+                && Objects.equals(subscription.user, this.user);
         }
 
         return false;

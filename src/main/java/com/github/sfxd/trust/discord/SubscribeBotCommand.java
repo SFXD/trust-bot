@@ -4,42 +4,41 @@ package com.github.sfxd.trust.discord;
 import java.util.Optional;
 
 import com.github.sfxd.trust.core.instances.Instance;
-import com.github.sfxd.trust.core.instances.InstanceService;
-import com.github.sfxd.trust.core.instanceusers.InstanceUser;
-import com.github.sfxd.trust.core.instanceusers.InstanceUserService;
-import com.github.sfxd.trust.core.users.UserService;
+import com.github.sfxd.trust.core.instances.InstanceRepository;
+import com.github.sfxd.trust.core.subscription.Subscription;
+import com.github.sfxd.trust.core.subscription.SubscriptionRepository;
 import com.github.sfxd.trust.core.users.User;
 
+import com.github.sfxd.trust.core.users.UserRepository;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 
 class SubscribeBotCommand extends BotCommand {
 
-    private final InstanceService instanceService;
-    private final InstanceUserService instanceUserService;
-    private final UserService userService;
+    private final InstanceRepository instanceRepository;
+    private final UserRepository userRepository;
+    private final SubscriptionRepository subscriptionRepository;
     private final String key;
 
     SubscribeBotCommand(
         SlashCommandEvent event,
-        InstanceService instanceService,
-        InstanceUserService isService,
-        UserService subscriberService,
+        InstanceRepository instanceRepository,
+        UserRepository userRepository,
+        SubscriptionRepository subscriptionRepository,
         String key
     ) {
         super(event);
 
-        this.instanceService = instanceService;
-        this.instanceUserService = isService;
-        this.userService = subscriberService;
+        this.instanceRepository = instanceRepository;
+        this.userRepository = userRepository;
+        this.subscriptionRepository = subscriptionRepository;
         this.key = key;
     }
 
     @Override
     public void run() {
-        Optional<Instance> instance = this.instanceService.findByKey(key);
-
-        if (instance.isEmpty()) {
+        Instance instance = this.instanceRepository.findByKey(key);
+        if (instance == null) {
             this.event.reply(String.format("%s is not a valid instance key.", this.key))
                 .queue();
 
@@ -47,20 +46,23 @@ class SubscribeBotCommand extends BotCommand {
         }
 
         String username = this.event.getUser().getId();
-        User user = this.userService.findByUsername(username)
-            .orElseGet(() -> new User(username));
+        User user = this.findUser(username);
 
-        InstanceUser subscription = null;
+        Subscription subscription = null;
         if (!user.isNew()) {
-            subscription = this.instanceUserService
-                .findByInstanceIdAndUserId(instance.get().getId(), user.getId())
-                .orElse(null);
-        }
-
-        if (subscription == null) {
-            this.instanceUserService.insert(new InstanceUser(instance.get(), user));
+            subscription = this.subscriptionRepository.findByInstanceAndUser(instance, user);
+            if (subscription == null)
+                this.subscriptionRepository.insert(new Subscription(instance, user));
         }
 
         this.replyWithCheckMark();
+    }
+
+    private User findUser(String username) {
+        User user = this.userRepository.findByUsername(username);
+        if (user == null)
+            user = new User(username);
+
+        return user;
     }
 }

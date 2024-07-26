@@ -19,7 +19,7 @@ jobs:
     - name: Set up the JDK
       uses: actions/setup-java@v2
       with:
-        java-version: '19'
+        java-version: '22'
         distribution: 'zulu'
         cache: maven
     - name: Test with Maven

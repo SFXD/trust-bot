@@ -1,37 +1,28 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package com.github.sfxd.trust.discord;
 
-import java.util.Optional;
+import com.github.sfxd.trust.core.subscription.Subscription;
 
-import com.github.sfxd.trust.core.instanceusers.InstanceUser;
-import com.github.sfxd.trust.core.instanceusers.InstanceUserService;
-
+import com.github.sfxd.trust.core.subscription.SubscriptionRepository;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 /** Command for !trust unsubscribe <serverkey> */
 class UnsubscribeBotCommand extends BotCommand {
     private final String key;
-    private final InstanceUserService instanceUserService;
+    private final SubscriptionRepository repository;
 
-    UnsubscribeBotCommand(
-        SlashCommandEvent event,
-        String key,
-        InstanceUserService isService
-    ) {
+    UnsubscribeBotCommand(SlashCommandEvent event, String key, SubscriptionRepository repository) {
         super(event);
 
         this.key = key;
-        this.instanceUserService = isService;
+        this.repository = repository;
     }
 
     @Override
     public void run() {
-        Optional<InstanceUser> subscription = this.instanceUserService
-            .findByKeyAndUsername(this.key, this.event.getUser().getId());
-
-        if (subscription.isPresent()) {
-            this.instanceUserService.delete(subscription.get());
-        }
+        Subscription subscription = this.repository.findByKeyAndUsername(this.key, this.event.getUser().getId());
+        if (subscription != null)
+            this.repository.delete(subscription);
 
         this.replyWithCheckMark();
     }

@@ -8,10 +8,9 @@ import static org.mockito.Mockito.when;
 
 import java.util.Map;
 
-import com.github.sfxd.trust.core.instances.InstanceService;
-import com.github.sfxd.trust.core.instanceusers.InstanceUserService;
-import com.github.sfxd.trust.core.users.UserService;
-
+import com.github.sfxd.trust.core.instances.InstanceRepository;
+import com.github.sfxd.trust.core.subscription.SubscriptionRepository;
+import com.github.sfxd.trust.core.users.UserRepository;
 import org.junit.jupiter.api.Test;
 
 import net.dv8tion.jda.api.entities.Message;
@@ -55,9 +54,9 @@ class BotCommandFactoryTests {
     }
 
     private static void assertCommandClass(String name, Map<String, String> options, Class<? extends BotCommand> clazz) {
-        var isService = mock(InstanceUserService.class);
-        var subscriberService = mock(UserService.class);
-        var instanceService = mock(InstanceService.class);
+        var isService = mock(SubscriptionRepository.class);
+        var subscriberService = mock(UserRepository.class);
+        var instanceService = mock(InstanceRepository.class);
         var event = mock(SlashCommandEvent.class);
         var message = mock(Message.class);
         var jda = mock(JDA.class);
@@ -76,9 +75,9 @@ class BotCommandFactoryTests {
         }
 
         var factory = new BotCommandFactory(
-            isService,
-            subscriberService,
             instanceService,
+            subscriberService,
+            isService,
             jda
         );
 

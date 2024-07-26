@@ -2,8 +2,8 @@
 package com.github.sfxd.trust.core.instances;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import javax.inject.Singleton;
 
@@ -11,10 +11,10 @@ import com.github.sfxd.trust.core.Repository;
 
 /** Finder for the Instance model */
 @Singleton
-class InstanceFinder extends Repository<Instance> {
+public class InstanceRepository extends Repository<Instance> {
     private static final String KEY = "key";
 
-    InstanceFinder() {
+    InstanceRepository() {
         super(Instance.class);
     }
 
@@ -24,11 +24,11 @@ class InstanceFinder extends Repository<Instance> {
      * @param key the instance's unique key you want to find
      * @return the matching instances
      */
-    public Optional<Instance> findByKey(String key) {
+    public Instance findByKey(String key) {
         return this.query()
             .where()
             .eq(KEY, key)
-            .findOneOrEmpty();
+            .findOne();
     }
 
     /**
@@ -37,12 +37,14 @@ class InstanceFinder extends Repository<Instance> {
      * @param keys the keys you want to filter by
      * @return the matching instances
      */
-    public Stream<Instance> findByKeyIn(Collection<String> keys) {
-        return this.query()
+    public Collection<Instance> findByKeyIn(Collection<String> keys) {
+        var query = this.query()
+            .fetch("instanceUsers")
             .where()
             .in(KEY, keys)
-            .query()
-            .findStream();
+            .query();
+
+        return Collections.unmodifiableList(query.findList());
     }
 
     /**
@@ -51,11 +53,12 @@ class InstanceFinder extends Repository<Instance> {
      * @param ids the ids you want to filter by
      * @return the matching instances
      */
-    public Stream<Instance> findByIdIn(Collection<Long> ids) {
-        return this.query()
+    public Collection<Instance> findByIdIn(Collection<Long> ids) {
+        var query = this.query()
             .where()
             .idIn(ids)
-            .query()
-            .findStream();
+            .query();
+
+        return Collections.unmodifiableList(query.findList());
     }
 }

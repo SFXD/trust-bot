@@ -4,10 +4,9 @@ package com.github.sfxd.trust.discord;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import com.github.sfxd.trust.core.instances.InstanceService;
-import com.github.sfxd.trust.core.instanceusers.InstanceUserService;
-import com.github.sfxd.trust.core.users.UserService;
-
+import com.github.sfxd.trust.core.instances.InstanceRepository;
+import com.github.sfxd.trust.core.subscription.SubscriptionRepository;
+import com.github.sfxd.trust.core.users.UserRepository;
 import org.apache.commons.lang3.StringUtils;
 
 import net.dv8tion.jda.api.JDA;
@@ -22,39 +21,35 @@ class BotCommandFactory {
     static final String SOURCE = "source";
     static final String INSTANCE = "instance";
 
-    private final InstanceUserService isService;
-    private final UserService subscriberService;
-    private final InstanceService instanceService;
+    private final InstanceRepository instanceRepository;
+    private final UserRepository userRepository;
+    private final SubscriptionRepository subscriptionRepository;
     private final JDA jda;
 
     @Inject
     BotCommandFactory(
-        InstanceUserService isService,
-        UserService subscriberService,
-        InstanceService instanceService,
+        InstanceRepository instanceRepository,
+        UserRepository userRepository,
+        SubscriptionRepository subscriptionRepository,
         JDA jda
     ) {
-        this.isService = isService;
-        this.subscriberService = subscriberService;
-        this.instanceService = instanceService;
+        this.instanceRepository = instanceRepository;
+        this.userRepository = userRepository;
+        this.subscriptionRepository = subscriptionRepository;
         this.jda = jda;
-
         this.jda.upsertCommand(SUBSCRIBE, "subscribe to notifications about a sandbox.")
             .addOptions(
                 new OptionData(OptionType.STRING, INSTANCE, "the sandbox instance you want to subscribe to.")
                     .setRequired(true)
             )
             .queue();
-
         this.jda.upsertCommand(UNSUBSCRIBE, "unsubscribe to notifications about a sandbox.")
             .addOptions(
                 new OptionData(OptionType.STRING, INSTANCE, "the sandbox instance you want to subscribe to.")
                     .setRequired(true)
             )
             .queue();
-
         this.jda.upsertCommand(SOURCE, "get the source code.").queue();
-
         this.jda.upsertCommand("help", "prints usage instructions.").queue();
     }
 
@@ -70,13 +65,13 @@ class BotCommandFactory {
                 if (SUBSCRIBE.equals(command)) {
                     yield new SubscribeBotCommand(
                         event,
-                        this.instanceService,
-                        this.isService,
-                        this.subscriberService,
+                        this.instanceRepository,
+                        this.userRepository,
+                        this.subscriptionRepository,
                         instanceKey
                     );
                 } else {
-                    yield new UnsubscribeBotCommand(event, instanceKey, this.isService);
+                    yield new UnsubscribeBotCommand(event, instanceKey, this.subscriptionRepository);
                 }
             }
             case SOURCE -> new SourceBotCommand(event);

@@ -16,6 +16,7 @@ import org.apache.camel.component.jackson.ListJacksonDataFormat;
  * Task that will check the Trust api instances and update their data in the
  * database.
  */
+@SuppressWarnings("unused") // reflectively found by DI
 public class InstanceRefreshRoute extends RouteBuilder {
     private final InstanceRefreshConsumer consumer;
 
@@ -32,7 +33,7 @@ public class InstanceRefreshRoute extends RouteBuilder {
             .choice()
                 .when(header("CamelHttpResponseCode").isEqualTo(200))
                     .log(LoggingLevel.INFO, "Running instance refresh route")
-                    .unmarshal(new ListJacksonDataFormat(Json.MAPPER, Instance.class))
+                    .unmarshal(new ListJacksonDataFormat(Json.mapper(), Instance.class))
                     .process().body(Collection.class, this.consumer::accept)
                 .endChoice()
                 .otherwise()

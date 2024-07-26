@@ -12,7 +12,10 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.sfxd.trust.core.Entity;
-import com.github.sfxd.trust.core.instanceusers.InstanceUser;
+import com.github.sfxd.trust.core.subscription.Subscription;
+import org.apache.commons.lang3.builder.DiffBuilder;
+import org.apache.commons.lang3.builder.DiffResult;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * Represents an SFDC instance. Sandbox or Production.
@@ -41,7 +44,7 @@ public class Instance extends Entity {
     private Environment environment;
 
     @OneToMany(mappedBy = "instance", cascade = CascadeType.REMOVE)
-    private List<InstanceUser> instanceUsers;
+    private List<Subscription> subscriptions;
 
     public Instance() {
 
@@ -101,12 +104,12 @@ public class Instance extends Entity {
         return this;
     }
 
-    public List<InstanceUser> getInstanceUsers() {
-        return this.instanceUsers;
+    public List<Subscription> getSubscriptions() {
+        return this.subscriptions;
     }
 
-    public Instance setInstanceUsers(List<InstanceUser> instanceUsers) {
-        this.instanceUsers = instanceUsers;
+    public Instance setSubscriptions(List<Subscription> subscriptions) {
+        this.subscriptions = subscriptions;
         return this;
     }
 
@@ -116,6 +119,16 @@ public class Instance extends Entity {
 
         @JsonProperty("production")
         PRODUCTION
+    }
+
+    public DiffResult<Instance> diff(Instance other) {
+        return new DiffBuilder<>(other, this, ToStringStyle.DEFAULT_STYLE, false)
+            .append("status", other.status, this.status)
+            .append("environment", other.environment, this.environment)
+            .append("location", other.location, this.location)
+            .append("releaseNumber", other.releaseNumber, this.releaseNumber)
+            .append("releaseVersion", other.releaseVersion, this.releaseVersion)
+            .build();
     }
 
     @Override
