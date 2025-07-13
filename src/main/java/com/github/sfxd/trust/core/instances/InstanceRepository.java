@@ -3,7 +3,6 @@ package com.github.sfxd.trust.core.instances;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Optional;
 
 import javax.inject.Singleton;
 
@@ -39,7 +38,7 @@ public class InstanceRepository extends Repository<Instance> {
      */
     public Collection<Instance> findByKeyIn(Collection<String> keys) {
         var query = this.query()
-            .fetch("instanceUsers")
+            .fetch("subscriptions")
             .where()
             .in(KEY, keys)
             .query();

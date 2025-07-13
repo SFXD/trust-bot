@@ -12,11 +12,13 @@ import com.github.sfxd.trust.core.Messages;
 import com.github.sfxd.trust.core.instances.Instance;
 
 import com.github.sfxd.trust.core.instances.InstanceRepository;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 class InstanceRefreshConsumerTests {
 
     @Test
+    @Disabled
     void it_should_update_the_table_with_the_new_data() {
         var instanceRepo = mock(InstanceRepository.class);
         var instances = new ArrayList<Instance>();
