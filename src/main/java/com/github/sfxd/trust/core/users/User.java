@@ -28,21 +28,12 @@ public class User extends Entity {
         this.username = username;
     }
 
-    public String getUsername() {
+    public String username() {
         return this.username;
     }
 
     public User setUsername(String username) {
         this.username = username;
-        return this;
-    }
-
-    public List<Subscription> getInstanceUsers() {
-        return this.subscriptions;
-    }
-
-    public User setInstanceUsers(List<Subscription> subscriptions) {
-        this.subscriptions = subscriptions;
         return this;
     }
 

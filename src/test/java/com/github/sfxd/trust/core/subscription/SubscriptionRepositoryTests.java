@@ -31,10 +31,10 @@ class SubscriptionRepositoryTests {
 
         this.finder.insert(List.of(new Subscription(instance, subscriber)));
 
-        var found = this.finder.findByKeyAndUsername(instance.getKey(), subscriber.getUsername());
+        var found = this.finder.findByKeyAndUsername(instance.key(), subscriber.username());
         assertNotNull(found);
-        assertEquals(found.getInstance().getKey(), instance.getKey());
-        assertEquals(found.getUser().getUsername(), subscriber.getUsername());
+        assertEquals(found.instance().key(), instance.key());
+        assertEquals(found.user().username(), subscriber.username());
 
         this.db.delete(instance);
         this.db.delete(subscriber);
@@ -52,8 +52,8 @@ class SubscriptionRepositoryTests {
 
         var found = this.finder.findByInstanceAndUser(instance, subscriber);
         assertNotNull(found);
-        assertEquals(instance.getId(), found.getInstance().getId());
-        assertEquals(subscriber.getId(), found.getUser().getId());
+        assertEquals(instance.getId(), found.instance().getId());
+        assertEquals(subscriber.getId(), found.user().getId());
 
         this.db.delete(instance);
         this.db.delete(subscriber);

@@ -23,12 +23,12 @@ class InstanceRepositoryTests {
         b.setKey("CS01");
 
         this.instanceRepository.insert(List.of(a, b));
-        List<Instance> found = this.instanceRepository.findByKeyIn(Set.of(a.getKey()))
+        List<Instance> found = this.instanceRepository.findByKeyIn(Set.of(a.key()))
             .stream()
             .toList();
 
         assertEquals(1, found.size());
-        assertEquals(found.get(0).getKey(), a.getKey());
+        assertEquals(found.get(0).key(), a.key());
     }
 
     @Test
@@ -56,7 +56,7 @@ class InstanceRepositoryTests {
 
         this.instanceRepository.insert(List.of(a, b));
 
-        Instance found = this.instanceRepository.findByKey(a.getKey());
-        assertEquals(found.getKey(), a.getKey());
+        Instance found = this.instanceRepository.findByKey(a.key());
+        assertEquals(found.key(), a.key());
     }
 }

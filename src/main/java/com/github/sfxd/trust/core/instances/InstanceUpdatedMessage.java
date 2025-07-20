@@ -17,7 +17,7 @@ public class InstanceUpdatedMessage implements Message {
 
     @Override
     public User to() {
-        return this.subscription.getUser();
+        return this.subscription.user();
     }
 
     @Override

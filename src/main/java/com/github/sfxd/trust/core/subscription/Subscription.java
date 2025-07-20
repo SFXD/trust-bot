@@ -30,7 +30,7 @@ public class Subscription extends Entity {
         this.user = user;
     }
 
-    public Instance getInstance() {
+    public Instance instance() {
         return this.instance;
     }
 
@@ -39,7 +39,7 @@ public class Subscription extends Entity {
         return this;
     }
 
-    public User getUser() {
+    public User user() {
         return this.user;
     }
 

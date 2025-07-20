@@ -33,14 +33,14 @@ class InstanceRefreshConsumer implements Consumer<Collection<Instance>> {
     @Override
     public void accept(Collection<Instance> incomingInstances) {
         Map<String, Instance> instancePreviews = incomingInstances.stream()
-            .collect(Collectors.toMap(Instance::getKey, identity()));
+            .collect(Collectors.toMap(Instance::key, identity()));
 
         Map<String, Instance> instances = this.instanceRepository.findByKeyIn(instancePreviews.keySet())
             .stream()
-            .collect(Collectors.toMap(Instance::getKey, identity()));
+            .collect(Collectors.toMap(Instance::key, identity()));
 
         for (Instance preview : instancePreviews.values()) {
-            Instance current = instances.computeIfAbsent(preview.getKey(), key -> preview);
+            Instance current = instances.computeIfAbsent(preview.key(), key -> preview);
             DiffResult<Instance> diff = current.diff(preview);
             if (!diff.getDiffs().isEmpty())
                 this.update(current, preview, diff);
@@ -51,11 +51,11 @@ class InstanceRefreshConsumer implements Consumer<Collection<Instance>> {
 
     private void update(Instance current, Instance preview, DiffResult<Instance> diff) {
         current
-            .setLocation(preview.getLocation())
-            .setReleaseVersion(preview.getReleaseVersion())
-            .setReleaseNumber(preview.getReleaseNumber())
-            .setStatus(preview.getStatus())
-            .setEnvironment(preview.getEnvironment());
+            .setLocation(preview.location())
+            .setReleaseVersion(preview.releaseVersion())
+            .setReleaseNumber(preview.releaseNumber())
+            .setStatus(preview.status())
+            .setEnvironment(preview.environment());
         this.sendMessages(current, diff);
     }
 

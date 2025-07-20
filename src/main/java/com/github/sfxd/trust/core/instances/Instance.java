@@ -50,7 +50,7 @@ public class Instance extends Entity {
 
     }
 
-    public String getKey() {
+    public String key() {
         return this.key;
     }
 
@@ -59,7 +59,7 @@ public class Instance extends Entity {
         return this;
     }
 
-    public String getLocation() {
+    public String location() {
         return this.location;
     }
 
@@ -68,7 +68,7 @@ public class Instance extends Entity {
         return this;
     }
 
-    public String getReleaseVersion() {
+    public String releaseVersion() {
         return this.releaseVersion;
     }
 
@@ -77,7 +77,7 @@ public class Instance extends Entity {
         return this;
     }
 
-    public String getReleaseNumber() {
+    public String releaseNumber() {
         return this.releaseNumber;
     }
 
@@ -86,7 +86,7 @@ public class Instance extends Entity {
         return this;
     }
 
-    public String getStatus() {
+    public String status() {
         return this.status;
     }
 
@@ -95,7 +95,7 @@ public class Instance extends Entity {
         return this;
     }
 
-    public Environment getEnvironment() {
+    public Environment environment() {
         return this.environment;
     }
 

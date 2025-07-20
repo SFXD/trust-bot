@@ -21,7 +21,7 @@ class JdaMessages implements Messages {
 
     @Override
     public void send(Message message) {
-        this.jda.retrieveUserById(message.to().getUsername()).queue(u -> {
+        this.jda.retrieveUserById(message.to().username()).queue(u -> {
             u.openPrivateChannel().queue(channel -> channel.sendMessage(message.body()).queue());
         });
     }

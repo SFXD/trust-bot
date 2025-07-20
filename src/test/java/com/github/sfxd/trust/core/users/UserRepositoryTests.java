@@ -16,11 +16,11 @@ class UserRepositoryTests {
         var subscriber = new User("vips#7L");
         finder.insert(List.of(subscriber));
 
-        User found = finder.findByUsername(subscriber.getUsername());
+        User found = finder.findByUsername(subscriber.username());
 
         assertNotNull(found);
         assertEquals(found, subscriber);
-        assertEquals(found.getUsername(), subscriber.getUsername());
+        assertEquals(found.username(), subscriber.username());
 
         finder.delete(List.of(found));
     }
