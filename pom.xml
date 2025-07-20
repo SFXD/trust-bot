@@ -57,16 +57,16 @@
       <groupId>net.dv8tion</groupId>
       <artifactId>JDA</artifactId>
       <version>4.3.0_313</version>
-      <exclusions>
-        <exclusion>
-          <groupId>club.minced</groupId>
-          <artifactId>opus-java</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.google.crypto.tink</groupId>
-          <artifactId>tink</artifactId>
-        </exclusion>
-      </exclusions>
+<!--      <exclusions>-->
+<!--        <exclusion>-->
+<!--          <groupId>club.minnced</groupId>-->
+<!--          <artifactId>opus-java</artifactId>-->
+<!--        </exclusion>-->
+<!--        <exclusion>-->
+<!--          <groupId>com.google.crypto.tink</groupId>-->
+<!--          <artifactId>tink</artifactId>-->
+<!--        </exclusion>-->
+<!--      </exclusions>-->
     </dependency>
     <dependency>
       <groupId>org.jboss.weld.se</groupId>
@@ -141,17 +141,16 @@
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
+        <version>3.10.1</version>
         <configuration>
           <compilerArgs>
-<!--            <arg>-Werror</arg>-->
-            <arg>-Xlint:all</arg>
+            <arg>-Xlint</arg>
           </compilerArgs>
           <annotationProcessorPaths>
             <path>
               <groupId>io.ebean</groupId>
               <artifactId>querybean-generator</artifactId>
-              <version>${ebean.version}</version>
+              <version>${ebean.version}-javax</version>
             </path>
           </annotationProcessorPaths>
         </configuration>
@@ -191,30 +190,6 @@
         <artifactId>ebean-maven-plugin</artifactId>
         <version>${ebean.version}</version>
         <extensions>true</extensions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-enforcer-plugin</artifactId>
-        <version>3.0.0</version>
-        <executions>
-          <execution>
-            <id>Log4Shell</id>
-            <phase>validate</phase>
-            <goals>
-              <goal>enforce</goal>
-            </goals>
-            <configuration>
-              <rules>
-                <bannedDependencies>
-                  <excludes>
-                    <exclude>org.apache.logging.log4j:log4j-core:(,2.17.1)</exclude>
-                  </excludes>
-                </bannedDependencies>
-              </rules>
-              <fail>true</fail>
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>

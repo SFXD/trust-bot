@@ -4,6 +4,7 @@ package com.github.sfxd.trust.core.users;
 import javax.inject.Singleton;
 
 import com.github.sfxd.trust.core.Repository;
+import com.github.sfxd.trust.core.users.query.QUser;
 
 @Singleton
 public class UserRepository extends Repository<User> {
@@ -20,9 +21,8 @@ public class UserRepository extends Repository<User> {
      *         NoResultException
      */
     public User findByUsername(String username) {
-        return this.query()
-            .where()
-            .eq("username", username)
+        return new QUser()
+            .username.eq(username)
             .findOne();
     }
 }

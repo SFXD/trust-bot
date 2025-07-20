@@ -7,12 +7,11 @@ import java.util.Collections;
 import javax.inject.Singleton;
 
 import com.github.sfxd.trust.core.Repository;
+import com.github.sfxd.trust.core.instances.query.QInstance;
 
 /** Finder for the Instance model */
 @Singleton
 public class InstanceRepository extends Repository<Instance> {
-    private static final String KEY = "key";
-
     InstanceRepository() {
         super(Instance.class);
     }
@@ -24,9 +23,8 @@ public class InstanceRepository extends Repository<Instance> {
      * @return the matching instances
      */
     public Instance findByKey(String key) {
-        return this.query()
-            .where()
-            .eq(KEY, key)
+        return new QInstance()
+            .key.eq(key)
             .findOne();
     }
 
@@ -37,11 +35,9 @@ public class InstanceRepository extends Repository<Instance> {
      * @return the matching instances
      */
     public Collection<Instance> findByKeyIn(Collection<String> keys) {
-        var query = this.query()
-            .fetch("subscriptions")
-            .where()
-            .in(KEY, keys)
-            .query();
+        var query = new QInstance()
+            .subscriptions.fetch()
+            .key.in(keys);
 
         return Collections.unmodifiableList(query.findList());
     }
@@ -53,10 +49,8 @@ public class InstanceRepository extends Repository<Instance> {
      * @return the matching instances
      */
     public Collection<Instance> findByIdIn(Collection<Long> ids) {
-        var query = this.query()
-            .where()
-            .idIn(ids)
-            .query();
+        var query = new QInstance()
+            .id.in(ids);
 
         return Collections.unmodifiableList(query.findList());
     }

@@ -5,6 +5,7 @@ import javax.inject.Singleton;
 
 import com.github.sfxd.trust.core.Repository;
 import com.github.sfxd.trust.core.instances.Instance;
+import com.github.sfxd.trust.core.subscription.query.QSubscription;
 import com.github.sfxd.trust.core.users.User;
 
 @Singleton
@@ -15,18 +16,16 @@ public class SubscriptionRepository extends Repository<Subscription> {
     }
 
     public Subscription findByInstanceAndUser(Instance instance, User user) {
-        return this.query()
-            .where()
-            .eq("user", user)
-            .eq("instance", instance)
+        return new QSubscription()
+            .user.eq(user)
+            .instance.eq(instance)
             .findOne();
     }
 
     public Subscription findByKeyAndUsername(String key, String username) {
-        return this.query()
-            .where()
-            .eq("user.username", username)
-            .eq("instance.key", key)
+        return new QSubscription()
+            .user.username.eq(username)
+            .instance.key.eq(key)
             .findOne();
     }
 }
