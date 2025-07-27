@@ -13,7 +13,7 @@ import com.github.sfxd.trust.core.Messages;
 import com.github.sfxd.trust.core.instances.Instance;
 import com.github.sfxd.trust.core.instances.InstanceRepository;
 import com.github.sfxd.trust.core.instances.InstanceUpdatedMessage;
-import com.github.sfxd.trust.core.subscription.Subscription;
+import com.github.sfxd.trust.core.users.Subscription;
 import org.apache.commons.lang3.builder.DiffResult;
 
 import static java.util.function.Function.identity;

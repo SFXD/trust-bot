@@ -1,7 +1,7 @@
 package com.github.sfxd.trust.core.instances;
 
 import com.github.sfxd.trust.core.Message;
-import com.github.sfxd.trust.core.subscription.Subscription;
+import com.github.sfxd.trust.core.users.Subscription;
 import com.github.sfxd.trust.core.users.User;
 import org.apache.commons.lang3.builder.Diff;
 import org.apache.commons.lang3.builder.DiffResult;

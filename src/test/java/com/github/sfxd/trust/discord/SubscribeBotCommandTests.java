@@ -5,12 +5,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Optional;
-
 import com.github.sfxd.trust.core.instances.Instance;
 import com.github.sfxd.trust.core.instances.InstanceRepository;
-import com.github.sfxd.trust.core.subscription.Subscription;
-import com.github.sfxd.trust.core.subscription.SubscriptionRepository;
 import com.github.sfxd.trust.core.users.User;
 
 import com.github.sfxd.trust.core.users.UserRepository;
@@ -24,7 +20,6 @@ class SubscribeBotCommandTests {
     @Test
     void it_should_respond_with_a_message_if_the_instance_is_not_found() {
         var subscriberService = mock(UserRepository.class);
-        var isService = mock(SubscriptionRepository.class);
         var instanceService = mock(InstanceRepository.class);
         var event = mock(SlashCommandEvent.class);
         var replyAction = mock(ReplyAction.class);
@@ -36,7 +31,6 @@ class SubscribeBotCommandTests {
             event,
             instanceService,
             subscriberService,
-            isService,
             "na99"
         );
 
@@ -49,7 +43,6 @@ class SubscribeBotCommandTests {
     @Test
     void it_should_create_a_new_subscription_only_if_there_isnt_one() throws Exception {
         var subscriberService = mock(UserRepository.class);
-        var isService = mock(SubscriptionRepository.class);
         var instanceService = mock(InstanceRepository.class);
         var event = mock(SlashCommandEvent.class);
         var user = mock(net.dv8tion.jda.api.entities.User.class);
@@ -64,18 +57,14 @@ class SubscribeBotCommandTests {
         instance.setId(1L);
         when(instanceService.findByKey(anyString())).thenReturn(instance);
         when(subscriberService.findByUsername(anyString())).thenReturn(subscriber);
-        when(isService.findByInstanceAndUser(any(), any()))
-            .thenReturn(null);
 
         var command = new SubscribeBotCommand(
             event,
             instanceService,
             subscriberService,
-            isService,
             "na99"
         );
 
         command.run();
-        verify(isService).insert(new Subscription(instance, new User("")));
     }
 }

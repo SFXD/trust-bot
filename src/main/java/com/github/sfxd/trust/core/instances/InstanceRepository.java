@@ -12,7 +12,7 @@ import com.github.sfxd.trust.core.instances.query.QInstance;
 /** Finder for the Instance model */
 @Singleton
 public class InstanceRepository extends Repository<Instance> {
-    InstanceRepository() {
+    public InstanceRepository() {
         super(Instance.class);
     }
 

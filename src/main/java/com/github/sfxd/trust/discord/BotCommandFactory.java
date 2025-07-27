@@ -5,7 +5,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import com.github.sfxd.trust.core.instances.InstanceRepository;
-import com.github.sfxd.trust.core.subscription.SubscriptionRepository;
 import com.github.sfxd.trust.core.users.UserRepository;
 import org.apache.commons.lang3.StringUtils;
 
@@ -23,19 +22,16 @@ class BotCommandFactory {
 
     private final InstanceRepository instanceRepository;
     private final UserRepository userRepository;
-    private final SubscriptionRepository subscriptionRepository;
     private final JDA jda;
 
     @Inject
     BotCommandFactory(
         InstanceRepository instanceRepository,
         UserRepository userRepository,
-        SubscriptionRepository subscriptionRepository,
         JDA jda
     ) {
         this.instanceRepository = instanceRepository;
         this.userRepository = userRepository;
-        this.subscriptionRepository = subscriptionRepository;
         this.jda = jda;
         this.jda.upsertCommand(SUBSCRIBE, "subscribe to notifications about a sandbox.")
             .addOptions(
@@ -67,11 +63,10 @@ class BotCommandFactory {
                         event,
                         this.instanceRepository,
                         this.userRepository,
-                        this.subscriptionRepository,
                         instanceKey
                     );
                 } else {
-                    yield new UnsubscribeBotCommand(event, instanceKey, this.subscriptionRepository);
+                    yield new UnsubscribeBotCommand(event, instanceKey, this.userRepository, this.instanceRepository);
                 }
             }
             case SOURCE -> new SourceBotCommand(event);

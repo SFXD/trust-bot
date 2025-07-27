@@ -2,14 +2,15 @@
 package com.github.sfxd.trust.core.users;
 
 import java.util.List;
-import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.OneToMany;
 
 import com.github.sfxd.trust.core.Entity;
-import com.github.sfxd.trust.core.subscription.Subscription;
+import com.github.sfxd.trust.core.instances.Instance;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * Represents a user that has subscribe to notifications
@@ -19,35 +20,37 @@ import com.github.sfxd.trust.core.subscription.Subscription;
 public class User extends Entity {
 
     @Column(unique = true, nullable = false)
-    private String username;
+    private final String username;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Subscription> subscriptions;
 
     public User(String username) {
-        this.username = username;
+        this.username = requireNonNull(username);
     }
 
     public String username() {
         return this.username;
     }
 
-    public User setUsername(String username) {
-        this.username = username;
-        return this;
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (other instanceof User subscriber) {
-            return Objects.equals(this.username, subscriber.username);
+    public void subscribe(Instance instance) {
+        if (this.isSubscribed(instance)) {
+            return;
         }
 
-        return false;
+        this.subscriptions.add(new Subscription(instance, this));
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.username);
+    public boolean isSubscribed(Instance instance) {
+        return this.subscriptions.stream()
+            .map(Subscription::instance)
+            .anyMatch(instance::equals);
+    }
+
+    public void unsubscribe(Instance instance) {
+        this.subscriptions.stream()
+            .filter(subscription -> subscription.instance().equals(instance))
+            .findFirst()
+            .ifPresent(this.subscriptions::remove);
     }
 }

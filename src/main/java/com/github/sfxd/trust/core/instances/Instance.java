@@ -12,7 +12,7 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.sfxd.trust.core.Entity;
-import com.github.sfxd.trust.core.subscription.Subscription;
+import com.github.sfxd.trust.core.users.Subscription;
 import org.apache.commons.lang3.builder.DiffBuilder;
 import org.apache.commons.lang3.builder.DiffResult;
 import org.apache.commons.lang3.builder.ToStringStyle;
