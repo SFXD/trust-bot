@@ -1,5 +1,6 @@
 package com.github.sfxd.trust.discord;
 
+import static com.github.sfxd.trust.core.instances.Instance.Environment.PRODUCTION;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -53,7 +54,7 @@ class SubscribeBotCommandTests {
         when(user.getId()).thenReturn("");
         when(event.reply(anyString())).thenReturn(mock(ReplyAction.class));
 
-        var instance = new Instance();
+        var instance = new Instance("NA01", PRODUCTION);
         instance.setId(1L);
         when(instanceService.findByKey(anyString())).thenReturn(instance);
         when(subscriberService.findByUsername(anyString())).thenReturn(subscriber);

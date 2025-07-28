@@ -19,7 +19,7 @@ import org.apache.commons.lang3.builder.DiffResult;
 import static java.util.function.Function.identity;
 
 @ApplicationScoped
-class InstanceRefreshConsumer implements Consumer<Collection<Instance>> {
+class InstanceRefreshConsumer implements Consumer<Collection<InstancePreviewViewModel>> {
 
     private final InstanceRepository instanceRepository;
     private final Messages messages;
@@ -31,8 +31,9 @@ class InstanceRefreshConsumer implements Consumer<Collection<Instance>> {
     }
 
     @Override
-    public void accept(Collection<Instance> incomingInstances) {
+    public void accept(Collection<InstancePreviewViewModel> incomingInstances) {
         Map<String, Instance> instancePreviews = incomingInstances.stream()
+            .map(InstancePreviewViewModel::toInstance)
             .collect(Collectors.toMap(Instance::key, identity()));
 
         Map<String, Instance> instances = this.instanceRepository.findByKeyIn(instancePreviews.keySet())
@@ -42,20 +43,19 @@ class InstanceRefreshConsumer implements Consumer<Collection<Instance>> {
         for (Instance preview : instancePreviews.values()) {
             Instance current = instances.computeIfAbsent(preview.key(), key -> preview);
             DiffResult<Instance> diff = current.diff(preview);
-            if (!diff.getDiffs().isEmpty())
+            if (!diff.getDiffs().isEmpty()) {
                 this.update(current, preview, diff);
+            }
         }
 
         this.instanceRepository.save(instances.values());
     }
 
     private void update(Instance current, Instance preview, DiffResult<Instance> diff) {
-        current
-            .setLocation(preview.location())
-            .setReleaseVersion(preview.releaseVersion())
-            .setReleaseNumber(preview.releaseNumber())
-            .setStatus(preview.status())
-            .setEnvironment(preview.environment());
+        current.setLocation(preview.location());
+        current.setReleaseVersion(preview.releaseVersion());
+        current.setReleaseNumber(preview.releaseNumber());
+        current.setStatus(preview.status());
         this.sendMessages(current, diff);
     }
 

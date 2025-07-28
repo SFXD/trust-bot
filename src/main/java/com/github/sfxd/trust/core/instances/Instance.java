@@ -2,123 +2,107 @@
 package com.github.sfxd.trust.core.instances;
 
 import java.util.List;
-import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.sfxd.trust.core.Entity;
 import com.github.sfxd.trust.core.users.Subscription;
+import io.ebean.annotation.DbEnumType;
+import io.ebean.annotation.DbEnumValue;
 import org.apache.commons.lang3.builder.DiffBuilder;
 import org.apache.commons.lang3.builder.DiffResult;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-/**
- * Represents an SFDC instance. Sandbox or Production.
- * This model maps directly to the model from the api.
- */
+import static java.util.Objects.requireNonNull;
+
+/// Represents an SFDC instance. Sandbox or Production.
 @javax.persistence.Entity
 public class Instance extends Entity {
-    public static final String STATUS_OK = "OK";
+    @Column(unique = true, nullable = false, name = "\"key\"", columnDefinition = "character varying")
+    private final String key;
 
-    @Column(unique = true, nullable = false, length = 255, name = "\"key\"")
-    private String key;
-
-    @Column(length = 255)
+    @Column(columnDefinition = "character varying")
     private String location;
 
-    @Column(length = 255)
+    @Column(columnDefinition = "character varying")
     private String releaseVersion;
 
-    @Column(length = 255)
+    @Column(columnDefinition = "character varying")
     private String releaseNumber;
 
-    @Column(length = 255)
+    @Column(columnDefinition = "character varying")
     private String status;
 
-    @Enumerated(EnumType.STRING)
-    private Environment environment;
+    @Column(nullable = false)
+    private final Environment environment;
 
     @OneToMany(mappedBy = "instance", cascade = CascadeType.REMOVE)
     private List<Subscription> subscriptions;
 
-    public Instance() {
-
+    public Instance(String key, Environment environment) {
+        this.key = requireNonNull(key);
+        this.environment = requireNonNull(environment);
     }
 
     public String key() {
         return this.key;
     }
 
-    public Instance setKey(String key) {
-        this.key = key;
-        return this;
-    }
-
     public String location() {
         return this.location;
     }
 
-    public Instance setLocation(String location) {
+    public void setLocation(String location) {
         this.location = location;
-        return this;
     }
 
     public String releaseVersion() {
         return this.releaseVersion;
     }
 
-    public Instance setReleaseVersion(String releaseVersion) {
+    public void setReleaseVersion(String releaseVersion) {
         this.releaseVersion = releaseVersion;
-        return this;
     }
 
     public String releaseNumber() {
         return this.releaseNumber;
     }
 
-    public Instance setReleaseNumber(String releaseNumber) {
+    public void setReleaseNumber(String releaseNumber) {
         this.releaseNumber = releaseNumber;
-        return this;
     }
 
     public String status() {
         return this.status;
     }
 
-    public Instance setStatus(String status) {
+    public void setStatus(String status) {
         this.status = status;
-        return this;
     }
 
     public Environment environment() {
         return this.environment;
     }
 
-    public Instance setEnvironment(Environment environment) {
-        this.environment = environment;
-        return this;
-    }
-
     public List<Subscription> getSubscriptions() {
         return this.subscriptions;
     }
 
-    public Instance setSubscriptions(List<Subscription> subscriptions) {
-        this.subscriptions = subscriptions;
-        return this;
-    }
-
     public enum Environment {
-        @JsonProperty("sandbox")
-        SANDBOX,
+        SANDBOX(1),
+        PRODUCTION(2);
 
-        @JsonProperty("production")
-        PRODUCTION
+        private final int id;
+        Environment(int id) {
+            this.id = id;
+        }
+
+        @DbEnumValue(storage = DbEnumType.INTEGER)
+        public int id() {
+            return this.id;
+        }
     }
 
     public DiffResult<Instance> diff(Instance other) {
@@ -129,19 +113,5 @@ public class Instance extends Entity {
             .append("releaseNumber", other.releaseNumber, this.releaseNumber)
             .append("releaseVersion", other.releaseVersion, this.releaseVersion)
             .build();
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (other instanceof Instance i) {
-            return Objects.equals(this.key, i.key);
-        }
-
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.key);
     }
 }

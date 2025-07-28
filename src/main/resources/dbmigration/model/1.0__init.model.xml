@@ -3,21 +3,21 @@
     <changeSet type="apply">
         <createTable name="instance" identityType="identity" pkName="pk_instance">
             <column name="id" type="bigint" primaryKey="true"/>
-            <column name="&quot;key&quot;" type="varchar" notnull="true" unique="uq_instance_key"/>
-            <column name="location" type="varchar"/>
-            <column name="release_version" type="varchar"/>
-            <column name="release_number" type="varchar"/>
-            <column name="status" type="varchar"/>
-            <column name="environment" type="varchar(10)" checkConstraint="check ( environment in ('SANDBOX','PRODUCTION'))" checkConstraintName="ck_instance_environment"/>
+            <column name="&quot;key&quot;" type="character varying" notnull="true" unique="uq_instance_key"/>
+            <column name="location" type="character varying"/>
+            <column name="release_version" type="character varying"/>
+            <column name="release_number" type="character varying"/>
+            <column name="status" type="character varying"/>
+            <column name="environment" type="integer" notnull="true" checkConstraint="check ( environment in (1,2))" checkConstraintName="ck_instance_environment"/>
         </createTable>
-        <createTable name="instance_user" identityType="identity" pkName="pk_instance_user">
+        <createTable name="subscription" identityType="identity" pkName="pk_subscription">
             <column name="id" type="bigint" primaryKey="true"/>
-            <column name="instance_id" type="bigint" references="instance.id" foreignKeyName="fk_instance_user_instance_id" foreignKeyIndex="ix_instance_user_instance_id"/>
-            <column name="user_id" type="bigint" references="users.id" foreignKeyName="fk_instance_user_user_id" foreignKeyIndex="ix_instance_user_user_id"/>
+            <column name="instance_id" type="bigint" references="instance.id" foreignKeyName="fk_subscription_instance_id" foreignKeyIndex="ix_subscription_instance_id"/>
+            <column name="user_id" type="bigint" references="users.id" foreignKeyName="fk_subscription_user_id" foreignKeyIndex="ix_subscription_user_id"/>
         </createTable>
         <createTable name="users" identityType="identity" pkName="pk_users">
             <column name="id" type="bigint" primaryKey="true"/>
-            <column name="username" type="varchar" notnull="true" unique="uq_users_username"/>
+            <column name="username" type="character varying" notnull="true" unique="uq_users_username"/>
         </createTable>
     </changeSet>
 </migration>

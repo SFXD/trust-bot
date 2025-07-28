@@ -1,5 +1,7 @@
 package com.github.sfxd.trust.core.instances;
 
+import static com.github.sfxd.trust.core.instances.Instance.Environment.PRODUCTION;
+import static com.github.sfxd.trust.core.instances.Instance.Environment.SANDBOX;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
@@ -17,10 +19,8 @@ class InstanceRepositoryTests {
 
     @Test
     void it_should_find_instances_whos_key_is_in_the_set() {
-        var a = new Instance();
-        var b = new Instance();
-        a.setKey("NA01");
-        b.setKey("CS01");
+        var a = new Instance("NA01", SANDBOX);
+        var b = new Instance("CS01", PRODUCTION);
 
         this.instanceRepository.insert(List.of(a, b));
         List<Instance> found = this.instanceRepository.findByKeyIn(Set.of(a.key()))
@@ -33,10 +33,8 @@ class InstanceRepositoryTests {
 
     @Test
     void it_should_find_instances_whos_id_is_in_the_set() {
-        var a = new Instance();
-        var b = new Instance();
-        a.setKey("NA02");
-        b.setKey("CS02");
+        var a = new Instance("NA02", PRODUCTION);
+        var b = new Instance("CS02", SANDBOX);
 
         this.instanceRepository.insert(List.of(a, b));
         List<Instance> found = this.instanceRepository.findByIdIn(Set.of(a.getId()))
@@ -44,15 +42,13 @@ class InstanceRepositoryTests {
             .toList();
 
         assertEquals(1, found.size());
-        assertEquals(found.get(0).getId(), a.getId());
+        assertEquals(found.getFirst().getId(), a.getId());
     }
 
     @Test
     void it_should_find_the_instance_which_the_matching_key() {
-        var a = new Instance();
-        var b = new Instance();
-        a.setKey("NA03");
-        b.setKey("CS03");
+        var a = new Instance("NA03", PRODUCTION);
+        var b = new Instance("CS03", SANDBOX);
 
         this.instanceRepository.insert(List.of(a, b));
 

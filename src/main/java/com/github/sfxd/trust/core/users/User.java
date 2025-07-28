@@ -19,7 +19,7 @@ import static java.util.Objects.requireNonNull;
 @javax.persistence.Table(name = "users")
 public class User extends Entity {
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, columnDefinition = "character varying")
     private final String username;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
