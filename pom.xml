@@ -7,14 +7,14 @@
   <version>1.0.1-SNAPSHOT</version>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>24</maven.compiler.source>
-    <maven.compiler.target>24</maven.compiler.target>
+    <maven.compiler.source>25</maven.compiler.source>
+    <maven.compiler.target>25</maven.compiler.target>
 
     <!--
       Make sure you upgrade the ebean-migration dependency as well.
       The version numbers don't match exactly.
     -->
-    <ebean.version>14.11.0</ebean.version>
+    <ebean.version>16.0.1</ebean.version>
     <camel.version>4.10.2</camel.version>
   </properties>
 

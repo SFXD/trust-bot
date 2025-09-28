@@ -3,8 +3,11 @@ package com.github.sfxd.trust.discord;
 
 import com.github.sfxd.trust.core.instances.InstanceRepository;
 
+import com.github.sfxd.trust.core.users.DuplicateUserException;
 import com.github.sfxd.trust.core.users.UserRepository;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+
+import static com.github.sfxd.trust.util.ExceptionUtils.uncheck;
 
 /// Command for /unsubscribe <server-key>
 class UnsubscribeBotCommand extends BotCommand {
@@ -32,7 +35,7 @@ class UnsubscribeBotCommand extends BotCommand {
             var instance = this.instanceRepository.findByKey(this.key);
             if (instance != null) {
                 user.unsubscribe(instance);
-                this.repository.save(user);
+                uncheck(() -> this.repository.save(user));
             }
         }
 

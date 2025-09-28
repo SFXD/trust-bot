@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.entities.Activity;
 
 class JDAProducer {
     private static final Logger LOGGER = LoggerFactory.getLogger(JDAProducer.class);

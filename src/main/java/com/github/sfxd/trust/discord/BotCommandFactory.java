@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import com.github.sfxd.trust.core.instances.InstanceRepository;
 import com.github.sfxd.trust.core.users.UserRepository;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import org.apache.commons.lang3.StringUtils;
 
 import net.dv8tion.jda.api.JDA;
@@ -13,40 +14,41 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
+import java.util.List;
+
 @ApplicationScoped
-class BotCommandFactory {
+public class BotCommandFactory {
     static final String SUBSCRIBE = "subscribe";
     static final String UNSUBSCRIBE = "unsubscribe";
     static final String SOURCE = "source";
     static final String INSTANCE = "instance";
+    private static final List<CommandData> COMMANDS = List.of(
+        new CommandData(SUBSCRIBE,"subscribe to notifications about a sandbox.")
+            .addOptions(
+                new OptionData(OptionType.STRING, INSTANCE, "the sandbox instance you want to subscribe to.")
+                    .setRequired(true)
+            ),
+        new CommandData(UNSUBSCRIBE, "unsubscribe to notifications about a sandbox.")
+            .addOptions(
+                new OptionData(OptionType.STRING, INSTANCE, "the sandbox instance you want to subscribe to.")
+                    .setRequired(true)
+            ),
+        new CommandData(SOURCE, "get the source code."),
+        new CommandData("help", "print usage instructions.")
+    );
 
     private final InstanceRepository instanceRepository;
     private final UserRepository userRepository;
-    private final JDA jda;
 
     @Inject
-    BotCommandFactory(
-        InstanceRepository instanceRepository,
-        UserRepository userRepository,
-        JDA jda
-    ) {
+    public BotCommandFactory(InstanceRepository instanceRepository, UserRepository userRepository) {
         this.instanceRepository = instanceRepository;
         this.userRepository = userRepository;
-        this.jda = jda;
-        this.jda.upsertCommand(SUBSCRIBE, "subscribe to notifications about a sandbox.")
-            .addOptions(
-                new OptionData(OptionType.STRING, INSTANCE, "the sandbox instance you want to subscribe to.")
-                    .setRequired(true)
-            )
-            .queue();
-        this.jda.upsertCommand(UNSUBSCRIBE, "unsubscribe to notifications about a sandbox.")
-            .addOptions(
-                new OptionData(OptionType.STRING, INSTANCE, "the sandbox instance you want to subscribe to.")
-                    .setRequired(true)
-            )
-            .queue();
-        this.jda.upsertCommand(SOURCE, "get the source code.").queue();
-        this.jda.upsertCommand("help", "prints usage instructions.").queue();
+    }
+
+    /// The supported commands
+    public List<CommandData> commands() {
+        return COMMANDS;
     }
 
     BotCommand of(SlashCommandEvent event) {

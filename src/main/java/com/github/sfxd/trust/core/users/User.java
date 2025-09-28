@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 
 import com.github.sfxd.trust.core.Entity;
@@ -12,9 +13,7 @@ import com.github.sfxd.trust.core.instances.Instance;
 
 import static java.util.Objects.requireNonNull;
 
-/**
- * Represents a user that has subscribe to notifications
- */
+/// Represents a user that has subscribed to notifications
 @javax.persistence.Entity
 @javax.persistence.Table(name = "users")
 public class User extends Entity {
@@ -22,7 +21,7 @@ public class User extends Entity {
     @Column(unique = true, nullable = false, columnDefinition = "character varying")
     private final String username;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Subscription> subscriptions;
 
     public User(String username) {

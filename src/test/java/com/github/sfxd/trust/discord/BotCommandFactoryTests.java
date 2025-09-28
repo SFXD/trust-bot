@@ -74,8 +74,7 @@ class BotCommandFactoryTests {
 
         var factory = new BotCommandFactory(
             instanceService,
-            subscriberService,
-            jda
+            subscriberService
         );
 
         var command = factory.of(event);

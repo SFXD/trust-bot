@@ -3,16 +3,11 @@ package com.github.sfxd.trust.core.users;
 
 import javax.inject.Singleton;
 
-import com.github.sfxd.trust.core.Repository;
 import com.github.sfxd.trust.core.users.query.QUser;
+import io.ebean.DB;
 
 @Singleton
-public class UserRepository extends Repository<User> {
-
-    public UserRepository() {
-        super(User.class);
-    }
-
+public class UserRepository {
     /**
      * Finds a subscriber by their unique username.
      *
@@ -24,5 +19,18 @@ public class UserRepository extends Repository<User> {
         return new QUser()
             .username.eq(username)
             .findOne();
+    }
+
+    public void save(User user) throws DuplicateUserException {
+        var existing = this.findByUsername(user.username());
+        if (existing != null && !existing.equals(user)) {
+            throw new DuplicateUserException();
+        }
+
+        DB.save(user);
+    }
+
+    public void delete(User user) {
+        DB.delete(user);
     }
 }

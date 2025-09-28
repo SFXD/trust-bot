@@ -3,8 +3,6 @@ package com.github.sfxd.trust.core.users;
 import static io.smallrye.common.constraint.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.List;
-
 import org.junit.jupiter.api.Test;
 
 class UserRepositoryTests {
@@ -14,7 +12,7 @@ class UserRepositoryTests {
         var finder = new UserRepository();
 
         var subscriber = new User("vips#7L");
-        finder.insert(List.of(subscriber));
+        finder.save(subscriber);
 
         User found = finder.findByUsername(subscriber.username());
 
@@ -22,6 +20,6 @@ class UserRepositoryTests {
         assertEquals(found, subscriber);
         assertEquals(found.username(), subscriber.username());
 
-        finder.delete(List.of(found));
+        finder.delete(found);
     }
 }
