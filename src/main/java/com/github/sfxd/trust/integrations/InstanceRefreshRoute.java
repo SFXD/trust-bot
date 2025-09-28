@@ -1,16 +1,18 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package com.github.sfxd.trust.integrations;
 
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Collection;
 
 import javax.inject.Inject;
 
-import com.github.sfxd.trust.core.instances.Instance;
 import com.github.sfxd.trust.util.Json;
 
+import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.component.jackson.ListJacksonDataFormat;
+import org.apache.camel.spi.DataFormat;
 
 /**
  * Task that will check the Trust api instances and update their data in the
@@ -33,12 +35,40 @@ public class InstanceRefreshRoute extends RouteBuilder {
             .choice()
                 .when(header("CamelHttpResponseCode").isEqualTo(200))
                     .log(LoggingLevel.INFO, "Running instance refresh route")
-                    .unmarshal(new ListJacksonDataFormat(Json.mapper(), Instance.class))
+                    .unmarshal(new JsonDataFormat<>(InstancePreviewViewModel.class))
                     .process().body(Collection.class, this.consumer::accept)
                 .endChoice()
                 .otherwise()
                     .log(LoggingLevel.WARN, "Trust api not-ok: ${headers.CamelHttpResponseCode}")
                 .endChoice()
             .end();
+    }
+
+    private static class JsonDataFormat<T> implements DataFormat {
+        private final Class<T> clazz;
+
+        private JsonDataFormat(Class<T> clazz) {
+            this.clazz = clazz;
+        }
+
+        @Override
+        public void marshal(Exchange exchange, Object graph, OutputStream stream) throws Exception {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Object unmarshal(Exchange exchange, InputStream stream) throws Exception {
+            return Json.deserialize(stream, this.clazz);
+        }
+
+        @Override
+        public void start() {
+            // No idea what this does. Camel is a web of enterprise bullshit.
+        }
+
+        @Override
+        public void stop() {
+            // No idea what this does. Camel is a web of enterprise bullshit.
+        }
     }
 }

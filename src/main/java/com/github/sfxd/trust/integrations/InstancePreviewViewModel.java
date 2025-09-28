@@ -2,10 +2,12 @@ package com.github.sfxd.trust.integrations;
 
 import com.github.sfxd.trust.core.instances.Instance;
 import com.github.sfxd.trust.core.instances.Instance.Environment;
+import io.avaje.jsonb.Json;
 
 import static com.github.sfxd.trust.core.instances.Instance.Environment.PRODUCTION;
 import static com.github.sfxd.trust.core.instances.Instance.Environment.SANDBOX;
 
+@Json
 record InstancePreviewViewModel(
     String key,
     String location,
