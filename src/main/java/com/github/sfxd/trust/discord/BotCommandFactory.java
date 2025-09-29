@@ -7,9 +7,7 @@ import javax.inject.Inject;
 import com.github.sfxd.trust.core.instances.InstanceRepository;
 import com.github.sfxd.trust.core.users.UserRepository;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
-import org.apache.commons.lang3.StringUtils;
 
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
@@ -56,7 +54,7 @@ public class BotCommandFactory {
         return switch (command) {
             case SUBSCRIBE, UNSUBSCRIBE -> {
                 String instanceKey = event.getOption(INSTANCE).getAsString();
-                if (StringUtils.isBlank(instanceKey)) {
+                if (instanceKey.isBlank()) {
                     yield new UsageBotCommand(event);
                 }
 

@@ -3,16 +3,17 @@ package com.github.sfxd.trust.core.instances;
 import com.github.sfxd.trust.core.Message;
 import com.github.sfxd.trust.core.users.Subscription;
 import com.github.sfxd.trust.core.users.User;
-import org.apache.commons.lang3.builder.Diff;
-import org.apache.commons.lang3.builder.DiffResult;
+import com.github.sfxd.trust.util.Diff;
+
+import java.util.List;
 
 public class InstanceUpdatedMessage implements Message {
     private final Subscription subscription;
-    private final DiffResult<Instance> diff;
+    private final List<Diff<?>> diffs;
 
-    public InstanceUpdatedMessage(Subscription subscription, DiffResult<Instance> diff) {
+    public InstanceUpdatedMessage(Subscription subscription, List<Diff<?>> diffs) {
         this.subscription = subscription;
-        this.diff = diff;
+        this.diffs = diffs;
     }
 
     @Override
@@ -23,8 +24,8 @@ public class InstanceUpdatedMessage implements Message {
     @Override
     public String body() {
         var body = new StringBuilder();
-        for (Diff<?> d : diff) {
-            body.append("  %s: %s -> %s%n".formatted(d.getFieldName(), d.getLeft(), d.getRight()));
+        for (Diff<?> diff : this.diffs) {
+            body.append("  %s: %s -> %s%n".formatted(diff.field(), diff.left(), diff.right()));
         }
 
         return body.toString();

@@ -9,11 +9,10 @@ import javax.persistence.OneToMany;
 
 import com.github.sfxd.trust.core.Entity;
 import com.github.sfxd.trust.core.users.Subscription;
+import com.github.sfxd.trust.util.Diff;
+import com.github.sfxd.trust.util.DiffBuilder;
 import io.ebean.annotation.DbEnumType;
 import io.ebean.annotation.DbEnumValue;
-import org.apache.commons.lang3.builder.DiffBuilder;
-import org.apache.commons.lang3.builder.DiffResult;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import static java.util.Objects.requireNonNull;
 
@@ -105,8 +104,8 @@ public class Instance extends Entity {
         }
     }
 
-    public DiffResult<Instance> diff(Instance other) {
-        return new DiffBuilder<>(other, this, ToStringStyle.DEFAULT_STYLE, false)
+    public List<Diff<?>> diff(Instance other) {
+        return new DiffBuilder()
             .append("status", other.status, this.status)
             .append("environment", other.environment, this.environment)
             .append("location", other.location, this.location)

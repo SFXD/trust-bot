@@ -2,6 +2,7 @@
 package com.github.sfxd.trust.integrations;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -14,7 +15,7 @@ import com.github.sfxd.trust.core.instances.Instance;
 import com.github.sfxd.trust.core.instances.InstanceRepository;
 import com.github.sfxd.trust.core.instances.InstanceUpdatedMessage;
 import com.github.sfxd.trust.core.users.Subscription;
-import org.apache.commons.lang3.builder.DiffResult;
+import com.github.sfxd.trust.util.Diff;
 
 import static java.util.function.Function.identity;
 
@@ -42,26 +43,26 @@ class InstanceRefreshConsumer implements Consumer<Collection<InstancePreviewView
 
         for (Instance preview : instancePreviews.values()) {
             Instance current = instances.computeIfAbsent(preview.key(), key -> preview);
-            DiffResult<Instance> diff = current.diff(preview);
-            if (!diff.getDiffs().isEmpty()) {
-                this.update(current, preview, diff);
+            List<Diff<?>> diffs = current.diff(preview);
+            if (!diffs.isEmpty()) {
+                this.update(current, preview, diffs);
             }
         }
 
         this.instanceRepository.save(instances.values());
     }
 
-    private void update(Instance current, Instance preview, DiffResult<Instance> diff) {
+    private void update(Instance current, Instance preview, List<Diff<?>> diffs) {
         current.setLocation(preview.location());
         current.setReleaseVersion(preview.releaseVersion());
         current.setReleaseNumber(preview.releaseNumber());
         current.setStatus(preview.status());
-        this.sendMessages(current, diff);
+        this.sendMessages(current, diffs);
     }
 
-    private void sendMessages(Instance current, DiffResult<Instance> diff) {
+    private void sendMessages(Instance current, List<Diff<?>> diffs) {
         for (Subscription subscription : current.getSubscriptions()) {
-            this.messages.send(new InstanceUpdatedMessage(subscription, diff));
+            this.messages.send(new InstanceUpdatedMessage(subscription, diffs));
         }
     }
 }
