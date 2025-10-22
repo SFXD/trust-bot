@@ -11,10 +11,10 @@ import org.apache.camel.impl.DefaultCamelContext;
 import java.util.List;
 
 @Factory
-class CamelProducer {
+public class CamelProducer {
 
     @Bean(initMethod = "start", destroyMethod = "shutdown")
-    CamelContext produceCamelContext(List<RouteBuilder> builders) throws Exception {
+    public CamelContext produceCamelContext(List<RouteBuilder> builders) throws Exception {
         @SuppressWarnings("resource") // shutdown when the cdi container shuts down
         var context = new DefaultCamelContext();
 
