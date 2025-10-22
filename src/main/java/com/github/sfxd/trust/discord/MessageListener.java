@@ -1,14 +1,17 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package com.github.sfxd.trust.discord;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+
+import java.util.Collection;
 
 @Singleton
 public class MessageListener extends ListenerAdapter {
@@ -32,6 +35,10 @@ public class MessageListener extends ListenerAdapter {
             LOGGER.error("Command failed: ", ex);
             this.printError(event);
         }
+    }
+
+    public Collection<CommandData> commands() {
+        return this.botCommandFactory.commands();
     }
 
     private void printError(SlashCommandEvent event) {

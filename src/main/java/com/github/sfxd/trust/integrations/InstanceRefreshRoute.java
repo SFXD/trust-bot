@@ -5,10 +5,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
 
-import javax.inject.Inject;
-
 import com.github.sfxd.trust.util.Json;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
@@ -19,6 +19,7 @@ import org.apache.camel.spi.DataFormat;
  * database.
  */
 @SuppressWarnings("unused") // reflectively found by DI
+@Singleton
 public class InstanceRefreshRoute extends RouteBuilder {
     private final InstanceRefreshConsumer consumer;
 

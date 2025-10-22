@@ -4,10 +4,10 @@ package com.github.sfxd.trust.instances;
 import java.util.Collection;
 import java.util.Collections;
 
-import javax.inject.Singleton;
 
 import com.github.sfxd.trust.instances.query.QInstance;
 import io.ebean.DB;
+import jakarta.inject.Singleton;
 
 /** Finder for the Instance model */
 @Singleton

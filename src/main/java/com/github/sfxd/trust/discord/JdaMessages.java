@@ -1,15 +1,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package com.github.sfxd.trust.discord;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
 import com.github.sfxd.trust.Message;
 import com.github.sfxd.trust.Messages;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import net.dv8tion.jda.api.JDA;
 
-@ApplicationScoped
+@Singleton
 class JdaMessages implements Messages {
 
     private final JDA jda;

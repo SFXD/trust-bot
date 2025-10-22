@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package com.github.sfxd.trust.discord;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 
 import com.github.sfxd.trust.instances.InstanceRepository;
 import com.github.sfxd.trust.users.UserRepository;
@@ -12,9 +10,12 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import java.util.List;
 
-@ApplicationScoped
+@Singleton
 public class BotCommandFactory {
     static final String SUBSCRIBE = "subscribe";
     static final String UNSUBSCRIBE = "unsubscribe";

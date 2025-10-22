@@ -7,26 +7,25 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
 import com.github.sfxd.trust.Messages;
 import com.github.sfxd.trust.instances.Instance;
 import com.github.sfxd.trust.instances.InstanceRepository;
 import com.github.sfxd.trust.instances.InstanceUpdatedMessage;
 import com.github.sfxd.trust.users.Subscription;
 import com.github.sfxd.trust.util.Diff;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import static java.util.function.Function.identity;
 
-@ApplicationScoped
-class InstanceRefreshConsumer implements Consumer<Collection<InstancePreviewViewModel>> {
+@Singleton
+public class InstanceRefreshConsumer implements Consumer<Collection<InstancePreviewViewModel>> {
 
     private final InstanceRepository instanceRepository;
     private final Messages messages;
 
     @Inject
-    InstanceRefreshConsumer(InstanceRepository instanceRepository, Messages messages) {
+    public InstanceRefreshConsumer(InstanceRepository instanceRepository, Messages messages) {
         this.instanceRepository = instanceRepository;
         this.messages = messages;
     }
