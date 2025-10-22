@@ -1,10 +1,11 @@
 package com.github.sfxd.trust.core.users;
 
-import com.github.sfxd.trust.core.instances.Instance;
+import com.github.sfxd.trust.instances.Instance;
+import com.github.sfxd.trust.users.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static com.github.sfxd.trust.core.instances.Instance.Environment.PRODUCTION;
+import static com.github.sfxd.trust.instances.Instance.Environment.PRODUCTION;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

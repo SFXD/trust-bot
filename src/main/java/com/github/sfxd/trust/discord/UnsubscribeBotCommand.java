@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package com.github.sfxd.trust.discord;
 
-import com.github.sfxd.trust.core.instances.InstanceRepository;
+import com.github.sfxd.trust.instances.InstanceRepository;
 
-import com.github.sfxd.trust.core.users.DuplicateUserException;
-import com.github.sfxd.trust.core.users.UserRepository;
+import com.github.sfxd.trust.users.UserRepository;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 import static com.github.sfxd.trust.util.ExceptionUtils.uncheck;

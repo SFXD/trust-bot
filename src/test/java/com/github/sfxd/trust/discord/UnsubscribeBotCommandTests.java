@@ -4,8 +4,8 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.github.sfxd.trust.core.instances.InstanceRepository;
-import com.github.sfxd.trust.core.users.UserRepository;
+import com.github.sfxd.trust.instances.InstanceRepository;
+import com.github.sfxd.trust.users.UserRepository;
 import org.junit.jupiter.api.Test;
 
 import net.dv8tion.jda.api.entities.User;

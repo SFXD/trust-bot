@@ -1,13 +1,15 @@
 package com.github.sfxd.trust.core.instances;
 
-import static com.github.sfxd.trust.core.instances.Instance.Environment.PRODUCTION;
-import static com.github.sfxd.trust.core.instances.Instance.Environment.SANDBOX;
+import static com.github.sfxd.trust.instances.Instance.Environment.PRODUCTION;
+import static com.github.sfxd.trust.instances.Instance.Environment.SANDBOX;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 import java.util.Set;
 
 
+import com.github.sfxd.trust.instances.Instance;
+import com.github.sfxd.trust.instances.InstanceRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -22,7 +24,7 @@ class InstanceRepositoryTests {
         var a = new Instance("NA01", SANDBOX);
         var b = new Instance("CS01", PRODUCTION);
 
-        this.instanceRepository.insert(List.of(a, b));
+        this.instanceRepository.save(List.of(a, b));
         List<Instance> found = this.instanceRepository.findByKeyIn(Set.of(a.key()))
             .stream()
             .toList();
@@ -36,13 +38,13 @@ class InstanceRepositoryTests {
         var a = new Instance("NA02", PRODUCTION);
         var b = new Instance("CS02", SANDBOX);
 
-        this.instanceRepository.insert(List.of(a, b));
-        List<Instance> found = this.instanceRepository.findByIdIn(Set.of(a.getId()))
+        this.instanceRepository.save(List.of(a, b));
+        List<Instance> found = this.instanceRepository.findByIdIn(Set.of(a.id()))
             .stream()
             .toList();
 
         assertEquals(1, found.size());
-        assertEquals(found.getFirst().getId(), a.getId());
+        assertEquals(found.getFirst().id(), a.id());
     }
 
     @Test
@@ -50,7 +52,7 @@ class InstanceRepositoryTests {
         var a = new Instance("NA03", PRODUCTION);
         var b = new Instance("CS03", SANDBOX);
 
-        this.instanceRepository.insert(List.of(a, b));
+        this.instanceRepository.save(List.of(a, b));
 
         Instance found = this.instanceRepository.findByKey(a.key());
         assertEquals(found.key(), a.key());

@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-package com.github.sfxd.trust.core.users;
+package com.github.sfxd.trust.users;
 
 import javax.persistence.Column;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 
-import com.github.sfxd.trust.core.Entity;
-import com.github.sfxd.trust.core.instances.Instance;
+import com.github.sfxd.trust.Entity;
+import com.github.sfxd.trust.instances.Instance;
 
 import static java.util.Objects.requireNonNull;
 

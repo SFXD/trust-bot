@@ -4,8 +4,8 @@ package com.github.sfxd.trust.discord;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import com.github.sfxd.trust.core.instances.InstanceRepository;
-import com.github.sfxd.trust.core.users.UserRepository;
+import com.github.sfxd.trust.instances.InstanceRepository;
+import com.github.sfxd.trust.users.UserRepository;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;

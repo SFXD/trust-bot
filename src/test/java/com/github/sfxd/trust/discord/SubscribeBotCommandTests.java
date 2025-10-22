@@ -1,16 +1,16 @@
 package com.github.sfxd.trust.discord;
 
-import static com.github.sfxd.trust.core.instances.Instance.Environment.PRODUCTION;
+import static com.github.sfxd.trust.instances.Instance.Environment.PRODUCTION;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.github.sfxd.trust.core.instances.Instance;
-import com.github.sfxd.trust.core.instances.InstanceRepository;
-import com.github.sfxd.trust.core.users.User;
+import com.github.sfxd.trust.instances.Instance;
+import com.github.sfxd.trust.instances.InstanceRepository;
+import com.github.sfxd.trust.users.User;
 
-import com.github.sfxd.trust.core.users.UserRepository;
+import com.github.sfxd.trust.users.UserRepository;
 import org.junit.jupiter.api.Test;
 
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;

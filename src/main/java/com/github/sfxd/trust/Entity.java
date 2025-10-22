@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-package com.github.sfxd.trust.core;
+package com.github.sfxd.trust;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,7 +24,7 @@ public abstract class Entity {
         this.id = id;
     }
 
-    public Long getId() {
+    public Long id() {
         return this.id;
     }
 

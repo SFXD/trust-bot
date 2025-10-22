@@ -10,11 +10,11 @@ import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import com.github.sfxd.trust.core.Messages;
-import com.github.sfxd.trust.core.instances.Instance;
-import com.github.sfxd.trust.core.instances.InstanceRepository;
-import com.github.sfxd.trust.core.instances.InstanceUpdatedMessage;
-import com.github.sfxd.trust.core.users.Subscription;
+import com.github.sfxd.trust.Messages;
+import com.github.sfxd.trust.instances.Instance;
+import com.github.sfxd.trust.instances.InstanceRepository;
+import com.github.sfxd.trust.instances.InstanceUpdatedMessage;
+import com.github.sfxd.trust.users.Subscription;
 import com.github.sfxd.trust.util.Diff;
 
 import static java.util.function.Function.identity;

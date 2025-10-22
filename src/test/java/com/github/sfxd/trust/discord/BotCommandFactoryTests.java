@@ -8,8 +8,8 @@ import static org.mockito.Mockito.when;
 
 import java.util.Map;
 
-import com.github.sfxd.trust.core.instances.InstanceRepository;
-import com.github.sfxd.trust.core.users.UserRepository;
+import com.github.sfxd.trust.instances.InstanceRepository;
+import com.github.sfxd.trust.users.UserRepository;
 import org.junit.jupiter.api.Test;
 
 import net.dv8tion.jda.api.entities.Message;

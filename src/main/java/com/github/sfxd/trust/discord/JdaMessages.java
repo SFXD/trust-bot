@@ -4,8 +4,8 @@ package com.github.sfxd.trust.discord;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import com.github.sfxd.trust.core.Message;
-import com.github.sfxd.trust.core.Messages;
+import com.github.sfxd.trust.Message;
+import com.github.sfxd.trust.Messages;
 
 import net.dv8tion.jda.api.JDA;
 

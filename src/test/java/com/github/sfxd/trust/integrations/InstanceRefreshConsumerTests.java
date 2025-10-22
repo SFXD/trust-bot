@@ -7,10 +7,10 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.sfxd.trust.core.Messages;
-import com.github.sfxd.trust.core.instances.Instance;
+import com.github.sfxd.trust.Messages;
+import com.github.sfxd.trust.instances.Instance;
 
-import com.github.sfxd.trust.core.instances.InstanceRepository;
+import com.github.sfxd.trust.instances.InstanceRepository;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 

@@ -1,8 +1,8 @@
-package com.github.sfxd.trust.core.instances;
+package com.github.sfxd.trust.instances;
 
-import com.github.sfxd.trust.core.Message;
-import com.github.sfxd.trust.core.users.Subscription;
-import com.github.sfxd.trust.core.users.User;
+import com.github.sfxd.trust.Message;
+import com.github.sfxd.trust.users.Subscription;
+import com.github.sfxd.trust.users.User;
 import com.github.sfxd.trust.util.Diff;
 
 import java.util.List;

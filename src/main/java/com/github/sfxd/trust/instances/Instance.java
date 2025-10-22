@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-package com.github.sfxd.trust.core.instances;
+package com.github.sfxd.trust.instances;
 
 import java.util.List;
 
@@ -7,8 +7,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.OneToMany;
 
-import com.github.sfxd.trust.core.Entity;
-import com.github.sfxd.trust.core.users.Subscription;
+import com.github.sfxd.trust.Entity;
+import com.github.sfxd.trust.users.Subscription;
 import com.github.sfxd.trust.util.Diff;
 import com.github.sfxd.trust.util.DiffBuilder;
 import io.ebean.annotation.DbEnumType;

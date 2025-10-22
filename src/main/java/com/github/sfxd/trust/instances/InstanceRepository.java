@@ -1,20 +1,17 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-package com.github.sfxd.trust.core.instances;
+package com.github.sfxd.trust.instances;
 
 import java.util.Collection;
 import java.util.Collections;
 
 import javax.inject.Singleton;
 
-import com.github.sfxd.trust.core.Repository;
-import com.github.sfxd.trust.core.instances.query.QInstance;
+import com.github.sfxd.trust.instances.query.QInstance;
+import io.ebean.DB;
 
 /** Finder for the Instance model */
 @Singleton
-public class InstanceRepository extends Repository<Instance> {
-    public InstanceRepository() {
-        super(Instance.class);
-    }
+public class InstanceRepository {
 
     /**
      * Finds an instance by its unique key (i.e. NA99, CS104)
@@ -53,5 +50,9 @@ public class InstanceRepository extends Repository<Instance> {
             .id.in(ids);
 
         return Collections.unmodifiableList(query.findList());
+    }
+
+    public void save(Collection<Instance> instances) {
+        DB.saveAll(instances);
     }
 }

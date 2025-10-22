@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-package com.github.sfxd.trust.core.users;
+package com.github.sfxd.trust.users;
 
 import javax.inject.Singleton;
 
-import com.github.sfxd.trust.core.users.query.QUser;
+import com.github.sfxd.trust.users.query.QUser;
 import io.ebean.DB;
 
 @Singleton
