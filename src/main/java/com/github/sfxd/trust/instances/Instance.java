@@ -3,9 +3,9 @@ package com.github.sfxd.trust.instances;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.OneToMany;
 
 import com.github.sfxd.trust.Entity;
 import com.github.sfxd.trust.users.Subscription;
@@ -17,7 +17,7 @@ import io.ebean.annotation.DbEnumValue;
 import static java.util.Objects.requireNonNull;
 
 /// Represents an SFDC instance. Sandbox or Production.
-@javax.persistence.Entity
+@jakarta.persistence.Entity
 public class Instance extends Entity {
     @Column(unique = true, nullable = false, name = "\"key\"", columnDefinition = "character varying")
     private final String key;

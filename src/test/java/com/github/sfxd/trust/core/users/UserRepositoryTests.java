@@ -1,7 +1,7 @@
 package com.github.sfxd.trust.core.users;
 
-import static io.smallrye.common.constraint.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.github.sfxd.trust.users.User;
 import com.github.sfxd.trust.users.UserRepository;

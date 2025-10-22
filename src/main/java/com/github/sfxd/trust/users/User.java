@@ -3,10 +3,10 @@ package com.github.sfxd.trust.users;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToMany;
 
 import com.github.sfxd.trust.Entity;
 import com.github.sfxd.trust.instances.Instance;
@@ -14,8 +14,8 @@ import com.github.sfxd.trust.instances.Instance;
 import static java.util.Objects.requireNonNull;
 
 /// Represents a user that has subscribed to notifications
-@javax.persistence.Entity
-@javax.persistence.Table(name = "users")
+@jakarta.persistence.Entity
+@jakarta.persistence.Table(name = "users")
 public class User extends Entity {
 
     @Column(unique = true, nullable = false, columnDefinition = "character varying")

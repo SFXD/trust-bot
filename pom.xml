@@ -40,8 +40,8 @@
     </dependency>
     <dependency>
       <groupId>io.ebean</groupId>
-      <artifactId>ebean</artifactId>
-      <version>${ebean.version}-javax</version>
+      <artifactId>ebean-h2</artifactId>
+      <version>${ebean.version}</version>
     </dependency>
     <dependency>
       <groupId>io.ebean</groupId>
@@ -114,7 +114,7 @@
     <dependency>
       <groupId>io.ebean</groupId>
       <artifactId>ebean-test</artifactId>
-      <version>${ebean.version}-javax</version>
+      <version>${ebean.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -144,7 +144,7 @@
             <path>
               <groupId>io.ebean</groupId>
               <artifactId>querybean-generator</artifactId>
-              <version>${ebean.version}-javax</version>
+              <version>${ebean.version}</version>
             </path>
           </annotationProcessorPaths>
         </configuration>
