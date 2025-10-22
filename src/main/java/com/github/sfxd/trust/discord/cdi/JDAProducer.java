@@ -5,16 +5,12 @@ import com.github.sfxd.trust.discord.MessageListener;
 
 import io.avaje.inject.Bean;
 import io.avaje.inject.Factory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 
 @Factory
 public class JDAProducer {
-    private static final Logger LOGGER = LoggerFactory.getLogger(JDAProducer.class);
-
     @Bean(initMethod = "awaitReady", destroyMethod = "shutdown")
     public JDA produceJDA(MessageListener listener) throws Exception {
         var jda = JDABuilder.createDefault(System.getProperty("trust.discord.token"))
