@@ -1,17 +1,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package com.github.sfxd.trust.integrations;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import com.github.sfxd.trust.Messages;
 import com.github.sfxd.trust.instances.Instance;
 import com.github.sfxd.trust.instances.InstanceRepository;
-import com.github.sfxd.trust.instances.InstanceUpdatedMessage;
-import com.github.sfxd.trust.users.Subscription;
 import com.github.sfxd.trust.util.Diff;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -22,12 +20,10 @@ import static java.util.function.Function.identity;
 public class InstanceRefreshConsumer implements Consumer<Collection<InstancePreviewViewModel>> {
 
     private final InstanceRepository instanceRepository;
-    private final Messages messages;
 
     @Inject
-    public InstanceRefreshConsumer(InstanceRepository instanceRepository, Messages messages) {
+    public InstanceRefreshConsumer(InstanceRepository instanceRepository) {
         this.instanceRepository = instanceRepository;
-        this.messages = messages;
     }
 
     @Override
@@ -39,29 +35,23 @@ public class InstanceRefreshConsumer implements Consumer<Collection<InstancePrev
         Map<String, Instance> instances = this.instanceRepository.findByKeyIn(instancePreviews.keySet())
             .stream()
             .collect(Collectors.toMap(Instance::key, identity()));
-
+        var forUpdate = new ArrayList<Instance>();
         for (Instance preview : instancePreviews.values()) {
-            Instance current = instances.computeIfAbsent(preview.key(), key -> preview);
+            Instance current = instances.computeIfAbsent(preview.key(), _ -> preview);
             List<Diff<?>> diffs = current.diff(preview);
             if (!diffs.isEmpty()) {
-                this.update(current, preview, diffs);
+                this.update(current, preview);
+                forUpdate.add(current);
             }
         }
 
-        this.instanceRepository.save(instances.values());
+        this.instanceRepository.save(forUpdate);
     }
 
-    private void update(Instance current, Instance preview, List<Diff<?>> diffs) {
+    private void update(Instance current, Instance preview) {
         current.setLocation(preview.location());
         current.setReleaseVersion(preview.releaseVersion());
         current.setReleaseNumber(preview.releaseNumber());
         current.setStatus(preview.status());
-        this.sendMessages(current, diffs);
-    }
-
-    private void sendMessages(Instance current, List<Diff<?>> diffs) {
-        for (Subscription subscription : current.getSubscriptions()) {
-            this.messages.send(new InstanceUpdatedMessage(subscription, diffs));
-        }
     }
 }

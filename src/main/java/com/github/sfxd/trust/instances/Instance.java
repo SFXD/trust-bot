@@ -1,11 +1,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package com.github.sfxd.trust.instances;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.OneToMany;
+import com.github.sfxd.trust.events.Event;
+import com.github.sfxd.trust.events.Eventful;
+import io.ebean.annotation.History;
+import jakarta.persistence.*;
 
 import com.github.sfxd.trust.Entity;
 import com.github.sfxd.trust.users.Subscription;
@@ -14,11 +17,13 @@ import com.github.sfxd.trust.util.DiffBuilder;
 import io.ebean.annotation.DbEnumType;
 import io.ebean.annotation.DbEnumValue;
 
+import static java.util.Collections.unmodifiableList;
 import static java.util.Objects.requireNonNull;
 
 /// Represents an SFDC instance. Sandbox or Production.
 @jakarta.persistence.Entity
-public class Instance extends Entity {
+@History
+public class Instance extends Entity implements Eventful {
     @Column(unique = true, nullable = false, name = "\"key\"", columnDefinition = "character varying")
     private final String key;
 
@@ -39,6 +44,9 @@ public class Instance extends Entity {
 
     @OneToMany(mappedBy = "instance", cascade = CascadeType.REMOVE)
     private List<Subscription> subscriptions;
+
+    @Transient
+    private final List<Event> events = new ArrayList<>();
 
     public Instance(String key, Environment environment) {
         this.key = requireNonNull(key);
@@ -78,6 +86,10 @@ public class Instance extends Entity {
     }
 
     public void setStatus(String status) {
+        if (!this.status.equals(status)) {
+            this.events.add(new InstanceStatusChangeEvent(this));
+        }
+
         this.status = status;
     }
 
@@ -85,7 +97,7 @@ public class Instance extends Entity {
         return this.environment;
     }
 
-    public List<Subscription> getSubscriptions() {
+    public List<Subscription> subscriptions() {
         return this.subscriptions;
     }
 
@@ -102,6 +114,10 @@ public class Instance extends Entity {
         public int id() {
             return this.id;
         }
+    }
+
+    public Collection<Event> events() {
+        return unmodifiableList(this.events);
     }
 
     public List<Diff<?>> diff(Instance other) {

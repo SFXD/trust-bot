@@ -7,7 +7,6 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.sfxd.trust.Messages;
 import com.github.sfxd.trust.instances.Instance;
 
 import com.github.sfxd.trust.instances.InstanceRepository;
@@ -25,7 +24,7 @@ class InstanceRefreshConsumerTests {
 
         when(instanceRepo.findByKeyIn(anySet())).thenReturn(instances);
 
-        var consumer = new InstanceRefreshConsumer(instanceRepo, mock(Messages.class));
+        var consumer = new InstanceRefreshConsumer(instanceRepo);
         consumer.accept(previews);
     }
 }
