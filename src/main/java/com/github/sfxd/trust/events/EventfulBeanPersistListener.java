@@ -1,12 +1,16 @@
 package com.github.sfxd.trust.events;
 
 import io.ebean.event.BeanPersistListener;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import java.util.Set;
 
+@Singleton
 public class EventfulBeanPersistListener implements BeanPersistListener {
     private final Pipeline pipeline;
 
+    @Inject
     public EventfulBeanPersistListener(Pipeline pipeline) {
         this.pipeline = pipeline;
     }
