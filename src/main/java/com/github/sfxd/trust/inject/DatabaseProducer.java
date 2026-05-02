@@ -25,6 +25,7 @@ public class DatabaseProducer {
             .setPersistControllers(controllers)
             .setPersistListeners(listeners)
             .runMigration(true)
+            .defaultDatabase(true)
             .build();
     }
 }
