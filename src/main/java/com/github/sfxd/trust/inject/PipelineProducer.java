@@ -1,4 +1,4 @@
-package com.github.sfxd.trust.events.cdi;
+package com.github.sfxd.trust.inject;
 
 import com.github.sfxd.trust.events.EventHandler;
 import com.github.sfxd.trust.events.Pipeline;

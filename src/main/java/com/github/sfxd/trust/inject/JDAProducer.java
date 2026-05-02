@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-package com.github.sfxd.trust.discord.cdi;
+package com.github.sfxd.trust.inject;
 
 import com.github.sfxd.trust.discord.MessageListener;
 

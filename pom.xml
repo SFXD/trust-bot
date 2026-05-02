@@ -14,7 +14,7 @@
       Make sure you upgrade the ebean-migration dependency as well.
       The version numbers don't match exactly.
     -->
-    <ebean.version>16.1.1</ebean.version>
+    <ebean.version>17.4.0</ebean.version>
     <camel.version>4.10.2</camel.version>
     <inject.version>12.0</inject.version>
   </properties>

@@ -12,13 +12,13 @@ public class Pipeline {
 
     public void send(Event event) {
         List<EventHandler<Event>> handlers = this.mappings.get(event.getClass());
-        if (handlers != null) {
-            for (var handler : handlers) {
-                handler.accept(event);
-            }
+        if (handlers == null) {
+            throw new IllegalStateException("no event handler found");
         }
 
-        throw new IllegalStateException("no event handler found");
+        for (var handler : handlers) {
+            handler.accept(event);
+        }
     }
 
     public static class Builder {

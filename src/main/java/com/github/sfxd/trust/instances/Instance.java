@@ -86,10 +86,6 @@ public class Instance extends Entity implements Eventful {
     }
 
     public void setStatus(String status) {
-        if (!this.status.equals(status)) {
-            this.events.add(new InstanceStatusChangeEvent(this));
-        }
-
         this.status = status;
     }
 
@@ -118,6 +114,10 @@ public class Instance extends Entity implements Eventful {
 
     public Collection<Event> events() {
         return unmodifiableList(this.events);
+    }
+
+    void addEvent(Event event) {
+        this.events.add(event);
     }
 
     public List<Diff<?>> diff(Instance other) {

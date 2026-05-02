@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-package com.github.sfxd.trust.integrations.cdi;
+package com.github.sfxd.trust.inject;
 
 
 import io.avaje.inject.Bean;
