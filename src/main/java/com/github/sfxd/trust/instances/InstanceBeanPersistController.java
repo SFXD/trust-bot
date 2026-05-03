@@ -3,9 +3,11 @@ package com.github.sfxd.trust.instances;
 import io.ebean.event.BeanDeleteIdRequest;
 import io.ebean.event.BeanPersistController;
 import io.ebean.event.BeanPersistRequest;
+import jakarta.inject.Singleton;
 
 import java.util.Set;
 
+@Singleton
 public class InstanceBeanPersistController implements BeanPersistController {
     private static final Set<String> PROPS_FOR_UPDATE_EVENT = Set.of(
         "status",

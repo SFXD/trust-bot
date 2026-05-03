@@ -7,17 +7,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.List;
 import java.util.Set;
 
+import jakarta.inject.Inject;
+
+import io.avaje.inject.test.InjectTest;
+import org.junit.jupiter.api.Test;
 
 import com.github.sfxd.trust.instances.Instance;
 import com.github.sfxd.trust.instances.InstanceRepository;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestInstance.Lifecycle;
 
-@TestInstance(Lifecycle.PER_CLASS)
-class InstanceRepositoryTests {
+@InjectTest
+public class InstanceRepositoryItTests {
 
-    private final InstanceRepository instanceRepository = new InstanceRepository();
+    @Inject
+    public InstanceRepository instanceRepository;
 
     @Test
     void it_should_find_instances_whos_key_is_in_the_set() {

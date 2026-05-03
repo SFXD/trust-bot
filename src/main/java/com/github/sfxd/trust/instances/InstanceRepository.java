@@ -6,12 +6,20 @@ import java.util.Collections;
 
 
 import com.github.sfxd.trust.instances.query.QInstance;
-import io.ebean.DB;
+import io.ebean.Database;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 /** Finder for the Instance model */
 @Singleton
 public class InstanceRepository {
+
+    private final Database database;
+
+    @Inject
+    public InstanceRepository(Database database) {
+        this.database = database;
+    }
 
     /**
      * Finds an instance by its unique key (i.e. NA99, CS104)
@@ -53,6 +61,6 @@ public class InstanceRepository {
     }
 
     public void save(Collection<Instance> instances) {
-        DB.saveAll(instances);
+        this.database.saveAll(instances);
     }
 }

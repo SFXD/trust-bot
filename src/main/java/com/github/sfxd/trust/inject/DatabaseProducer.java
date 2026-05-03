@@ -1,6 +1,7 @@
 package com.github.sfxd.trust.inject;
 
 import io.avaje.inject.Bean;
+import io.avaje.inject.Factory;
 import io.ebean.Database;
 import io.ebean.datasource.DataSourceBuilder;
 import io.ebean.event.BeanPersistController;
@@ -9,6 +10,7 @@ import io.ebean.event.BeanPersistListener;
 import java.util.List;
 import java.util.Properties;
 
+@Factory
 public class DatabaseProducer {
 
     @Bean

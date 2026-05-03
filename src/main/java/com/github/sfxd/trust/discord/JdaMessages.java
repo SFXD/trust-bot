@@ -9,12 +9,12 @@ import jakarta.inject.Singleton;
 import net.dv8tion.jda.api.JDA;
 
 @Singleton
-class JdaMessages implements Messages {
+public class JdaMessages implements Messages {
 
     private final JDA jda;
 
     @Inject
-    JdaMessages(JDA jda) {
+    public JdaMessages(JDA jda) {
         this.jda = jda;
     }
 

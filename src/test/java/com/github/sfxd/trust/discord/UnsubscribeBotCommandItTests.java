@@ -6,16 +6,22 @@ import static org.mockito.Mockito.when;
 
 import com.github.sfxd.trust.instances.InstanceRepository;
 import com.github.sfxd.trust.users.UserRepository;
+import io.avaje.inject.test.InjectTest;
+import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyAction;
 
-class UnsubscribeBotCommandItTests {
+@InjectTest
+public class UnsubscribeBotCommandItTests {
+
+    @Inject
+    public InstanceRepository repository;
 
     @Test
-    void it_should_delete_the_subscription_if_found() throws Exception {
+    void it_should_delete_the_subscription_if_found() {
         var event = mock(SlashCommandEvent.class);
         var key = "NA99";
         var username = "george";
@@ -26,7 +32,7 @@ class UnsubscribeBotCommandItTests {
         when(user.getId()).thenReturn(username);
         when(event.reply(anyString())).thenReturn(action);
 
-        var command = new UnsubscribeBotCommand(event, key, new UserRepository(), new InstanceRepository());
+        var command = new UnsubscribeBotCommand(event, key, new UserRepository(), this.repository);
         command.run();
     }
 }

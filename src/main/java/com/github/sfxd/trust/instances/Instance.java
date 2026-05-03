@@ -7,7 +7,6 @@ import java.util.List;
 
 import com.github.sfxd.trust.events.Event;
 import com.github.sfxd.trust.events.Eventful;
-import io.ebean.annotation.History;
 import jakarta.persistence.*;
 
 import com.github.sfxd.trust.Entity;
@@ -22,7 +21,6 @@ import static java.util.Objects.requireNonNull;
 
 /// Represents an SFDC instance. Sandbox or Production.
 @jakarta.persistence.Entity
-@History
 public class Instance extends Entity implements Eventful {
     @Column(unique = true, nullable = false, name = "\"key\"", columnDefinition = "character varying")
     private final String key;
