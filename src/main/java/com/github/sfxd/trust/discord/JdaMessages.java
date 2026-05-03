@@ -11,12 +11,7 @@ import net.dv8tion.jda.api.JDA;
 @Singleton
 public class JdaMessages implements Messages {
 
-    private final JDA jda;
-
-    @Inject
-    public JdaMessages(JDA jda) {
-        this.jda = jda;
-    }
+	@Inject JDA jda;
 
     @Override
     public void send(Message message) {
