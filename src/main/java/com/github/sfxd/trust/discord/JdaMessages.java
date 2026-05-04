@@ -10,8 +10,12 @@ import net.dv8tion.jda.api.JDA;
 
 @Singleton
 public class JdaMessages implements Messages {
-    //field injection is delayed so it avoids the circle
-	@Inject JDA jda;
+    private final JDA jda;
+
+	@Inject
+    public JdaMessages(JDA jda) {
+        this.jda = jda;
+    }
 
     @Override
     public void send(Message message) {

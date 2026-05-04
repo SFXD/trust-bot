@@ -12,7 +12,7 @@ public class PropertiesProducer {
     @Bean
     public Properties produceProperties() throws IOException {
         var properties = new Properties();
-        try (InputStream is = getClass().getResourceAsStream("application.properties")) {
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream("application.properties")) {
             properties.load(is);
         }
 
