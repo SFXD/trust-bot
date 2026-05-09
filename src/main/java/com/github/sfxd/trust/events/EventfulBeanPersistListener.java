@@ -41,6 +41,7 @@ public class EventfulBeanPersistListener implements BeanPersistListener {
     }
 
     private void send(Object obj) {
-        ((Eventful) obj).events().forEach(this.pipeline::send);
+        var events = ((Eventful) obj).events();
+        this.pipeline.send(events);
     }
 }

@@ -114,7 +114,8 @@ public class Instance extends Entity implements Eventful {
         return unmodifiableList(this.events);
     }
 
-    void addEvent(Event event) {
+    @Override
+    public void addEvent(Event event) {
         this.events.add(event);
     }
 

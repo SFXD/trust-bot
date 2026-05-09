@@ -4,4 +4,5 @@ import java.util.Collection;
 
 public interface Eventful {
     Collection<Event> events();
+    void addEvent(Event event);
 }
